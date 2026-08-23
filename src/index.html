@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel de Conexão | Bot WhatsApp</title>
+  <!-- Socket.IO Client CDN para Cloudflare -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #0b141a;
+      color: #e9edef;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .card {
+      background: #111b21;
+      padding: 32px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      text-align: center;
+      width: 100%;
+      max-width: 380px;
+      border: 1px solid #222d34;
+    }
+    h2 { color: #00a884; font-size: 1.5rem; margin-bottom: 12px; }
+    p { color: #8696a0; font-size: 0.9rem; line-height: 1.4; margin-bottom: 16px; }
+    
+    .status-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+    }
+    .online { background: #00a88422; color: #00a884; border: 1px solid #00a884; }
+    .offline { background: #f15c6d22; color: #f15c6d; border: 1px solid #f15c6d; }
+    .warning { background: #ffd27922; color: #ffd279; border: 1px solid #ffd279; }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid #2a3942;
+      background: #202c33;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    input:focus { border-color: #00a884; }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      border: none;
+      background: #00a884;
+      color: #111b21;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: opacity 0.2s;
+    }
+    button:hover { opacity: 0.9; }
+    button:disabled { background: #374248; color: #8696a0; cursor: not-allowed; }
+
+    .code-box {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: 4px;
+      color: #00a884;
+      background: #202c33;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+      border: 1px dashed #00a884;
+    }
+
+    .btn-reset {
+      background: transparent;
+      color: #f15c6d;
+      border: 1px solid #f15c6d;
+      margin-top: 12px;
+    }
+    .btn-reset:hover { background: #f15c6d11; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>Painel do Bot</h2>
+    <div id="statusBadge" class="status-badge offline">Conectando...</div>
+
+    <!-- 1. Formulário para inserir número -->
+    <div id="secForm">
+      <p>Insira o número de telefone completo com o código do país (ex: 258841234567)</p>
+      <input type="text" id="numInput" placeholder="Ex: 258841234567">
+      <button id="btnGerar" onclick="gerarCodigo()">Gerar Código de Pareamento</button>
+    </div>
+
+    <!-- 2. Tela de exibição do código -->
+    <div id="secCodigo" style="display: none;">
+      <p>Abra o WhatsApp $\rightarrow$ Aparelhos Conectados $\rightarrow$ Conectar com código de telefone:</p>
+      <div id="codeDisplay" class="code-box">---- ----</div>
+    </div>
+
+    <!-- 3. Tela de bot ativo -->
+    <div id="secOnline" style="display: none;">
+      <p id="txtOnline" style="color: #00a884; font-weight: 600; font-size: 1rem;"></p>
+      <button class="btn-reset" onclick="resetarSessao()">Desconectar e Limpar Sessão</button>
+    </div>
+  </div>
+
+  <script>
+    // 🔴 ALTERE PARA O DOMÍNIO DA SUA RAILWAY
+    const RAILWAY_URL = 'https://teu-bot-production.up.railway.app';
+
+    const socket = io(RAILWAY_URL, { transports: ['websocket', 'polling'] });
+
+    const statusBadge = document.getElementById('statusBadge');
+    const secForm = document.getElementById('secForm');
+    const secCodigo = document.getElementById('secCodigo');
+    const secOnline = document.getElementById('secOnline');
+    const codeDisplay = document.getElementById('codeDisplay');
+    const txtOnline = document.getElementById('txtOnline');
+
+    socket.on('status', (dados) => {
+      if (dados.status === 'conectado') {
+        statusBadge.className = 'status-badge online';
+        statusBadge.innerText = 'Bot Ativo';
+        secForm.style.display = 'none';
+        secCodigo.style.display = 'none';
+        secOnline.style.display = 'block';
+        txtOnline.innerText = `Conectado ao número:\n+${dados.user}`;
+      } else if (dados.status === 'codigo_gerado') {
+        statusBadge.className = 'status-badge warning';
+        statusBadge.innerText = 'Aguardando Pareamento';
+        secForm.style.display = 'none';
+        secCodigo.style.display = 'block';
+        secOnline.style.display = 'none';
+        codeDisplay.innerText = dados.code;
+      } else {
+        statusBadge.className = 'status-badge offline';
+        statusBadge.innerText = 'Desconectado';
+        secForm.style.display = 'block';
+        secCodigo.style.display = 'none';
+        secOnline.style.display = 'none';
+      }
+    });
+
+    async function gerarCodigo() {
+      const numero = document.getElementById('numInput').value.trim();
+      if (!numero) return alert('Por favor, introduza o número de telefone!');
+
+      const btn = document.getElementById('btnGerar');
+      btn.disabled = true;
+      btn.innerText = 'A solicitar código...';
+
+      try {
+        const res = await fetch(`${RAILWAY_URL}/api/solicitar-codigo`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ numero })
+        });
+
+        const data = await res.json();
+        if (!data.success) {
+          alert('Erro: ' + data.error);
+        }
+      } catch (err) {
+        alert('Erro ao ligar ao servidor Railway: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = 'Gerar Código de Pareamento';
+      }
+    }
+
+    async function resetarSessao() {
+      if (!confirm('Deseja realmente desconectar e remover a sessão do bot?')) return;
+      try {
+        await fetch(`${RAILWAY_URL}/api/resetar-sessao`, { method: 'POST' });
+      } catch (err) {
+        alert('Erro ao solicitar reset: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
