@@ -253,7 +253,6 @@
 <body>
 
   <div class="container">
-    <!-- Header -->
     <div class="header-banner">
       <div class="title-main">
         <span class="highlight">BL4CK</span> <span class="white">BOT SYSTEM</span>
@@ -265,15 +264,12 @@
       </div>
     </div>
 
-    <!-- Status Fixo -->
     <div class="status-card">
       <span style="font-size: 0.78rem; font-weight: 600;">STATUS SESSÃO</span>
       <div id="statusBadge" class="status-badge offline">Desconectado</div>
     </div>
 
-    <!-- Painel de Ação -->
     <div class="action-panel">
-      <!-- 1. Form Número -->
       <div id="secForm">
         <input type="text" id="numInput" placeholder="Ex: 258841234567">
         <div class="btn-grid">
@@ -283,7 +279,6 @@
         </div>
       </div>
 
-      <!-- 2. Tela Código -->
       <div id="secCodigo" style="display: none;">
         <p style="font-size: 0.78rem; color: var(--text-muted); text-align: center;">Insira no WhatsApp do dispositivo:</p>
         <div id="codeDisplay" class="code-box">---- ----</div>
@@ -295,7 +290,6 @@
         </div>
       </div>
 
-      <!-- 3. Tela Online -->
       <div id="secOnline" style="display: none; text-align: center;">
         <p id="txtOnline" style="color: var(--primary-green); font-weight: 700; font-size: 0.95rem; margin-bottom: 12px;"></p>
         <div class="btn-grid">
@@ -304,14 +298,12 @@
       </div>
     </div>
 
-    <!-- Logs -->
     <div class="log-panel" id="logContainer">
       <div class="log-title">CONSOLE LIVE</div>
       <div class="log-entry info">[SISTEMA] Sistema pronto para uso!</div>
     </div>
   </div>
 
-  <!-- Modal Tutorial -->
   <div id="tutorialModal" class="modal">
     <div class="modal-content">
       <h3>Como Conectar</h3>
@@ -473,7 +465,7 @@
         if (data.success) {
           numeroAtual = '';
           document.getElementById('numInput').value = '';
-          addLog('Sessão limpa do MongoDB e volume restaurado.', 'success');
+          addLog('Sessão limpa do MongoDB e diretório local redefinido.', 'success');
         } else {
           addLog(`Erro ao resetar: ${data.error}`, 'danger');
         }
