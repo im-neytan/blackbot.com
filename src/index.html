@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>BL4CK BOT | PAINEL LIVE</title>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   <style>
@@ -27,28 +27,18 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 24px 20px;
+      padding: 12px 14px;
       overflow-x: hidden;
       position: relative;
     }
 
-    /* Aura Background Gradients */
+    /* Aura Background */
     body::before {
       content: "";
       position: absolute;
       top: 0; left: 0;
-      width: 100%; height: 350px;
-      background: radial-gradient(circle at 10% 10%, rgba(255, 42, 75, 0.18) 0%, transparent 60%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    body::after {
-      content: "";
-      position: absolute;
-      bottom: 0; right: 0;
-      width: 100%; height: 350px;
-      background: radial-gradient(circle at 90% 90%, rgba(0, 168, 132, 0.12) 0%, transparent 60%);
+      width: 100%; height: 250px;
+      background: radial-gradient(circle at 10% 10%, rgba(255, 42, 75, 0.15) 0%, transparent 60%);
       pointer-events: none;
       z-index: 0;
     }
@@ -57,179 +47,177 @@
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 600px;
+      max-width: 420px;
       margin: 0 auto;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 10px;
     }
 
-    /* Header Visual Exato da Imagem */
+    /* Header Compacto */
     .header-banner {
       text-align: left;
     }
 
     .title-main {
-      font-size: 2.2rem;
+      font-size: 1.6rem;
       font-weight: 900;
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      line-height: 1.1;
+      line-height: 1;
     }
 
     .title-main .highlight {
       color: var(--primary-red);
-      text-shadow: 0 0 15px rgba(255, 42, 75, 0.6);
-    }
-
-    .title-main .white {
-      color: #ffffff;
+      text-shadow: 0 0 12px rgba(255, 42, 75, 0.5);
     }
 
     .subtitle-sub {
-      font-size: 0.75rem;
+      font-size: 0.62rem;
       color: var(--text-muted);
-      letter-spacing: 2.5px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
-      margin-top: 6px;
+      margin-top: 3px;
       font-weight: 600;
     }
 
     .meta-info {
       font-family: monospace;
-      font-size: 0.85rem;
+      font-size: 0.72rem;
       color: #a0aab0;
-      margin-top: 14px;
-      line-height: 1.6;
+      margin-top: 8px;
+      line-height: 1.4;
     }
 
-    /* Status Grid */
+    /* Status Grid Com Altura Fixa Para Evitar Salto de Tela */
     .status-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px;
+      border-radius: 10px;
+      padding: 10px 14px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+      min-height: 48px;
     }
 
     .status-badge {
       display: inline-block;
-      padding: 6px 14px;
-      border-radius: 20px;
+      padding: 4px 10px;
+      border-radius: 16px;
       font-weight: 700;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
+      min-width: 110px;
+      text-align: center;
     }
 
     .online { background: rgba(0, 168, 132, 0.15); color: var(--primary-green); border: 1px solid var(--primary-green); }
     .offline { background: rgba(255, 42, 75, 0.15); color: var(--primary-red); border: 1px solid var(--primary-red); }
     .warning { background: rgba(255, 210, 121, 0.15); color: var(--primary-yellow); border: 1px solid var(--primary-yellow); }
 
-    /* Form & Action Area */
+    /* Painel Principal de Ação */
     .action-panel {
       background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      padding: 20px;
+      border-radius: 10px;
+      padding: 14px;
+      min-height: 180px; /* Mantém o tamanho estabilizado ao alternar as telas */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     input {
       width: 100%;
-      padding: 14px;
-      border-radius: 8px;
+      padding: 10px;
+      border-radius: 6px;
       border: 1px solid #2a3942;
       background: #0d131a;
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.9rem;
       outline: none;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       text-align: center;
       font-family: monospace;
     }
 
     input:focus {
       border-color: var(--primary-red);
-      box-shadow: 0 0 10px rgba(255, 42, 75, 0.3);
+      box-shadow: 0 0 8px rgba(255, 42, 75, 0.3);
     }
 
     .btn-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    button {
-      width: 100%;
-      padding: 14px;
-      border-radius: 8px;
-      border: none;
-      background: var(--primary-red);
-      color: #fff;
-      font-weight: 800;
-      cursor: pointer;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: all 0.2s;
-    }
-
-    button:hover { opacity: 0.9; box-shadow: 0 0 14px rgba(255, 42, 75, 0.4); }
-    button:disabled { background: #2a3942; color: var(--text-muted); cursor: not-allowed; box-shadow: none; }
-
-    .code-box {
-      font-size: 2rem;
-      font-weight: 900;
-      letter-spacing: 4px;
-      color: var(--primary-green);
-      background: #0d131a;
-      padding: 14px;
-      border-radius: 8px;
-      margin: 12px 0;
-      border: 1px dashed var(--primary-green);
-      text-align: center;
-      text-shadow: 0 0 12px rgba(0, 168, 132, 0.5);
-    }
-
-    .btn-sec { background: transparent; color: var(--text-muted); border: 1px solid #2a3942; }
-    .btn-sec:hover { background: #111b21; color: #fff; }
-
-    .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
-    .btn-tutorial:hover { background: rgba(0, 168, 132, 0.1); }
-
-    .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
-    .btn-reset:hover { background: rgba(255, 42, 75, 0.1); }
-
-    /* Painel de Logs Live Style Terminal */
-    .log-panel {
-      background: #000000;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 12px;
-      padding: 14px;
-      font-family: monospace;
-      font-size: 0.78rem;
-      height: 140px;
-      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
+    button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      background: var(--primary-red);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
+    }
+
+    button:hover { opacity: 0.9; }
+    button:disabled { background: #2a3942; color: var(--text-muted); cursor: not-allowed; }
+
+    .code-box {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+      color: var(--primary-green);
+      background: #0d131a;
+      padding: 8px;
+      border-radius: 6px;
+      margin: 8px 0;
+      border: 1px dashed var(--primary-green);
+      text-align: center;
+      text-shadow: 0 0 10px rgba(0, 168, 132, 0.4);
+    }
+
+    .btn-sec { background: transparent; color: var(--text-muted); border: 1px solid #2a3942; }
+    .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
+    .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
+
+    /* Console de Logs */
+    .log-panel {
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 0.72rem;
+      height: 110px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
     .log-title {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 4px;
+      padding-bottom: 2px;
     }
 
-    .log-entry { color: #a0aab0; }
+    .log-entry { color: #a0aab0; word-break: break-all; }
     .log-entry.info { color: #ffd279; }
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
@@ -239,33 +227,34 @@
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.85);
       z-index: 10;
       justify-content: center;
       align-items: center;
-      padding: 20px;
+      padding: 16px;
     }
 
     .modal-content {
       background: #0d131a;
       border: 1px solid var(--primary-green);
-      padding: 24px;
-      border-radius: 12px;
-      max-width: 380px;
+      padding: 18px;
+      border-radius: 10px;
+      max-width: 340px;
+      width: 100%;
     }
 
-    .modal-content h3 { color: var(--primary-green); margin-bottom: 12px; }
-    .modal-content ol { padding-left: 20px; color: var(--text-main); font-size: 0.9rem; line-height: 1.7; }
-    .modal-content button { margin-top: 18px; background: var(--primary-green); color: #000; }
+    .modal-content h3 { color: var(--primary-green); margin-bottom: 8px; font-size: 1rem; }
+    .modal-content ol { padding-left: 18px; color: var(--text-main); font-size: 0.8rem; line-height: 1.5; }
+    .modal-content button { margin-top: 14px; background: var(--primary-green); color: #000; }
 
     footer {
       position: relative;
       z-index: 1;
-      font-size: 0.75rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
       text-align: center;
-      margin-top: 20px;
-      letter-spacing: 1px;
+      margin-top: 10px;
+      letter-spacing: 0.5px;
     }
   </style>
 </head>
@@ -280,52 +269,52 @@
       <div class="subtitle-sub">bl4ck bot • PAINEL DE CONEXÃO LIVE</div>
       <div class="meta-info">
         <div id="liveClock">--</div>
-        <div>Versão: <span id="appVersion">4.10.0</span> • Dispositivo: <span id="deviceInUse">Detetando...</span></div>
+        <div>Versão: <span id="appVersion">2.4.0</span> • Dispositivo: <span id="deviceInUse">Detetando...</span></div>
       </div>
     </div>
 
-    <!-- Card de Status do Bot -->
+    <!-- Status Fixo -->
     <div class="status-card">
-      <span style="font-size: 0.85rem; font-weight: 600;">STATUS DA SESSÃO</span>
+      <span style="font-size: 0.78rem; font-weight: 600;">STATUS SESSÃO</span>
       <div id="statusBadge" class="status-badge offline">Desconectado</div>
     </div>
 
-    <!-- Painel Principal -->
+    <!-- Painel de Ação -->
     <div class="action-panel">
       <!-- 1. Form Número -->
       <div id="secForm">
         <input type="text" id="numInput" placeholder="Ex: 258841234567">
         <div class="btn-grid">
           <button id="btnGerar" onclick="gerarCodigo()">Gerar Código de Pareamento</button>
-          <button class="btn-tutorial" onclick="toggleTutorial(true)"> Como Conectar?</button>
+          <button class="btn-tutorial" onclick="toggleTutorial(true)">Como Conectar?</button>
         </div>
       </div>
 
-      <!-- 2. Tela Exibição do Código -->
+      <!-- 2. Tela Código -->
       <div id="secCodigo" style="display: none;">
-        <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">Insira este código no WhatsApp do seu dispositivo:</p>
+        <p style="font-size: 0.78rem; color: var(--text-muted); text-align: center;">Insira no WhatsApp do dispositivo:</p>
         <div id="codeDisplay" class="code-box">---- ----</div>
         
         <div class="btn-grid">
           <button class="btn-sec" onclick="solicitarNovoCodigo()">Solicitar novo código</button>
           <button class="btn-reset" onclick="resetarSessao()">Resetar sessão</button>
-          <button class="btn-tutorial" onclick="toggleTutorial(true)"> Como Conectar?</button>
+          <button class="btn-tutorial" onclick="toggleTutorial(true)">Como Conectar?</button>
         </div>
       </div>
 
-      <!-- 3. Bot Ativo -->
+      <!-- 3. Tela Online -->
       <div id="secOnline" style="display: none; text-align: center;">
-        <p id="txtOnline" style="color: var(--primary-green); font-weight: 700; font-size: 1.1rem; margin-bottom: 16px;"></p>
+        <p id="txtOnline" style="color: var(--primary-green); font-weight: 700; font-size: 0.95rem; margin-bottom: 12px;"></p>
         <div class="btn-grid">
           <button class="btn-reset" onclick="resetarSessao()">Desconectar e Limpar Sessão</button>
         </div>
       </div>
     </div>
 
-    <!-- Console de Logs Live -->
+    <!-- Logs -->
     <div class="log-panel" id="logContainer">
-      <div class="log-title">CONSOLE DE EVENTOS LIVE</div>
-      <div class="log-entry info">[SISTEMA] Painel inicializado.</div>
+      <div class="log-title">CONSOLE LIVE</div>
+      <div class="log-entry info">[SISTEMA] Painel pronto.</div>
     </div>
   </div>
 
@@ -345,7 +334,7 @@
   </div>
 
   <footer>
-    AUTO BOT • ATENDIMENTO AUTOMÁTICO 24/7 • <span style="color: var(--primary-red); font-weight: bold;">BL4CK SOLUTIONS</span>
+    AUTO BOT • ATENDIMENTO 24/7 • <span style="color: var(--primary-red); font-weight: bold;">BL4CK SOLUTIONS</span>
   </footer>
 
   <script>
@@ -356,12 +345,12 @@
 
     document.getElementById('appVersion').innerText = CONFIG.VERSION;
 
-    // Detectar Dispositivo do Utilizador
+    // Detectar Dispositivo
     function detectDevice() {
       const ua = navigator.userAgent;
       if (/android/i.test(ua)) {
         if (/galaxy/i.test(ua)) return 'Samsung Galaxy';
-        return 'Dispositivo Android';
+        return 'Android Device';
       }
       if (/iPhone|iPad|iPod/i.test(ua)) return 'Apple iPhone';
       if (/Windows/i.test(ua)) return 'Windows PC';
@@ -370,7 +359,7 @@
     }
     document.getElementById('deviceInUse').innerText = detectDevice();
 
-    // Relógio em Tempo Real com Dia da Semana
+    // Relógio
     function updateClock() {
       const now = new Date();
       const options = { 
@@ -379,8 +368,7 @@
         day: '2-digit', month: '2-digit', year: 'numeric',
         hour: '2-digit', minute: '2-digit', second: '2-digit'
       };
-      const formatted = now.toLocaleString('pt-PT', options);
-      document.getElementById('liveClock').innerText = `${formatted} • Maputo`;
+      document.getElementById('liveClock').innerText = `${now.toLocaleString('pt-PT', options)} • Maputo`;
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -416,31 +404,31 @@
         secCodigo.style.display = 'none';
         secOnline.style.display = 'block';
         txtOnline.innerText = `Sessão Ativa: +${dados.user}`;
-        addLog(`WhatsApp conectado com sucesso no número +${dados.user}`, 'success');
+        addLog(`Sessão iniciada (+${dados.user})`, 'success');
       } else if (dados.status === 'codigo_gerado') {
         statusBadge.className = 'status-badge warning';
-        statusBadge.innerText = 'Aguardando Conexão';
+        statusBadge.innerText = 'Aguardando';
         secForm.style.display = 'none';
         secCodigo.style.display = 'block';
         secOnline.style.display = 'none';
         codeDisplay.innerText = dados.code;
-        addLog(`Pairing Code gerado: ${dados.code}. Aguardando pareamento...`, 'info');
+        addLog(`Pairing Code: ${dados.code}`, 'info');
       } else {
         statusBadge.className = 'status-badge offline';
         statusBadge.innerText = 'Desconectado';
         secForm.style.display = 'block';
         secCodigo.style.display = 'none';
         secOnline.style.display = 'none';
-        addLog('Sistema desconectado / Aguardando ação do utilizador.', 'danger');
+        addLog('Sistema desconectado.', 'danger');
       }
     });
 
     async function gerarCodigo() {
       const numero = document.getElementById('numInput').value.trim();
-      if (!numero) return alert('Por favor, introduza o número de telefone!');
+      if (!numero) return alert('Por favor, introduza o número!');
 
       numeroAtual = numero;
-      addLog(`Solicitando Pairing Code para +${numero}...`, 'info');
+      addLog(`A solicitar código (+${numero})...`, 'info');
       await enviarPedidoCodigo(numero);
     }
 
@@ -450,7 +438,7 @@
         secForm.style.display = 'block';
         return;
       }
-      addLog('Solicitando novo Pairing Code...', 'info');
+      addLog('A solicitar novo código...', 'info');
       await enviarPedidoCodigo(numeroAtual);
     }
 
@@ -467,25 +455,25 @@
 
         const data = await res.json();
         if (!data.success) {
-          addLog(`Erro ao gerar código: ${data.error}`, 'danger');
+          addLog(`Erro: ${data.error}`, 'danger');
           alert('Erro: ' + data.error);
         }
       } catch (err) {
-        addLog(`Falha na ligação com o servidor: ${err.message}`, 'danger');
+        addLog(`Falha na ligação: ${err.message}`, 'danger');
       } finally {
         btn.disabled = false;
       }
     }
 
     async function resetarSessao() {
-      if (!confirm('Deseja realmente apagar a sessão atual?')) return;
-      addLog('Apagando sessão e limpando dados no servidor...', 'danger');
+      if (!confirm('Deseja apagar a sessão atual?')) return;
+      addLog('A apagar sessão no servidor...', 'danger');
       try {
         await fetch(`${CONFIG.RAILWAY_URL}/api/resetar-sessao`, { method: 'POST' });
         numeroAtual = '';
         addLog('Sessão restaurada com sucesso.', 'success');
       } catch (err) {
-        addLog(`Erro ao resetar sessão: ${err.message}`, 'danger');
+        addLog(`Erro no reset: ${err.message}`, 'danger');
       }
     }
 
