@@ -3,80 +3,84 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BL4CK BOT | Painel de Conexão</title>
+  <title>BL4CK BOT | PAINEL LIVE</title>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   <style>
     :root {
-      --bg-color: #05070a;
-      --card-bg: rgba(13, 19, 26, 0.85);
+      --bg-color: #030508;
+      --card-bg: rgba(10, 15, 22, 0.9);
       --primary-red: #ff2a4b;
       --primary-green: #00a884;
+      --primary-yellow: #ffd279;
       --text-main: #e9edef;
       --text-muted: #8696a0;
-      --border-color: rgba(255, 42, 75, 0.2);
+      --border-color: rgba(255, 42, 75, 0.15);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, monospace, sans-serif;
       background: var(--bg-color);
       color: var(--text-main);
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 16px;
+      justify-content: space-between;
+      padding: 24px 20px;
       overflow-x: hidden;
+      position: relative;
     }
 
-    /* Background Aura Glow */
+    /* Aura Background Gradients */
     body::before {
       content: "";
       position: absolute;
-      width: 320px;
-      height: 320px;
-      background: radial-gradient(circle, rgba(255, 42, 75, 0.12) 0%, rgba(0, 168, 132, 0.08) 50%, rgba(0,0,0,0) 70%);
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 0;
+      top: 0; left: 0;
+      width: 100%; height: 350px;
+      background: radial-gradient(circle at 10% 10%, rgba(255, 42, 75, 0.18) 0%, transparent 60%);
       pointer-events: none;
+      z-index: 0;
     }
 
-    .card {
+    body::after {
+      content: "";
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 100%; height: 350px;
+      background: radial-gradient(circle at 90% 90%, rgba(0, 168, 132, 0.12) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
       position: relative;
       z-index: 1;
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      padding: 24px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 42, 75, 0.1);
       width: 100%;
-      max-width: 380px;
-      border: 1px solid var(--border-color);
+      max-width: 600px;
+      margin: 0 auto;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    /* Dynamic Header Style based on Reference Image */
+    /* Header Visual Exato da Imagem */
     .header-banner {
       text-align: left;
-      margin-bottom: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 12px;
     }
 
     .title-main {
-      font-size: 1.6rem;
+      font-size: 2.2rem;
       font-weight: 900;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       line-height: 1.1;
     }
 
     .title-main .highlight {
       color: var(--primary-red);
-      text-shadow: 0 0 10px rgba(255, 42, 75, 0.5);
+      text-shadow: 0 0 15px rgba(255, 42, 75, 0.6);
     }
 
     .title-main .white {
@@ -84,127 +88,158 @@
     }
 
     .subtitle-sub {
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
-      letter-spacing: 2px;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
-      margin-top: 4px;
+      margin-top: 6px;
       font-weight: 600;
     }
 
     .meta-info {
       font-family: monospace;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       color: #a0aab0;
-      margin-top: 10px;
-      line-height: 1.5;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 8px 10px;
-      border-radius: 8px;
-      border-left: 2px solid var(--primary-red);
+      margin-top: 14px;
+      line-height: 1.6;
     }
 
-    /* Badges & Inputs */
+    /* Status Grid */
+    .status-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+    }
+
     .status-badge {
       display: inline-block;
-      padding: 4px 12px;
+      padding: 6px 14px;
       border-radius: 20px;
       font-weight: 700;
-      font-size: 0.7rem;
-      margin-bottom: 16px;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
 
     .online { background: rgba(0, 168, 132, 0.15); color: var(--primary-green); border: 1px solid var(--primary-green); }
     .offline { background: rgba(255, 42, 75, 0.15); color: var(--primary-red); border: 1px solid var(--primary-red); }
-    .warning { background: rgba(255, 210, 121, 0.15); color: #ffd279; border: 1px solid #ffd279; }
+    .warning { background: rgba(255, 210, 121, 0.15); color: var(--primary-yellow); border: 1px solid var(--primary-yellow); }
+
+    /* Form & Action Area */
+    .action-panel {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 20px;
+    }
 
     input {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       border-radius: 8px;
       border: 1px solid #2a3942;
-      background: #111b21;
+      background: #0d131a;
       color: #fff;
-      font-size: 0.9rem;
+      font-size: 1rem;
       outline: none;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       text-align: center;
+      font-family: monospace;
     }
 
     input:focus {
       border-color: var(--primary-red);
-      box-shadow: 0 0 8px rgba(255, 42, 75, 0.3);
+      box-shadow: 0 0 10px rgba(255, 42, 75, 0.3);
     }
 
-    /* Buttons */
+    .btn-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
     button {
       width: 100%;
-      padding: 11px;
+      padding: 14px;
       border-radius: 8px;
       border: none;
       background: var(--primary-red);
       color: #fff;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
       transition: all 0.2s;
     }
 
-    button:hover { opacity: 0.9; box-shadow: 0 0 10px rgba(255, 42, 75, 0.4); }
+    button:hover { opacity: 0.9; box-shadow: 0 0 14px rgba(255, 42, 75, 0.4); }
     button:disabled { background: #2a3942; color: var(--text-muted); cursor: not-allowed; box-shadow: none; }
 
     .code-box {
-      font-size: 1.4rem;
-      font-weight: 800;
-      letter-spacing: 2px;
+      font-size: 2rem;
+      font-weight: 900;
+      letter-spacing: 4px;
       color: var(--primary-green);
-      background: #111b21;
-      padding: 8px 12px;
+      background: #0d131a;
+      padding: 14px;
       border-radius: 8px;
-      margin: 10px 0;
+      margin: 12px 0;
       border: 1px dashed var(--primary-green);
-      display: inline-block;
-      text-shadow: 0 0 8px rgba(0, 168, 132, 0.4);
+      text-align: center;
+      text-shadow: 0 0 12px rgba(0, 168, 132, 0.5);
     }
 
-    .btn-group {
+    .btn-sec { background: transparent; color: var(--text-muted); border: 1px solid #2a3942; }
+    .btn-sec:hover { background: #111b21; color: #fff; }
+
+    .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
+    .btn-tutorial:hover { background: rgba(0, 168, 132, 0.1); }
+
+    .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
+    .btn-reset:hover { background: rgba(255, 42, 75, 0.1); }
+
+    /* Painel de Logs Live Style Terminal */
+    .log-panel {
+      background: #000000;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px;
+      font-family: monospace;
+      font-size: 0.78rem;
+      height: 140px;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       gap: 6px;
-      margin-top: 8px;
     }
 
-    .btn-sec {
-      background: transparent;
+    .log-title {
+      font-size: 0.7rem;
       color: var(--text-muted);
-      border: 1px solid #2a3942;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding-bottom: 4px;
     }
-    .btn-sec:hover { background: #111b21; color: #fff; }
 
-    .btn-tutorial {
-      background: transparent;
-      color: var(--primary-green);
-      border: 1px solid var(--primary-green);
-    }
-    .btn-tutorial:hover { background: rgba(0, 168, 132, 0.1); }
-
-    .btn-reset {
-      background: transparent;
-      color: var(--primary-red);
-      border: 1px solid var(--primary-red);
-    }
-    .btn-reset:hover { background: rgba(255, 42, 75, 0.1); }
+    .log-entry { color: #a0aab0; }
+    .log-entry.info { color: #ffd279; }
+    .log-entry.success { color: var(--primary-green); }
+    .log-entry.danger { color: var(--primary-red); }
 
     /* Modal Tutorial */
     .modal {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.9);
       z-index: 10;
       justify-content: center;
       align-items: center;
@@ -214,72 +249,83 @@
     .modal-content {
       background: #0d131a;
       border: 1px solid var(--primary-green);
-      padding: 20px;
+      padding: 24px;
       border-radius: 12px;
-      max-width: 340px;
-      text-align: left;
+      max-width: 380px;
     }
 
-    .modal-content h3 { color: var(--primary-green); margin-bottom: 10px; font-size: 1.1rem; }
-    .modal-content ol { padding-left: 18px; color: var(--text-main); font-size: 0.85rem; line-height: 1.6; }
-    .modal-content button { margin-top: 14px; background: var(--primary-green); color: #000; }
+    .modal-content h3 { color: var(--primary-green); margin-bottom: 12px; }
+    .modal-content ol { padding-left: 20px; color: var(--text-main); font-size: 0.9rem; line-height: 1.7; }
+    .modal-content button { margin-top: 18px; background: var(--primary-green); color: #000; }
 
     footer {
       position: relative;
       z-index: 1;
-      margin-top: 18px;
-      font-size: 0.7rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
       text-align: center;
+      margin-top: 20px;
+      letter-spacing: 1px;
     }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <!-- Header visual no estilo da imagem fornecida -->
+  <div class="container">
+    <!-- Header -->
     <div class="header-banner">
       <div class="title-main">
         <span class="highlight">BL4CK</span> <span class="white">BOT</span>
       </div>
       <div class="subtitle-sub">bl4ck bot • PAINEL DE CONEXÃO LIVE</div>
       <div class="meta-info">
-        <div id="liveClock">--/--/----, --:--:-- • Maputo</div>
-        <div>Versão: <span id="appVersion">1.0.0</span> • Dispositivo: <span id="deviceInUse">Desconhecido</span></div>
+        <div id="liveClock">--</div>
+        <div>Versão: <span id="appVersion">4.10.0</span> • Dispositivo: <span id="deviceInUse">Detetando...</span></div>
       </div>
     </div>
 
-    <div style="text-align: center;">
+    <!-- Card de Status do Bot -->
+    <div class="status-card">
+      <span style="font-size: 0.85rem; font-weight: 600;">STATUS DA SESSÃO</span>
       <div id="statusBadge" class="status-badge offline">Desconectado</div>
     </div>
 
-    <!-- 1. Formulário para número -->
-    <div id="secForm">
-      <input type="text" id="numInput" placeholder="Ex: 258841234567">
-      <button id="btnGerar" onclick="gerarCodigo()">Gerar Código</button>
-      <div class="btn-group">
-        <button class="btn-tutorial" onclick="toggleTutorial(true)"> Como Conectar?</button>
+    <!-- Painel Principal -->
+    <div class="action-panel">
+      <!-- 1. Form Número -->
+      <div id="secForm">
+        <input type="text" id="numInput" placeholder="Ex: 258841234567">
+        <div class="btn-grid">
+          <button id="btnGerar" onclick="gerarCodigo()">Gerar Código de Pareamento</button>
+          <button class="btn-tutorial" onclick="toggleTutorial(true)"> Como Conectar?</button>
+        </div>
+      </div>
+
+      <!-- 2. Tela Exibição do Código -->
+      <div id="secCodigo" style="display: none;">
+        <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">Insira este código no WhatsApp do seu dispositivo:</p>
+        <div id="codeDisplay" class="code-box">---- ----</div>
+        
+        <div class="btn-grid">
+          <button class="btn-sec" onclick="solicitarNovoCodigo()">Solicitar novo código</button>
+          <button class="btn-reset" onclick="resetarSessao()">Resetar sessão</button>
+          <button class="btn-tutorial" onclick="toggleTutorial(true)"> Como Conectar?</button>
+        </div>
+      </div>
+
+      <!-- 3. Bot Ativo -->
+      <div id="secOnline" style="display: none; text-align: center;">
+        <p id="txtOnline" style="color: var(--primary-green); font-weight: 700; font-size: 1.1rem; margin-bottom: 16px;"></p>
+        <div class="btn-grid">
+          <button class="btn-reset" onclick="resetarSessao()">Desconectar e Limpar Sessão</button>
+        </div>
       </div>
     </div>
 
-    <!-- 2. Tela de exibição do código -->
-    <div id="secCodigo" style="display: none; text-align: center;">
-      <p style="font-size: 0.8rem; color: var(--text-muted);">Insira o código abaixo no WhatsApp:</p>
-      <div id="codeDisplay" class="code-box">---- ----</div>
-      
-      <div class="btn-group">
-        <button class="btn-sec" onclick="solicitarNovoCodigo()">Solicitar novo código</button>
-        <button class="btn-reset" onclick="resetarSessao()">Resetar sessão</button>
-        <button class="btn-tutorial" onclick="toggleTutorial(true)"> Como Conectar?</button>
-      </div>
-    </div>
-
-    <!-- 3. Tela de bot ativo -->
-    <div id="secOnline" style="display: none; text-align: center;">
-      <p id="txtOnline" style="color: var(--primary-green); font-weight: 600; font-size: 0.9rem; margin-bottom: 12px;"></p>
-      <div class="btn-group">
-        <button class="btn-reset" onclick="resetarSessao()">Desconectar e Resetar</button>
-      </div>
+    <!-- Console de Logs Live -->
+    <div class="log-panel" id="logContainer">
+      <div class="log-title">CONSOLE DE EVENTOS LIVE</div>
+      <div class="log-entry info">[SISTEMA] Painel inicializado.</div>
     </div>
   </div>
 
@@ -288,42 +334,67 @@
     <div class="modal-content">
       <h3>Como Conectar</h3>
       <ol>
-        <li>Abra o WhatsApp no seu telemóvel.</li>
-        <li>Toque nos <b>3 pontos</b> (Android) ou <b>Definições</b> (iOS).</li>
-        <li>Selecione <b>Aparelhos Conectados</b>.</li>
-        <li>Toque em <b>Conectar um aparelho</b>.</li>
-        <li>Escolha <b>Conectar com código de telefone</b> na parte inferior.</li>
-        <li>Introduza o código gerado neste painel.</li>
+        <li>Abra o WhatsApp no seu smartphone.</li>
+        <li>Aceda aos <b>Aparelhos Conectados</b> nas definições.</li>
+        <li>Clique em <b>Conectar um aparelho</b>.</li>
+        <li>Selecione <b>Conectar com código de telefone</b>.</li>
+        <li>Digite o código gerado no painel acima.</li>
       </ol>
       <button onclick="toggleTutorial(false)">Entendido</button>
     </div>
   </div>
 
   <footer>
-    © 2024 bl4ck_solutions. Todos os direitos reservados.
+    AUTO BOT • ATENDIMENTO AUTOMÁTICO 24/7 • <span style="color: var(--primary-red); font-weight: bold;">BL4CK SOLUTIONS</span>
   </footer>
 
   <script>
-    // --- CONFIGURAÇÕES DEDICADAS ---
     const CONFIG = {
       RAILWAY_URL: 'https://orion-2-production.up.railway.app',
-      VERSION: 'v2.4.0' // Campo para definir a versão da aplicação
+      VERSION: 'v2.4.0'
     };
 
     document.getElementById('appVersion').innerText = CONFIG.VERSION;
 
-    // Relógio em tempo real com fuso de Maputo
+    // Detectar Dispositivo do Utilizador
+    function detectDevice() {
+      const ua = navigator.userAgent;
+      if (/android/i.test(ua)) {
+        if (/galaxy/i.test(ua)) return 'Samsung Galaxy';
+        return 'Dispositivo Android';
+      }
+      if (/iPhone|iPad|iPod/i.test(ua)) return 'Apple iPhone';
+      if (/Windows/i.test(ua)) return 'Windows PC';
+      if (/Macintosh/i.test(ua)) return 'Mac OS';
+      return 'Dispositivo Móvel';
+    }
+    document.getElementById('deviceInUse').innerText = detectDevice();
+
+    // Relógio em Tempo Real com Dia da Semana
     function updateClock() {
       const now = new Date();
       const options = { 
         timeZone: 'Africa/Maputo',
+        weekday: 'long',
         day: '2-digit', month: '2-digit', year: 'numeric',
         hour: '2-digit', minute: '2-digit', second: '2-digit'
       };
-      document.getElementById('liveClock').innerText = `${now.toLocaleString('pt-PT', options)} • Maputo`;
+      const formatted = now.toLocaleString('pt-PT', options);
+      document.getElementById('liveClock').innerText = `${formatted} • Maputo`;
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    // Logger
+    function addLog(msg, type = 'entry') {
+      const logContainer = document.getElementById('logContainer');
+      const entry = document.createElement('div');
+      const time = new Date().toLocaleTimeString('pt-PT');
+      entry.className = `log-entry ${type}`;
+      entry.innerText = `[${time}] ${msg}`;
+      logContainer.appendChild(entry);
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
 
     // Socket.IO
     const socket = io(CONFIG.RAILWAY_URL, { transports: ['websocket', 'polling'] });
@@ -334,7 +405,6 @@
     const secOnline = document.getElementById('secOnline');
     const codeDisplay = document.getElementById('codeDisplay');
     const txtOnline = document.getElementById('txtOnline');
-    const deviceInUse = document.getElementById('deviceInUse');
 
     let numeroAtual = '';
 
@@ -345,23 +415,23 @@
         secForm.style.display = 'none';
         secCodigo.style.display = 'none';
         secOnline.style.display = 'block';
-        txtOnline.innerText = `Conectado: +${dados.user}`;
-        deviceInUse.innerText = `+${dados.user}`;
+        txtOnline.innerText = `Sessão Ativa: +${dados.user}`;
+        addLog(`WhatsApp conectado com sucesso no número +${dados.user}`, 'success');
       } else if (dados.status === 'codigo_gerado') {
         statusBadge.className = 'status-badge warning';
-        statusBadge.innerText = 'Pareando';
+        statusBadge.innerText = 'Aguardando Conexão';
         secForm.style.display = 'none';
         secCodigo.style.display = 'block';
         secOnline.style.display = 'none';
         codeDisplay.innerText = dados.code;
-        deviceInUse.innerText = dados.user || 'Aguardando...';
+        addLog(`Pairing Code gerado: ${dados.code}. Aguardando pareamento...`, 'info');
       } else {
         statusBadge.className = 'status-badge offline';
         statusBadge.innerText = 'Desconectado';
         secForm.style.display = 'block';
         secCodigo.style.display = 'none';
         secOnline.style.display = 'none';
-        deviceInUse.innerText = 'Nenhum';
+        addLog('Sistema desconectado / Aguardando ação do utilizador.', 'danger');
       }
     });
 
@@ -370,6 +440,7 @@
       if (!numero) return alert('Por favor, introduza o número de telefone!');
 
       numeroAtual = numero;
+      addLog(`Solicitando Pairing Code para +${numero}...`, 'info');
       await enviarPedidoCodigo(numero);
     }
 
@@ -379,13 +450,13 @@
         secForm.style.display = 'block';
         return;
       }
+      addLog('Solicitando novo Pairing Code...', 'info');
       await enviarPedidoCodigo(numeroAtual);
     }
 
     async function enviarPedidoCodigo(numero) {
       const btn = document.getElementById('btnGerar');
       btn.disabled = true;
-      btn.innerText = 'A solicitar...';
 
       try {
         const res = await fetch(`${CONFIG.RAILWAY_URL}/api/solicitar-codigo`, {
@@ -396,23 +467,25 @@
 
         const data = await res.json();
         if (!data.success) {
+          addLog(`Erro ao gerar código: ${data.error}`, 'danger');
           alert('Erro: ' + data.error);
         }
       } catch (err) {
-        alert('Erro de conexão com Railway: ' + err.message);
+        addLog(`Falha na ligação com o servidor: ${err.message}`, 'danger');
       } finally {
         btn.disabled = false;
-        btn.innerText = 'Gerar Código';
       }
     }
 
     async function resetarSessao() {
-      if (!confirm('Deseja realmente desconectar e limpar a sessão?')) return;
+      if (!confirm('Deseja realmente apagar a sessão atual?')) return;
+      addLog('Apagando sessão e limpando dados no servidor...', 'danger');
       try {
         await fetch(`${CONFIG.RAILWAY_URL}/api/resetar-sessao`, { method: 'POST' });
         numeroAtual = '';
+        addLog('Sessão restaurada com sucesso.', 'success');
       } catch (err) {
-        alert('Erro ao solicitar reset: ' + err.message);
+        addLog(`Erro ao resetar sessão: ${err.message}`, 'danger');
       }
     }
 
