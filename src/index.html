@@ -3,95 +3,194 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel de Conexão | Bot WhatsApp</title>
-  <!-- Socket.IO Client CDN para Cloudflare -->
+  <title>Painel de Conexão | BL4CK BOT</title>
+  <!-- Socket.IO Client CDN -->
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: #0b141a;
+      background: #06090e;
       color: #e9edef;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
       padding: 20px;
+      overflow-x: hidden;
     }
+
+    /* Aura / Background Glow */
+    body::before {
+      content: "";
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(0, 168, 132, 0.15) 0%, rgba(0,0,0,0) 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
     .card {
-      background: #111b21;
-      padding: 32px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      position: relative;
+      z-index: 1;
+      background: rgba(17, 27, 33, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 28px 24px;
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 168, 132, 0.1);
       text-align: center;
       width: 100%;
-      max-width: 380px;
-      border: 1px solid #222d34;
+      max-width: 360px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    h2 { color: #00a884; font-size: 1.5rem; margin-bottom: 12px; }
-    p { color: #8696a0; font-size: 0.9rem; line-height: 1.4; margin-bottom: 16px; }
-    
+
+    h2 {
+      color: #00a884;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 12px rgba(0, 168, 132, 0.4);
+    }
+
+    p {
+      color: #8696a0;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      margin-bottom: 16px;
+    }
+
     .status-badge {
       display: inline-block;
-      padding: 6px 16px;
+      padding: 5px 14px;
       border-radius: 20px;
       font-weight: 600;
-      font-size: 0.85rem;
-      margin-bottom: 20px;
+      font-size: 0.75rem;
+      margin-bottom: 18px;
       text-transform: uppercase;
+      letter-spacing: 1px;
     }
-    .online { background: #00a88422; color: #00a884; border: 1px solid #00a884; }
-    .offline { background: #f15c6d22; color: #f15c6d; border: 1px solid #f15c6d; }
-    .warning { background: #ffd27922; color: #ffd279; border: 1px solid #ffd279; }
+
+    .online {
+      background: rgba(0, 168, 132, 0.15);
+      color: #00a884;
+      border: 1px solid #00a884;
+      box-shadow: 0 0 10px rgba(0, 168, 132, 0.3);
+    }
+
+    .offline {
+      background: rgba(241, 92, 109, 0.15);
+      color: #f15c6d;
+      border: 1px solid #f15c6d;
+    }
+
+    .warning {
+      background: rgba(255, 210, 121, 0.15);
+      color: #ffd279;
+      border: 1px solid #ffd279;
+    }
 
     input {
       width: 100%;
-      padding: 14px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 10px;
       border: 1px solid #2a3942;
-      background: #202c33;
+      background: #182229;
       color: #fff;
-      font-size: 1rem;
+      font-size: 0.95rem;
       outline: none;
       margin-bottom: 12px;
       text-align: center;
+      transition: all 0.2s ease;
     }
-    input:focus { border-color: #00a884; }
+
+    input:focus {
+      border-color: #00a884;
+      box-shadow: 0 0 8px rgba(0, 168, 132, 0.3);
+    }
 
     button {
       width: 100%;
-      padding: 14px;
-      border-radius: 8px;
+      padding: 12px;
+      border-radius: 10px;
       border: none;
       background: #00a884;
-      color: #111b21;
+      color: #0b141a;
       font-weight: bold;
       cursor: pointer;
-      font-size: 1rem;
-      transition: opacity 0.2s;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
     }
-    button:hover { opacity: 0.9; }
-    button:disabled { background: #374248; color: #8696a0; cursor: not-allowed; }
 
+    button:hover {
+      opacity: 0.9;
+      box-shadow: 0 0 12px rgba(0, 168, 132, 0.4);
+    }
+
+    button:disabled {
+      background: #374248;
+      color: #8696a0;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    /* Caixa do Código Ajustada */
     .code-box {
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      letter-spacing: 4px;
+      letter-spacing: 3px;
       color: #00a884;
-      background: #202c33;
-      padding: 16px;
-      border-radius: 8px;
-      margin: 16px 0;
+      background: #182229;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin: 12px 0;
       border: 1px dashed #00a884;
+      display: inline-block;
+      width: auto;
+      text-shadow: 0 0 8px rgba(0, 168, 132, 0.5);
+    }
+
+    /* Botões Adicionais */
+    .btn-secondary {
+      background: transparent;
+      color: #8696a0;
+      border: 1px solid #2a3942;
+      margin-top: 8px;
+    }
+
+    .btn-secondary:hover {
+      background: #182229;
+      color: #fff;
+      box-shadow: none;
     }
 
     .btn-reset {
       background: transparent;
       color: #f15c6d;
       border: 1px solid #f15c6d;
-      margin-top: 12px;
+      margin-top: 8px;
     }
-    .btn-reset:hover { background: #f15c6d11; }
+
+    .btn-reset:hover {
+      background: rgba(241, 92, 109, 0.1);
+      box-shadow: 0 0 10px rgba(241, 92, 109, 0.2);
+    }
+
+    /* Footer */
+    footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 24px;
+      font-size: 0.75rem;
+      color: #667781;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -109,19 +208,25 @@
 
     <!-- 2. Tela de exibição do código -->
     <div id="secCodigo" style="display: none;">
-      <p>Abra o WhatsApp $\rightarrow$ Aparelhos Conectados $\rightarrow$ Conectar com código de telefone:</p>
+      <p>Abra o WhatsApp $\rightarrow$ Aparelhos Conectados $\rightarrow$ Conectar com código:</p>
       <div id="codeDisplay" class="code-box">---- ----</div>
+      
+      <button class="btn-secondary" onclick="solicitarNovoCodigo()">Solicitar Novo Código</button>
+      <button class="btn-reset" onclick="resetarSessao()">Resetar Sessão</button>
     </div>
 
     <!-- 3. Tela de bot ativo -->
     <div id="secOnline" style="display: none;">
-      <p id="txtOnline" style="color: #00a884; font-weight: 600; font-size: 1rem;"></p>
+      <p id="txtOnline" style="color: #00a884; font-weight: 600; font-size: 0.95rem;"></p>
       <button class="btn-reset" onclick="resetarSessao()">Desconectar e Limpar Sessão</button>
     </div>
   </div>
 
+  <footer>
+    © 2024 bl4ck_solutions. Todos os direitos reservados.
+  </footer>
+
   <script>
-    // 🔴 ALTERE PARA O DOMÍNIO DA SUA RAILWAY
     const RAILWAY_URL = 'https://orion-2-production.up.railway.app';
 
     const socket = io(RAILWAY_URL, { transports: ['websocket', 'polling'] });
@@ -132,6 +237,8 @@
     const secOnline = document.getElementById('secOnline');
     const codeDisplay = document.getElementById('codeDisplay');
     const txtOnline = document.getElementById('txtOnline');
+
+    let numeroAtual = '';
 
     socket.on('status', (dados) => {
       if (dados.status === 'conectado') {
@@ -161,6 +268,20 @@
       const numero = document.getElementById('numInput').value.trim();
       if (!numero) return alert('Por favor, introduza o número de telefone!');
 
+      numeroAtual = numero;
+      await enviarPedidoCodigo(numero);
+    }
+
+    async function solicitarNovoCodigo() {
+      if (!numeroAtual) {
+        secCodigo.style.display = 'none';
+        secForm.style.display = 'block';
+        return;
+      }
+      await enviarPedidoCodigo(numeroAtual);
+    }
+
+    async function enviarPedidoCodigo(numero) {
       const btn = document.getElementById('btnGerar');
       btn.disabled = true;
       btn.innerText = 'A solicitar código...';
@@ -188,6 +309,7 @@
       if (!confirm('Deseja realmente desconectar e remover a sessão do bot?')) return;
       try {
         await fetch(`${RAILWAY_URL}/api/resetar-sessao`, { method: 'POST' });
+        numeroAtual = '';
       } catch (err) {
         alert('Erro ao solicitar reset: ' + err.message);
       }
