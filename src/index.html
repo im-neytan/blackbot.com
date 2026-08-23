@@ -387,6 +387,7 @@
 
     socket.on('status', (dados) => {
       if (dados.status === 'conectado') {
+        numeroAtual = dados.user || numeroAtual;
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Bot Ativo';
         secForm.style.display = 'none';
@@ -456,12 +457,26 @@
 
     async function resetarSessao() {
       if (!confirm('Deseja apagar a sessão atual?')) return;
+      
+      const targetNumber = numeroAtual || document.getElementById('numInput').value.trim();
       addLog('A apagar sessão no servidor...', 'danger');
+      
       try {
-        await fetch(`${CONFIG.RAILWAY_URL}/api/resetar-sessao`, { method: 'POST' });
-        numeroAtual = '';
-        document.getElementById('numInput').value = '';
-        addLog('Sessão restaurada com sucesso.', 'success');
+        const res = await fetch(`${CONFIG.RAILWAY_URL}/api/resetar-sessao`, { 
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ numero: targetNumber })
+        });
+
+        const data = await res.json();
+        
+        if (data.success) {
+          numeroAtual = '';
+          document.getElementById('numInput').value = '';
+          addLog('Sessão limpa do MongoDB e volume restaurado.', 'success');
+        } else {
+          addLog(`Erro ao resetar: ${data.error}`, 'danger');
+        }
       } catch (err) {
         addLog(`Erro no reset: ${err.message}`, 'danger');
       }
