@@ -1,482 +1,659 @@
-<!DOCTYPE html>
-<html lang="pt">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>bl4ck_bot | PAINEL LIVE</title>
-  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
-  <style>
-    :root {
-      --bg-color: #030508;
-      --card-bg: rgba(10, 15, 22, 0.9);
-      --primary-red: #ff2a4b;
-      --primary-green: #00a884;
-      --primary-yellow: #ffd279;
-      --text-main: #e9edef;
-      --text-muted: #8696a0;
-      --border-color: rgba(255, 42, 75, 0.15);
+/**
+ * Serviços de trabalhos com dados (Servidor)
+ * 
+ * @author Ghost X / Adaptado por im-neytan
+ */
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { MongoClient } from "mongodb";
+import { PREFIX, SPIDER_API_TOKEN } from "../config.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const databasePath = path.resolve(__dirname, "..", "..", "database");
+
+// Leitura do package.json para obter a versão dinamicamente
+const packageJsonPath = path.resolve(__dirname, "..", "..", "package.json");
+let appVersion = "4.10.0";
+try {
+  if (fs.existsSync(packageJsonPath)) {
+    const pkg = JSON.parse(fs.readFileSync(packageJsonPath, "utf8"));
+    if (pkg.version) appVersion = pkg.version;
+  }
+} catch (e) {
+  // Mantém a versão padrão caso ocorra algum erro
+}
+
+// Nomes das Coleções / Chaves
+const ANTI_LINK_GROUPS_FILE = "anti-link-groups";
+const AUTO_RESPONDER_FILE = "auto-responder";
+const AUTO_RESPONDER_GROUPS_FILE = "auto-responder-groups";
+const AUTO_STICKER_GROUPS_FILE = "auto-sticker-groups";
+const CONFIG_FILE = "config";
+const EXIT_GROUPS_FILE = "exit-groups";
+const GROUP_RESTRICTIONS_FILE = "group-restrictions";
+const INACTIVE_GROUPS_FILE = "inactive-groups";
+const MUTE_FILE = "muted";
+const ONLY_ADMINS_FILE = "only-admins";
+const PREFIX_GROUPS_FILE = "prefix-groups";
+const RESTRICTED_MESSAGES_FILE = "restricted-messages";
+const WELCOME_GROUPS_FILE = "welcome-groups";
+const DATABASE_MAIN_FILE = "database_main";
+
+// -------------------------------------------------------------
+// CACHE EM MEMÓRIA & CONEXÃO MONGODB
+// -------------------------------------------------------------
+const dbCache = {};
+let dbInstance = null;
+let isConnected = false;
+let initPromise = null;
+
+const uri = process.env.MONGO_URI || "mongodb://localhost:27017";
+
+if (!process.env.MONGO_URI) {
+  console.warn("⚠️ MONGO_URI não encontrada nas variáveis de ambiente! Usando 'mongodb://localhost:27017'.");
+}
+
+const client = new MongoClient(uri);
+
+// Auxiliar para leitura de backup local na primeira migração
+function readLocalJSONFallback(jsonFile) {
+  try {
+    let fullPath = path.resolve(databasePath, `${jsonFile}.json`);
+    if (jsonFile === DATABASE_MAIN_FILE) {
+      fullPath = path.resolve(__dirname, "..", "..", "database.json");
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, monospace, sans-serif;
-      background: var(--bg-color);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 12px 14px;
-      overflow-x: hidden;
-      position: relative;
+    if (fs.existsSync(fullPath)) {
+      return JSON.parse(fs.readFileSync(fullPath, "utf8"));
     }
+  } catch (e) {
+    // ignorar se não existir
+  }
+  return [MUTE_FILE, PREFIX_GROUPS_FILE, CONFIG_FILE, AUTO_RESPONDER_FILE, GROUP_RESTRICTIONS_FILE, DATABASE_MAIN_FILE].includes(jsonFile) ? {} : [];
+}
 
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 250px;
-      background: radial-gradient(circle at 10% 10%, rgba(255, 42, 75, 0.15) 0%, transparent 60%);
-      pointer-events: none;
-      z-index: 0;
+// Sincroniza cache com o MongoDB em segundo plano com Trava de Segurança
+function syncToMongo(key, data) {
+  if (!dbInstance) return;
+
+  // TRAVA DE SEGURANÇA: Cancela a gravação se tentarem sobrescrever o arquivo principal com dados corrompidos/inválidos
+  if (key === DATABASE_MAIN_FILE) {
+    if (!data || typeof data !== "object" || Array.isArray(data)) {
+      console.error("❌ [BLINDAGEM] Tentativa de sobrescrever DATABASE_MAIN_FILE com dado inválido cancelada!");
+      return;
     }
+  }
 
-    .container {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 420px;
-      margin: 0 auto;
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+  dbInstance.collection("bot_data").updateOne(
+    { _id: key },
+    { $set: { data: data, updatedAt: new Date() } },
+    { upsert: true }
+  ).catch(err => console.error(`❌ Erro ao salvar ${key} no Mongo:`, err.message));
+}
 
-    .header-banner { text-align: left; }
+// Inicializador da conexão e pré-carregamento dos dados com Proteção contra Zeramento
+export async function initMongo() {
+  if (isConnected) return dbInstance;
+  if (initPromise) return initPromise;
 
-    .title-main {
-      font-size: 1.6rem;
-      font-weight: 900;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      line-height: 1;
-    }
+  initPromise = (async () => {
+    try {
+      await client.connect();
+      dbInstance = client.db("blackbot_cloud");
+      isConnected = true;
 
-    .title-main .highlight {
-      color: var(--primary-red);
-      text-shadow: 0 0 12px rgba(255, 42, 75, 0.5);
-    }
+      // Print do Banner ASCII no console ao conectar
+      console.log(`\x1b[35m░█▀▄░█░░░█▀█░░█▀▀░█░█░░░█▀▄░█▀█░▀█▀\x1b[0m`);
+      console.log(`\x1b[35m░█▀▄░█░░░█▀█░░█░░░█▀▄░░░█▀▄░█░█░░█░\x1b[0m`);
+      console.log(`\x1b[35m░▀▀░░▀▀▀░▀░▀░░▀▀▀░▀░▀░░░▀▀░░▀▀▀░░▀\x1b[0m`);
+      console.log(`\x1b[35m👾 Versão: \x1b[0m${appVersion}\n`);
 
-    .subtitle-sub {
-      font-size: 0.62rem;
-      color: var(--text-muted);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-top: 3px;
-      font-weight: 600;
-    }
+      console.log("⚡ DbServer conectado e sincronizado com sucesso!");
 
-    .meta-info {
-      font-family: monospace;
-      font-size: 0.72rem;
-      color: #a0aab0;
-      margin-top: 8px;
-      line-height: 1.4;
-    }
+      const collections = [
+        ANTI_LINK_GROUPS_FILE, AUTO_RESPONDER_FILE, AUTO_RESPONDER_GROUPS_FILE,
+        AUTO_STICKER_GROUPS_FILE, CONFIG_FILE, EXIT_GROUPS_FILE,
+        GROUP_RESTRICTIONS_FILE, INACTIVE_GROUPS_FILE, MUTE_FILE,
+        ONLY_ADMINS_FILE, PREFIX_GROUPS_FILE, RESTRICTED_MESSAGES_FILE,
+        WELCOME_GROUPS_FILE, DATABASE_MAIN_FILE
+      ];
 
-    .status-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 10px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-      min-height: 48px;
-    }
-
-    .status-badge {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 16px;
-      font-weight: 700;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      min-width: 110px;
-      text-align: center;
-    }
-
-    .online { background: rgba(0, 168, 132, 0.15); color: var(--primary-green); border: 1px solid var(--primary-green); }
-    .offline { background: rgba(255, 42, 75, 0.15); color: var(--primary-red); border: 1px solid var(--primary-red); }
-    .warning { background: rgba(255, 210, 121, 0.15); color: var(--primary-yellow); border: 1px solid var(--primary-yellow); }
-
-    .action-panel {
-      background: var(--card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 14px;
-      min-height: 180px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #2a3942;
-      background: #0d131a;
-      color: #fff;
-      font-size: 0.9rem;
-      outline: none;
-      margin-bottom: 8px;
-      text-align: center;
-      font-family: monospace;
-    }
-
-    input:focus {
-      border-color: var(--primary-red);
-      box-shadow: 0 0 8px rgba(255, 42, 75, 0.3);
-    }
-
-    .btn-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: none;
-      background: var(--primary-red);
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 0.8rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      transition: all 0.2s;
-    }
-
-    button:hover { opacity: 0.9; }
-    button:disabled { background: #2a3942; color: var(--text-muted); cursor: not-allowed; }
-
-    .code-box {
-      font-size: 1.5rem;
-      font-weight: 800;
-      letter-spacing: 3px;
-      color: var(--primary-green);
-      background: #0d131a;
-      padding: 8px;
-      border-radius: 6px;
-      margin: 8px 0;
-      border: 1px dashed var(--primary-green);
-      text-align: center;
-      text-shadow: 0 0 10px rgba(0, 168, 132, 0.4);
-    }
-
-    .btn-sec { background: transparent; color: var(--text-muted); border: 1px solid #2a3942; }
-    .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
-    .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
-
-    .log-panel {
-      background: #000000;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 10px;
-      font-family: monospace;
-      font-size: 0.72rem;
-      height: 110px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .log-title {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 2px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 2px;
-    }
-
-    .log-entry { color: #a0aab0; word-break: break-all; }
-    .log-entry.info { color: #ffd279; }
-    .log-entry.success { color: var(--primary-green); }
-    .log-entry.danger { color: var(--primary-red); }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      z-index: 10;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
-
-    .modal-content {
-      background: #0d131a;
-      border: 1px solid var(--primary-green);
-      padding: 18px;
-      border-radius: 10px;
-      max-width: 340px;
-      width: 100%;
-    }
-
-    .modal-content h3 { color: var(--primary-green); margin-bottom: 8px; font-size: 1rem; }
-    .modal-content ol { padding-left: 18px; color: var(--text-main); font-size: 0.8rem; line-height: 1.5; }
-    .modal-content button { margin-top: 14px; background: var(--primary-green); color: #000; }
-
-    footer {
-      position: relative;
-      z-index: 1;
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      text-align: center;
-      margin-top: 10px;
-      letter-spacing: 0.5px;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="container">
-    <div class="header-banner">
-      <div class="title-main">
-        <span class="highlight">BL4CK</span> <span class="white">BOT SYSTEM</span>
-      </div>
-      <div class="subtitle-sub">bl4ck bot • PAINEL DE CONEXÃO EM TEMPO REAL</div>
-      <div class="meta-info">
-        <div id="liveClock">--</div>
-        <div>Versão: <span id="appVersion">4.10.0</span> • Dispositivo: <span id="deviceInUse">Detetando...</span></div>
-      </div>
-    </div>
-
-    <div class="status-card">
-      <span style="font-size: 0.78rem; font-weight: 600;">STATUS SESSÃO</span>
-      <div id="statusBadge" class="status-badge offline">Desconectado</div>
-    </div>
-
-    <div class="action-panel">
-      <div id="secForm">
-        <input type="text" id="numInput" placeholder="Ex: 258841234567">
-        <div class="btn-grid">
-          <button id="btnGerar" onclick="gerarCodigo()">Gerar Código de Pareamento</button>
-          <button class="btn-reset" onclick="resetarSessao()">Resetar Sessão</button>
-          <button class="btn-tutorial" onclick="toggleTutorial(true)">Como Conectar?</button>
-        </div>
-      </div>
-
-      <div id="secCodigo" style="display: none;">
-        <p style="font-size: 0.78rem; color: var(--text-muted); text-align: center;">Insira no WhatsApp do dispositivo:</p>
-        <div id="codeDisplay" class="code-box">---- ----</div>
+      for (const key of collections) {
+        const doc = await dbInstance.collection("bot_data").findOne({ _id: key });
         
-        <div class="btn-grid">
-          <button class="btn-sec" onclick="solicitarNovoCodigo()">Solicitar novo código</button>
-          <button class="btn-reset" onclick="resetarSessao()">Resetar sessão</button>
-          <button class="btn-tutorial" onclick="toggleTutorial(true)">Como Conectar?</button>
-        </div>
-      </div>
-
-      <div id="secOnline" style="display: none; text-align: center;">
-        <p id="txtOnline" style="color: var(--primary-green); font-weight: 700; font-size: 0.95rem; margin-bottom: 12px;"></p>
-        <div class="btn-grid">
-          <button class="btn-reset" onclick="resetarSessao()">Desconectar atual</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="log-panel" id="logContainer">
-      <div class="log-title">CONSOLE LIVE</div>
-      <div class="log-entry info">[SISTEMA] Sistema pronto para uso!</div>
-    </div>
-  </div>
-
-  <div id="tutorialModal" class="modal">
-    <div class="modal-content">
-      <h3>Como Conectar</h3>
-      <ol>
-        <li>Abra o WhatsApp no seu smartphone.</li>
-        <li>Aceda aos <b>Aparelhos Conectados</b> nas definições.</li>
-        <li>Clique em <b>Conectar um aparelho</b>.</li>
-        <li>Selecione <b>Conectar com código de telefone</b>.</li>
-        <li>Digite o código gerado no painel acima.</li>
-      </ol>
-      <button onclick="toggleTutorial(false)">Entendido</button>
-    </div>
-  </div>
-
-  <footer>
-    BL4CK BOT • SISTEMA 24/7 • <span style="color: var(--primary-red); font-weight: bold;">BL4CK SOLUTIONS</span>
-  </footer>
-
-  <script>
-    const CONFIG = {
-      RAILWAY_URL: 'https://orion-2-production.up.railway.app',
-      VERSION: 'v2.4.0'
-    };
-
-    document.getElementById('appVersion').innerText = CONFIG.VERSION;
-
-    function detectDevice() {
-      const ua = navigator.userAgent;
-      if (/android/i.test(ua)) {
-        if (/galaxy/i.test(ua)) return 'Samsung Galaxy';
-        return 'Android Device';
-      }
-      if (/iPhone|iPad|iPod/i.test(ua)) return 'Apple iPhone';
-      if (/Windows/i.test(ua)) return 'Windows PC';
-      if (/Macintosh/i.test(ua)) return 'Mac OS';
-      return 'Dispositivo Móvel';
-    }
-    document.getElementById('deviceInUse').innerText = detectDevice();
-
-    function updateClock() {
-      const now = new Date();
-      const options = { 
-        timeZone: 'Africa/Maputo',
-        weekday: 'long',
-        day: '2-digit', month: '2-digit', year: 'numeric',
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-      };
-      document.getElementById('liveClock').innerText = `${now.toLocaleString('pt-PT', options)} • Maputo`;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    function addLog(msg, type = 'entry') {
-      const logContainer = document.getElementById('logContainer');
-      const entry = document.createElement('div');
-      const time = new Date().toLocaleTimeString('pt-PT');
-      entry.className = `log-entry ${type}`;
-      entry.innerText = `[${time}] ${msg}`;
-      logContainer.appendChild(entry);
-      logContainer.scrollTop = logContainer.scrollHeight;
-    }
-
-    const socket = io(CONFIG.RAILWAY_URL, { transports: ['websocket', 'polling'] });
-
-    const statusBadge = document.getElementById('statusBadge');
-    const secForm = document.getElementById('secForm');
-    const secCodigo = document.getElementById('secCodigo');
-    const secOnline = document.getElementById('secOnline');
-    const codeDisplay = document.getElementById('codeDisplay');
-    const txtOnline = document.getElementById('txtOnline');
-
-    let numeroAtual = '';
-
-    socket.on('status', (dados) => {
-      if (dados.status === 'conectado') {
-        numeroAtual = dados.user || numeroAtual;
-        statusBadge.className = 'status-badge online';
-        statusBadge.innerText = 'Bot Ativo';
-        secForm.style.display = 'none';
-        secCodigo.style.display = 'none';
-        secOnline.style.display = 'block';
-        txtOnline.innerText = `Sessão Ativa: +${dados.user}`;
-        addLog(`Sessão iniciada (+${dados.user})`, 'success');
-      } else if (dados.status === 'codigo_gerado') {
-        statusBadge.className = 'status-badge warning';
-        statusBadge.innerText = 'Aguardando';
-        secForm.style.display = 'none';
-        secCodigo.style.display = 'block';
-        secOnline.style.display = 'none';
-        codeDisplay.innerText = dados.code;
-        addLog(`Pairing Code: ${dados.code}`, 'info');
-      } else {
-        statusBadge.className = 'status-badge offline';
-        statusBadge.innerText = 'Desconectado';
-        secForm.style.display = 'block';
-        secCodigo.style.display = 'none';
-        secOnline.style.display = 'none';
-        addLog('Sistema desconectado.', 'danger');
-      }
-    });
-
-    async function gerarCodigo() {
-      const numero = document.getElementById('numInput').value.trim();
-      if (!numero) return alert('Por favor, introduza o número!');
-
-      numeroAtual = numero;
-      addLog(`A solicitar código (+${numero})...`, 'info');
-      await enviarPedidoCodigo(numero);
-    }
-
-    async function solicitarNovoCodigo() {
-      if (!numeroAtual) {
-        secCodigo.style.display = 'none';
-        secForm.style.display = 'block';
-        return;
-      }
-      addLog('A solicitar novo código...', 'info');
-      await enviarPedidoCodigo(numeroAtual);
-    }
-
-    async function enviarPedidoCodigo(numero) {
-      const btn = document.getElementById('btnGerar');
-      btn.disabled = true;
-
-      try {
-        const res = await fetch(`${CONFIG.RAILWAY_URL}/api/solicitar-codigo`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ numero })
-        });
-
-        const data = await res.json();
-        if (!data.success) {
-          addLog(`Erro: ${data.error}`, 'danger');
-          alert('Erro: ' + data.error);
-        }
-      } catch (err) {
-        addLog(`Falha na ligação: ${err.message}`, 'danger');
-      } finally {
-        btn.disabled = false;
-      }
-    }
-
-    async function resetarSessao() {
-      if (!confirm('Deseja apagar a sessão atual?')) return;
-      
-      const targetNumber = numeroAtual || document.getElementById('numInput').value.trim();
-      addLog('A apagar sessão no servidor...', 'danger');
-      
-      try {
-        const res = await fetch(`${CONFIG.RAILWAY_URL}/api/resetar-sessao`, { 
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ numero: targetNumber })
-        });
-
-        const data = await res.json();
-        
-        if (data.success) {
-          numeroAtual = '';
-          document.getElementById('numInput').value = '';
-          addLog('Sessão limpa do MongoDB e diretório local redefinido.', 'success');
+        if (doc && doc.data !== undefined && doc.data !== null) {
+          dbCache[key] = doc.data;
         } else {
-          addLog(`Erro ao resetar: ${data.error}`, 'danger');
+          // Se não existir no Mongo, lê do fallback local
+          const localData = readLocalJSONFallback(key);
+          dbCache[key] = localData;
+
+          const hasContent = Array.isArray(localData) ? localData.length > 0 : Object.keys(localData).length > 0;
+          if (hasContent) {
+            await syncToMongo(key, localData);
+          }
         }
-      } catch (err) {
-        addLog(`Erro no reset: ${err.message}`, 'danger');
+      }
+
+      return dbInstance;
+    } catch (err) {
+      console.error("❌ Erro crítico ao conectar ao DbServer:", err.message);
+      throw err;
+    }
+  })();
+
+  return initPromise;
+}
+
+function readJSON(jsonFile, formatIfNotExists = []) {
+  if (dbCache[jsonFile] === undefined) {
+    dbCache[jsonFile] = formatIfNotExists;
+  }
+  return dbCache[jsonFile];
+}
+
+function writeJSON(jsonFile, data) {
+  dbCache[jsonFile] = data;
+  syncToMongo(jsonFile, data);
+}
+
+// -------------------------------------------------------------
+// FUNÇÕES NATIVAS MANTIDAS E BLINDADAS
+// -------------------------------------------------------------
+
+export function getDatabase() {
+  const data = readJSON(DATABASE_MAIN_FILE, {
+    groups: {},
+    compradores: {},
+    historicoContagem: {},
+    blacklist: [],
+    groupConfigs: {},
+    referenciasProcessadas: {},
+    pedidosPendentes: {},
+    clientesAguardandoNumero: {}
+  });
+
+  if (!data.groups) data.groups = {};
+  if (!data.compradores) data.compradores = {};
+  if (!data.historicoContagem) data.historicoContagem = {};
+  if (!Array.isArray(data.blacklist)) data.blacklist = [];
+  if (!data.groupConfigs) data.groupConfigs = {};
+  if (!data.referenciasProcessadas) data.referenciasProcessadas = {};
+  if (!data.pedidosPendentes) data.pedidosPendentes = {};
+  if (!data.clientesAguardandoNumero) data.clientesAguardandoNumero = {};
+
+  data.blacklist = [...new Set(
+    data.blacklist
+      .filter(Boolean)
+      .map(item => (typeof item === "string" ? item.trim() : item))
+  )];
+
+  return data;
+}
+
+export function saveDatabase(data) {
+  if (!data || typeof data !== "object") return;
+
+  const current = getDatabase();
+
+  const safeData = {
+    ...current,
+    ...data,
+    groups: data.groups || current.groups || {},
+    compradores: data.compradores || current.compradores || {},
+    historicoContagem: data.historicoContagem || current.historicoContagem || {},
+    blacklist: data.blacklist || current.blacklist || [],
+    groupConfigs: data.groupConfigs || current.groupConfigs || {},
+    referenciasProcessadas: data.referenciasProcessadas || current.referenciasProcessadas || {},
+    pedidosPendentes: data.pedidosPendentes || current.pedidosPendentes || {},
+    clientesAguardandoNumero: data.clientesAguardandoNumero || current.clientesAguardandoNumero || {}
+  };
+
+  writeJSON(DATABASE_MAIN_FILE, safeData);
+}
+
+export function activateExitGroup(groupId) {
+  const filename = EXIT_GROUPS_FILE;
+  const exitGroups = readJSON(filename, []);
+  if (!exitGroups.includes(groupId)) {
+    exitGroups.push(groupId);
+  }
+  writeJSON(filename, exitGroups);
+}
+
+export function deactivateExitGroup(groupId) {
+  const filename = EXIT_GROUPS_FILE;
+  const exitGroups = readJSON(filename, []);
+  const index = exitGroups.indexOf(groupId);
+  if (index === -1) return;
+  exitGroups.splice(index, 1);
+  writeJSON(filename, exitGroups);
+}
+
+export function isActiveExitGroup(groupId) {
+  const filename = EXIT_GROUPS_FILE;
+  const exitGroups = readJSON(filename, []);
+  return exitGroups.includes(groupId);
+}
+
+export function activateWelcomeGroup(groupId) {
+  const filename = WELCOME_GROUPS_FILE;
+  const welcomeGroups = readJSON(filename, []);
+  if (!welcomeGroups.includes(groupId)) {
+    welcomeGroups.push(groupId);
+  }
+  writeJSON(filename, welcomeGroups);
+}
+
+export function deactivateWelcomeGroup(groupId) {
+  const filename = WELCOME_GROUPS_FILE;
+  const welcomeGroups = readJSON(filename, []);
+  const index = welcomeGroups.indexOf(groupId);
+  if (index === -1) return;
+  welcomeGroups.splice(index, 1);
+  writeJSON(filename, welcomeGroups);
+}
+
+export function isActiveWelcomeGroup(groupId) {
+  const filename = WELCOME_GROUPS_FILE;
+  const welcomeGroups = readJSON(filename, []);
+  return welcomeGroups.includes(groupId);
+}
+
+export function activateGroup(groupId) {
+  const filename = INACTIVE_GROUPS_FILE;
+  const inactiveGroups = readJSON(filename, []);
+  const index = inactiveGroups.indexOf(groupId);
+  if (index === -1) return;
+  inactiveGroups.splice(index, 1);
+  writeJSON(filename, inactiveGroups);
+}
+
+export function deactivateGroup(groupId) {
+  const filename = INACTIVE_GROUPS_FILE;
+  const inactiveGroups = readJSON(filename, []);
+  if (!inactiveGroups.includes(groupId)) {
+    inactiveGroups.push(groupId);
+  }
+  writeJSON(filename, inactiveGroups);
+}
+
+export function isActiveGroup(groupId) {
+  const filename = INACTIVE_GROUPS_FILE;
+  const inactiveGroups = readJSON(filename, []);
+  return !inactiveGroups.includes(groupId);
+}
+
+export function activateAutoResponderGroup(groupId) {
+  const filename = AUTO_RESPONDER_GROUPS_FILE;
+  const autoResponderGroups = readJSON(filename, []);
+  if (!autoResponderGroups.includes(groupId)) {
+    autoResponderGroups.push(groupId);
+  }
+  writeJSON(filename, autoResponderGroups);
+}
+
+export function deactivateAutoResponderGroup(groupId) {
+  const filename = AUTO_RESPONDER_GROUPS_FILE;
+  const autoResponderGroups = readJSON(filename, []);
+  const index = autoResponderGroups.indexOf(groupId);
+  if (index === -1) return;
+  autoResponderGroups.splice(index, 1);
+  writeJSON(filename, autoResponderGroups);
+}
+
+export function isActiveAutoResponderGroup(groupId) {
+  const filename = AUTO_RESPONDER_GROUPS_FILE;
+  const autoResponderGroups = readJSON(filename, []);
+  return autoResponderGroups.includes(groupId);
+}
+
+export function activateAntiLinkGroup(groupId) {
+  const filename = ANTI_LINK_GROUPS_FILE;
+  const antiLinkGroups = readJSON(filename, []);
+  if (!antiLinkGroups.includes(groupId)) {
+    antiLinkGroups.push(groupId);
+  }
+  writeJSON(filename, antiLinkGroups);
+}
+
+export function deactivateAntiLinkGroup(groupId) {
+  const filename = ANTI_LINK_GROUPS_FILE;
+  const antiLinkGroups = readJSON(filename, []);
+  const index = antiLinkGroups.indexOf(groupId);
+  if (index === -1) return;
+  antiLinkGroups.splice(index, 1);
+  writeJSON(filename, antiLinkGroups);
+}
+
+export function isActiveAntiLinkGroup(groupId) {
+  const filename = ANTI_LINK_GROUPS_FILE;
+  const antiLinkGroups = readJSON(filename, []);
+  return antiLinkGroups.includes(groupId);
+}
+
+export function activateAutoStickerGroup(groupId) {
+  const filename = AUTO_STICKER_GROUPS_FILE;
+  const autoStickerGroups = readJSON(filename, []);
+  if (!autoStickerGroups.includes(groupId)) {
+    autoStickerGroups.push(groupId);
+  }
+  writeJSON(filename, autoStickerGroups);
+}
+
+export function deactivateAutoStickerGroup(groupId) {
+  const filename = AUTO_STICKER_GROUPS_FILE;
+  const autoStickerGroups = readJSON(filename, []);
+  const index = autoStickerGroups.indexOf(groupId);
+  if (index === -1) return;
+  autoStickerGroups.splice(index, 1);
+  writeJSON(filename, autoStickerGroups);
+}
+
+export function isActiveAutoStickerGroup(groupId) {
+  const filename = AUTO_STICKER_GROUPS_FILE;
+  const autoStickerGroups = readJSON(filename, []);
+  return autoStickerGroups.includes(groupId);
+}
+
+export function muteMember(groupId, memberId) {
+  const filename = MUTE_FILE;
+  const mutedMembers = readJSON(filename, {});
+  if (!mutedMembers[groupId]) {
+    mutedMembers[groupId] = [];
+  }
+  if (!mutedMembers[groupId]?.includes(memberId)) {
+    mutedMembers[groupId].push(memberId);
+  }
+  writeJSON(filename, mutedMembers);
+}
+
+export function unmuteMember(groupId, memberId) {
+  const filename = MUTE_FILE;
+  const mutedMembers = readJSON(filename, {});
+  if (!mutedMembers[groupId]) return;
+  const index = mutedMembers[groupId].indexOf(memberId);
+  if (index !== -1) {
+    mutedMembers[groupId].splice(index, 1);
+  }
+  writeJSON(filename, mutedMembers);
+}
+
+export function checkIfMemberIsMuted(groupId, memberId) {
+  const filename = MUTE_FILE;
+  const mutedMembers = readJSON(filename, {});
+  if (!mutedMembers[groupId]) return false;
+  return mutedMembers[groupId]?.includes(memberId);
+}
+
+export function activateOnlyAdmins(groupId) {
+  const filename = ONLY_ADMINS_FILE;
+  const onlyAdminsGroups = readJSON(filename, []);
+  if (!onlyAdminsGroups.includes(groupId)) {
+    onlyAdminsGroups.push(groupId);
+  }
+  writeJSON(filename, onlyAdminsGroups);
+}
+
+export function deactivateOnlyAdmins(groupId) {
+  const filename = ONLY_ADMINS_FILE;
+  const onlyAdminsGroups = readJSON(filename, []);
+  const index = onlyAdminsGroups.indexOf(groupId);
+  if (index === -1) return;
+  onlyAdminsGroups.splice(index, 1);
+  writeJSON(filename, onlyAdminsGroups);
+}
+
+export function isActiveOnlyAdmins(groupId) {
+  const filename = ONLY_ADMINS_FILE;
+  const onlyAdminsGroups = readJSON(filename, []);
+  return onlyAdminsGroups.includes(groupId);
+}
+
+export function readGroupRestrictions() {
+  return readJSON(GROUP_RESTRICTIONS_FILE, {});
+}
+
+export function saveGroupRestrictions(restrictions) {
+  writeJSON(GROUP_RESTRICTIONS_FILE, restrictions);
+}
+
+export function isActiveGroupRestriction(groupId, restriction) {
+  const restrictions = readGroupRestrictions();
+  if (!restrictions[groupId]) return false;
+  return restrictions[groupId][restriction] === true;
+}
+
+export function updateIsActiveGroupRestriction(groupId, restriction, isActive) {
+  const restrictions = readGroupRestrictions();
+  if (!restrictions[groupId]) {
+    restrictions[groupId] = {};
+  }
+  restrictions[groupId][restriction] = isActive;
+  saveGroupRestrictions(restrictions);
+}
+
+export function readRestrictedMessageTypes() {
+  return readJSON(RESTRICTED_MESSAGES_FILE, {
+    sticker: "stickerMessage",
+    video: "videoMessage",
+    image: "imageMessage",
+    audio: "audioMessage",
+    product: "productMessage",
+    document: "documentMessage",
+    event: "eventMessage",
+  });
+}
+
+export function setPrefix(groupJid, prefix) {
+  const filename = PREFIX_GROUPS_FILE;
+  const prefixGroups = readJSON(filename, {});
+  prefixGroups[groupJid] = prefix;
+  writeJSON(filename, prefixGroups);
+}
+
+export function getPrefix(groupJid) {
+  const filename = PREFIX_GROUPS_FILE;
+  const prefixGroups = readJSON(filename, {});
+  return prefixGroups[groupJid] || PREFIX;
+}
+
+export function setSpiderApiToken(token) {
+  const filename = CONFIG_FILE;
+  const config = readJSON(filename, {});
+  config.spider_api_token = token;
+  writeJSON(filename, config);
+}
+
+export function getSpiderApiToken() {
+  const filename = CONFIG_FILE;
+  const config = readJSON(filename, {});
+  return config.spider_api_token || SPIDER_API_TOKEN;
+}
+
+// =================================================================
+// AUTO-RESPONDER OPERAÇÃO POR GRUPO
+// =================================================================
+
+export function getAutoResponderResponse(groupId, match) {
+  const filename = AUTO_RESPONDER_FILE;
+  const responses = readJSON(filename, {});
+  if (!responses[groupId] || !Array.isArray(responses[groupId])) return null;
+
+  const textoLimpo = String(match || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+
+  const data = responses[groupId].find((response) => {
+    const termoGatilho = String(response.match || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+
+    return termoGatilho && textoLimpo.includes(termoGatilho);
+  });
+
+  if (!data) return null;
+
+  if (typeof data.answer === "object" && data.answer !== null) {
+    return data.answer;
+  }
+
+  return {
+    answer: String(data.answer || ""),
+    reaction: data.reaction || "✅",
+  };
+}
+
+export function listAutoResponderItems(groupId) {
+  const filename = AUTO_RESPONDER_FILE;
+  const responses = readJSON(filename, {});
+  if (!responses[groupId] || !Array.isArray(responses[groupId])) return [];
+
+  return responses[groupId].map((item, index) => {
+    let respostaTexto = "";
+    if (typeof item.answer === "object" && item.answer !== null) {
+      respostaTexto = item.answer.answer || "";
+    } else {
+      respostaTexto = String(item.answer || "");
+    }
+
+    return {
+      key: index + 1,
+      match: item.match,
+      answer: respostaTexto,
+    };
+  });
+}
+
+export function addAutoResponderItem(groupId, match, answerData) {
+  const filename = AUTO_RESPONDER_FILE;
+  const responses = readJSON(filename, {});
+
+  if (!responses[groupId] || !Array.isArray(responses[groupId])) {
+    responses[groupId] = [];
+  }
+
+  const termoNovo = String(match || "").trim().toLowerCase();
+  const existingIndex = responses[groupId].findIndex(
+    (response) => String(response.match || "").trim().toLowerCase() === termoNovo
+  );
+
+  let payloadSalvar = {};
+  if (typeof answerData === "object" && answerData !== null) {
+    payloadSalvar = {
+      answer: String(answerData.answer || "").trim(),
+      reaction: answerData.reaction || "✅",
+    };
+  } else {
+    payloadSalvar = {
+      answer: String(answerData || "").trim(),
+      reaction: "✅",
+    };
+  }
+
+  if (existingIndex !== -1) {
+    responses[groupId][existingIndex].answer = payloadSalvar;
+    writeJSON(filename, responses);
+    return { success: true, alreadyExisted: true };
+  }
+
+  responses[groupId].push({
+    match: String(match || "").trim(),
+    answer: payloadSalvar,
+  });
+
+  writeJSON(filename, responses);
+  return { success: true, alreadyExisted: false };
+}
+
+export function removeAutoResponderItemByKey(groupId, key) {
+  const filename = AUTO_RESPONDER_FILE;
+  const responses = readJSON(filename, {});
+
+  if (!responses[groupId] || !Array.isArray(responses[groupId])) return false;
+
+  const index = key - 1;
+  if (index < 0 || index >= responses[groupId].length) return false;
+
+  responses[groupId].splice(index, 1);
+  writeJSON(filename, responses);
+  return true;
+}
+
+// =================================================================
+// GESTÃO DE SESSÕES BAILEYS POR NÚMERO DE TELEFONE (MONGODB)
+// =================================================================
+
+/**
+ * Salva todos os ficheiros da pasta local assets/auth no MongoDB
+ */
+export async function saveSessionToMongo(numero, sessionDir) {
+  if (!dbInstance || !numero || !fs.existsSync(sessionDir)) return;
+
+  try {
+    const files = fs.readdirSync(sessionDir);
+    const sessionData = {};
+
+    for (const file of files) {
+      const filePath = path.join(sessionDir, file);
+      if (fs.statSync(filePath).isFile()) {
+        const content = fs.readFileSync(filePath, "utf8");
+        const safeKey = file.replace(/\./g, "_dot_");
+        sessionData[safeKey] = content;
       }
     }
 
-    function toggleTutorial(show) {
-      document.getElementById('tutorialModal').style.display = show ? 'flex' : 'none';
+    await dbInstance.collection("bot_sessions").updateOne(
+      { _id: String(numero) },
+      { $set: { files: sessionData, updatedAt: new Date() } },
+      { upsert: true }
+    );
+  } catch (err) {
+    console.error(`❌ Erro ao salvar sessão do número ${numero} no Mongo:`, err.message);
+  }
+}
+
+/**
+ * Restaura os ficheiros do MongoDB para a pasta assets/auth
+ */
+export async function getSessionFromMongo(numero, sessionDir) {
+  if (!dbInstance || !numero) return false;
+
+  try {
+    const doc = await dbInstance.collection("bot_sessions").findOne({ _id: String(numero) });
+    if (!doc || !doc.files) return false;
+
+    if (!fs.existsSync(sessionDir)) {
+      fs.mkdirSync(sessionDir, { recursive: true });
     }
-  </script>
-</body>
-</html>
+
+    for (const [safeKey, content] of Object.entries(doc.files)) {
+      const originalFile = safeKey.replace(/_dot_/g, ".");
+      const filePath = path.join(sessionDir, originalFile);
+      fs.writeFileSync(filePath, content, "utf8");
+    }
+
+    return true;
+  } catch (err) {
+    console.error(`❌ Erro ao restaurar sessão do número ${numero} do Mongo:`, err.message);
+    return false;
+  }
+}
+
+/**
+ * Apaga a sessão associada ao número no MongoDB
+ */
+export async function deleteSessionFromMongo(numero) {
+  if (!dbInstance || !numero) return;
+
+  try {
+    await dbInstance.collection("bot_sessions").deleteOne({ _id: String(numero) });
+  } catch (err) {
+    console.error(`❌ Erro ao apagar sessão do número ${numero} no Mongo:`, err.message);
+  }
+}
