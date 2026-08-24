@@ -120,7 +120,7 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 10px;
       padding: 14px;
-      min-height: 180px;
+      min-height: 160px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -183,23 +183,6 @@
       text-shadow: 0 0 10px rgba(0, 168, 132, 0.4);
     }
 
-    .ascii-box {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: clamp(0.42rem, 2.3vw, 0.65rem);
-      color: #d946ef;
-      background: #000000;
-      padding: 10px 4px;
-      border-radius: 6px;
-      border: 1px solid rgba(189, 0, 255, 0.3);
-      margin-bottom: 10px;
-      line-height: 1.15;
-      letter-spacing: -0.5px;
-      overflow-x: auto;
-      text-shadow: 0 0 8px rgba(189, 0, 255, 0.5);
-      white-space: pre;
-      text-align: center;
-    }
-
     .btn-sec { background: transparent; color: var(--text-muted); border: 1px solid #2a3942; }
     .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
     .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
@@ -211,7 +194,7 @@
       padding: 10px;
       font-family: monospace;
       font-size: 0.72rem;
-      height: 110px;
+      height: 180px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -226,6 +209,17 @@
       margin-bottom: 2px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       padding-bottom: 2px;
+    }
+
+    .ascii-banner-log {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: clamp(0.38rem, 2.1vw, 0.55rem);
+      color: #d946ef;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      white-space: pre;
+      margin: 4px 0;
+      text-shadow: 0 0 6px rgba(189, 0, 255, 0.6);
     }
 
     .log-entry { color: #a0aab0; word-break: break-all; }
@@ -309,15 +303,9 @@
       </div>
 
       <div id="secOnline" style="display: none; text-align: center;">
-        <pre class="ascii-box">░█▀▄░█░░░█▀█░░█▀▀░█░█░░░█▀▄░█▀█░▀█▀
-░█▀▄░█░░░█▀█░░█░░░█▀▄░░░█▀▄░█░█░░█░
-░▀▀░░▀▀▀░▀░▀░░▀▀▀░▀░▀░░░▀▀░░▀▀▀░░▀░
-<span id="bannerVersion" style="color: var(--text-main);"></span></pre>
-        
-        <p id="txtOnline" style="color: var(--primary-green); font-weight: 700; font-size: 0.85rem; margin-bottom: 12px;"></p>
-        
+        <p id="txtOnline" style="color: var(--primary-green); font-weight: 700; font-size: 0.9rem; margin-bottom: 14px;"></p>
         <div class="btn-grid">
-          <button class="btn-reset" onclick="resetarSessao()">Desconectar atual</button>
+          <button class="btn-reset" onclick="resetarSessao()">Desconectar Atual</button>
         </div>
       </div>
     </div>
@@ -387,13 +375,29 @@
       logContainer.scrollTop = logContainer.scrollHeight;
     }
 
+    function addAsciiToLog() {
+      const logContainer = document.getElementById('logContainer');
+      if (document.getElementById('logAsciiBanner')) return; // Impede duplicar o banner
+
+      const asciiPre = document.createElement('pre');
+      asciiPre.id = 'logAsciiBanner';
+      asciiPre.className = 'ascii-banner-log';
+      asciiPre.innerText = 
+`░█▀▄░█░░░█▀█░░█▀▀░█░█░░░█▀▄░█▀█░▀█▀
+░█▀▄░█░░░█▀█░░█░░░█▀▄░░░█▀▄░█░█░░█░
+░▀▀░░▀▀▀░▀░▀░░▀▀▀░▀░▀░░░▀▀░░▀▀▀░░▀░
+👾 BL4CK BOT ACTIVE (${CONFIG.VERSION})`;
+      
+      logContainer.appendChild(asciiPre);
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
     const secCodigo = document.getElementById('secCodigo');
     const secOnline = document.getElementById('secOnline');
     const codeDisplay = document.getElementById('codeDisplay');
     const txtOnline = document.getElementById('txtOnline');
-    const bannerVersion = document.getElementById('bannerVersion');
 
     let numeroAtual = localStorage.getItem('bl4ck_num') || '';
 
@@ -413,7 +417,6 @@
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Bot Ativo';
         secOnline.style.display = 'block';
-        bannerVersion.innerText = `👾 Versão: ${CONFIG.VERSION}`;
         txtOnline.innerText = `Sessão Ativa: +${numeroAtual}`;
       } else if (status === 'codigo_gerado') {
         statusBadge.className = 'status-badge warning';
@@ -427,12 +430,12 @@
       }
     }
 
-    // Carregamento instantâneo da cache
     const cachedState = localStorage.getItem('bl4ck_state');
     const cachedNum = localStorage.getItem('bl4ck_num');
     const cachedCode = localStorage.getItem('bl4ck_code');
     if (cachedState) {
       aplicarEstadoReal(cachedState, cachedNum, cachedCode);
+      if (cachedState === 'conectado') addAsciiToLog();
     }
 
     const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
@@ -449,10 +452,13 @@
       aplicarEstadoReal(dados.status, dados.user, dados.code);
 
       if (dados.status === 'conectado') {
+        addAsciiToLog();
         addLog(`Sessão iniciada (+${dados.user})`, 'success');
       } else if (dados.status === 'codigo_gerado') {
         addLog(`Pairing Code: ${dados.code}`, 'info');
       } else if (dados.status === 'desconectado') {
+        const asciiElem = document.getElementById('logAsciiBanner');
+        if (asciiElem) asciiElem.remove();
         addLog('Sistema desconectado.', 'danger');
       }
     });
@@ -517,6 +523,8 @@
           numeroAtual = '';
           localStorage.clear();
           document.getElementById('numInput').value = '';
+          const asciiElem = document.getElementById('logAsciiBanner');
+          if (asciiElem) asciiElem.remove();
           aplicarEstadoReal('desconectado');
           addLog('Sessão limpa com sucesso.', 'success');
         } else {
