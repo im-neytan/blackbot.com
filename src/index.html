@@ -45,7 +45,6 @@
       z-index: 0;
     }
 
-    /* REESCREVER SUAVE / FADE ANIMATION */
     .smooth-rewrite {
       animation: reescreverPagina 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
@@ -75,7 +74,6 @@
       gap: 8px;
     }
 
-    /* CABEÇALHO FIXO */
     .header-banner { 
       text-align: left;
       position: fixed;
@@ -270,7 +268,6 @@
 
     .btn-copy svg { width: 16px; height: 16px; fill: currentColor; }
 
-    /* SEÇÃO ATIVA MELHORADA (CARD ESTILIZADO) */
     .online-card-box {
       background: linear-gradient(145deg, rgba(13, 19, 26, 0.8), rgba(6, 10, 15, 0.95));
       border: 1px solid rgba(0, 168, 132, 0.3);
@@ -345,7 +342,6 @@
       font-weight: 800;
     }
 
-    /* CONSOLE PEQUENO */
     .log-panel {
       background: #000000;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -384,7 +380,6 @@
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
 
-    /* PÁGINA LIVE CHAT (FULL OVERLAY NATIVO) */
     .chat-page {
       position: fixed;
       top: 0; left: 0;
@@ -516,7 +511,6 @@
 </head>
 <body>
 
-  <!-- CABEÇALHO FIXO -->
   <div class="header-banner">
     <div class="header-inner">
       <div class="title-main">
@@ -537,7 +531,6 @@
     </div>
 
     <div class="action-panel">
-      <!-- FORMULÁRIO INICIAL -->
       <div id="secForm">
         <div class="input-wrapper">
           <input type="text" id="numInput" placeholder="Ex: 258841234567" oninput="toggleInputIcons()">
@@ -557,7 +550,6 @@
         </div>
       </div>
 
-      <!-- PAINEL CÓDIGO -->
       <div id="secCodigo" style="display: none;">
         <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center;">Insira no WhatsApp do dispositivo:</p>
         
@@ -576,7 +568,6 @@
         </div>
       </div>
 
-      <!-- PAINEL CONECTADO (REFORMULADO) -->
       <div id="secOnline" style="display: none;">
         <div class="online-card-box">
           <div class="online-row">
@@ -605,14 +596,12 @@
       </div>
     </div>
 
-    <!-- CONSOLE LIVE -->
     <div class="log-panel" id="logContainer">
       <div class="log-title">CONSOLE LIVE</div>
       <div class="log-list" id="logList"></div>
     </div>
   </div>
 
-  <!-- PÁGINA LIVE CHAT (NAVEGAÇÃO NATIVA / DESLIZAR) -->
   <div id="chatPage" class="chat-page">
     <div class="chat-header">
       <button class="btn-back-chat" onclick="fecharLiveChat(true)">&#10094;</button>
@@ -629,7 +618,6 @@
     </div>
   </div>
 
-  <!-- MODAL TUTORIAL -->
   <div id="tutorialModal" class="modal">
     <div class="modal-content">
       <h3>Como Conectar</h3>
@@ -713,7 +701,6 @@
       }
     }
 
-    /* SISTEMA DE LOGS DO CONSOLE */
     const logList = document.getElementById('logList');
     let logsCache = JSON.parse(localStorage.getItem('bl4ck_logs') || '[]');
 
@@ -737,7 +724,6 @@
     }
     renderLogs();
 
-    /* GERENCIAMENTO DE TELA E NAVEGAÇÃO CHAT */
     const chatPage = document.getElementById('chatPage');
     const chatContainer = document.getElementById('chatContainer');
     let chatMessages = JSON.parse(localStorage.getItem('bl4ck_chat_msgs') || '[]');
@@ -782,14 +768,12 @@
       }
     }
 
-    // SUPORTE PARA BOTÃO VOLTAR DO TELEFONE OU DESLIZAR DO IPHONE (POPSTATE)
     window.addEventListener('popstate', (e) => {
       if (!e.state || e.state.page !== 'chat') {
         fecharLiveChat(false);
       }
     });
 
-    /* CONTROLE DE SESSÃO */
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
     const secCodigo = document.getElementById('secCodigo');
@@ -898,16 +882,26 @@
     socket.on('status', (dados) => processarEventoStatus(dados));
     socket.on('status_change', (dados) => processarEventoStatus(dados));
 
-    /* RECEBER MENSAGENS EM TEMPO REAL */
+    /* RECEPÇÃO DE MENSAGENS COMPATÍVEL COM O SCRIPT ONMESSAGESUPSERT.JS */
     socket.on('new_message', (msg) => {
-      if (msg) {
-        appendChatMessage({
-          sender: msg.sender || msg.from || 'Contacto',
-          text: msg.text || msg.body || msg.message || '',
-          fromMe: !!msg.fromMe,
-          time: new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })
-        });
+      if (!msg) return;
+
+      // Valida se o botNumber do evento corresponde ao número ativo no dispositivo
+      const activeNum = (numeroAtual || '').toString().replace(/\D/g, '');
+      const msgBotNum = (msg.botNumber || '').toString().replace(/\D/g, '');
+
+      if (activeNum && msgBotNum && activeNum !== msgBotNum) {
+        return; 
       }
+
+      const formattedTime = msg.time || new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+
+      appendChatMessage({
+        sender: msg.sender || 'Contacto',
+        text: msg.text || 'Mensagem / Mídia',
+        fromMe: !!msg.fromMe,
+        time: formattedTime
+      });
     });
 
     function copiarCodigo() {
