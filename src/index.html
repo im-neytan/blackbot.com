@@ -28,7 +28,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 10px 12px 40px 12px; /* Espaço para o footer fixo */
+      padding: 10px 12px 40px 12px;
       overflow-x: hidden;
       position: relative;
     }
@@ -43,7 +43,6 @@
       z-index: 0;
     }
 
-    /* EFEITO DE ANIMAÇÃO AO RECARREGAR A PÁGINA */
     .container {
       position: relative;
       z-index: 1;
@@ -138,23 +137,69 @@
       flex-direction: column;
     }
 
-    input {
+    /* CONTAINER DO INPUT COM OS ÍCONES */
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
       width: 100%;
-      padding: 8px;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 8px 65px 8px 10px; /* Espaço na direita para os dois ícones */
       border-radius: 6px;
       border: 1px solid #2a3942;
       background: #0d131a;
       color: #fff;
       font-size: 0.85rem;
       outline: none;
-      margin-bottom: 6px;
-      text-align: center;
+      text-align: left; /* Digita da esquerda para a direita */
       font-family: monospace;
+      margin-bottom: 0;
     }
 
-    input:focus {
+    .input-wrapper input:focus {
       border-color: var(--primary-red);
       box-shadow: 0 0 8px rgba(255, 42, 75, 0.3);
+    }
+
+    .input-icons-right {
+      position: absolute;
+      right: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .icon-btn-inline {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2px;
+      width: auto;
+      height: auto;
+      transition: color 0.2s;
+    }
+
+    .icon-btn-inline:hover {
+      color: #fff;
+      opacity: 1;
+    }
+
+    .icon-btn-inline svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    #btnClearInput {
+      display: none; /* Inicia oculto */
     }
 
     .btn-grid {
@@ -334,7 +379,6 @@
     .modal-content ol { padding-left: 16px; color: var(--text-main); font-size: 0.78rem; line-height: 1.4; }
     .modal-content button { margin-top: 12px; background: var(--primary-green); color: #000; }
 
-    /* FOOTER FIXO SEMENTE / SEM ALTERAR NADA */
     footer {
       position: fixed;
       bottom: 0;
@@ -372,8 +416,22 @@
 
     <div class="action-panel">
       <div id="secForm">
-        <input type="text" id="numInput" placeholder="Ex: 258841234567">
-        <div class="btn-grid">
+        <div class="input-wrapper">
+          <input type="text" id="numInput" placeholder="Ex: 258841234567" oninput="toggleInputIcons()">
+          <div class="input-icons-right">
+            <button type="button" class="icon-btn-inline" id="btnClearInput" onclick="limparInput()" title="Limpar">
+              <svg viewBox="0 0 24 24">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+              </svg>
+            </button>
+            <button type="button" class="icon-btn-inline" onclick="colarNoInput()" title="Colar">
+              <svg viewBox="0 0 24 24">
+                <path d="M19 2h-4.18C14.4 0.84 13.3 0 12 0c-1.3 0-2.4 0.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="btn-grid" style="margin-top: 6px;">
           <button id="btnGerar" onclick="gerarCodigo()">Gerar Código de Pareamento</button>
           <button class="btn-reset" onclick="resetarSessao()">Resetar Sessão</button>
           <button class="btn-tutorial" onclick="toggleTutorial(true)">Como Conectar?</button>
@@ -437,7 +495,6 @@
   </footer>
 
   <script>
-    // 1. CONFIGURAÇÃO E DADOS GERAIS
     const CONFIG = {
       SERVER_URL: 'https://orion-2-production.up.railway.app',
       VERSION: 'v2.4.0'
@@ -468,7 +525,35 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // 2. SISTEMA DE LOGS
+    // CONTROLE DOS ÍCONES DE COLAR / LIMPAR
+    function toggleInputIcons() {
+      const input = document.getElementById('numInput');
+      const btnClear = document.getElementById('btnClearInput');
+      if (input.value.trim().length > 0) {
+        btnClear.style.display = 'flex';
+      } else {
+        btnClear.style.display = 'none';
+      }
+    }
+
+    function limparInput() {
+      const input = document.getElementById('numInput');
+      input.value = '';
+      toggleInputIcons();
+      input.focus();
+    }
+
+    async function colarNoInput() {
+      try {
+        const text = await navigator.clipboard.readText();
+        const input = document.getElementById('numInput');
+        input.value = text.trim();
+        toggleInputIcons();
+      } catch (err) {
+        addLog('Erro ao colar área de transferência.', 'danger');
+      }
+    }
+
     const logContainer = document.getElementById('logContainer');
     const logList = document.getElementById('logList');
     let logsCache = JSON.parse(localStorage.getItem('bl4ck_logs') || '[]');
@@ -502,7 +587,6 @@
 
     renderLogs();
 
-    // 3. REFERÊNCIAS DO DOM E ESTADO LOCAL
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
     const secCodigo = document.getElementById('secCodigo');
@@ -516,8 +600,8 @@
     function aplicarEstadoReal(status, user, code) {
       if (status) localStorage.setItem('bl4ck_state', status);
       if (user) {
-        numeroAtual = user;
-        localStorage.setItem('bl4ck_num', user);
+        numeroAtual = user.toString().replace(/\D/g, '');
+        localStorage.setItem('bl4ck_num', numeroAtual);
       }
       if (code) localStorage.setItem('bl4ck_code', code);
 
@@ -529,7 +613,7 @@
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Bot Ativo';
         secOnline.style.display = 'block';
-        txtOnlineNumber.innerText = `+${(numeroAtual || '').replace(/\D/g, '')}`;
+        txtOnlineNumber.innerText = `+${numeroAtual}`;
       } else if (status === 'codigo_gerado') {
         statusBadge.className = 'status-badge warning';
         statusBadge.innerText = 'Aguardando';
@@ -542,27 +626,72 @@
       }
     }
 
-    // CORREÇÃO DO TRAVAMENTO:
-    // Se não estiver confirmado como conectado, ao recarregar volta ao formulário
-    const cachedState = localStorage.getItem('bl4ck_state');
-    const cachedNum = localStorage.getItem('bl4ck_num');
-    const cachedCode = localStorage.getItem('bl4ck_code');
+    const cachedState = localStorage.getItem('bl4ck_state') || 'desconectado';
+    const cachedNum = localStorage.getItem('bl4ck_num') || '';
+    const cachedCode = localStorage.getItem('bl4ck_code') || '';
+    aplicarEstadoReal(cachedState, cachedNum, cachedCode);
 
-    if (cachedState === 'conectado') {
-      aplicarEstadoReal('conectado', cachedNum, cachedCode);
-    } else {
-      aplicarEstadoReal('desconectado');
+    function parseStatus(st) {
+      if (!st) return 'desconectado';
+      const s = String(st).toLowerCase();
+      if (['conectado', 'connected', 'open', 'isconnected', 'authenticated', 'online', 'ready', 'true'].includes(s)) {
+        return 'conectado';
+      }
+      if (['codigo_gerado', 'code', 'pairing', 'connecting', 'qr', 'waiting'].includes(s)) {
+        return 'codigo_gerado';
+      }
+      return 'desconectado';
     }
 
-    // 4. INTEGRAÇÃO SOCKET.IO
+    function processarEventoStatus(dados) {
+      if (!dados) return;
+
+      const numEvento = (dados.user || dados.numero || dados.phone || '').toString().replace(/\D/g, '');
+      const numLocal = (numeroAtual || '').toString().replace(/\D/g, '');
+
+      if (numEvento && numLocal && numEvento !== numLocal) return;
+
+      const stFinal = parseStatus(dados.status || dados.state);
+      aplicarEstadoReal(stFinal, dados.user || dados.numero || numeroAtual, dados.code);
+
+      if (stFinal === 'conectado') {
+        if (ultimoEstado !== 'conectado') {
+          addLog(`Sessão iniciada (+${numeroAtual})`, 'success');
+        }
+      } else if (stFinal === 'codigo_gerado') {
+        if (dados.code) addLog(`Pairing Code: ${dados.code}`, 'info');
+      } else if (stFinal === 'desconectado') {
+        if (ultimoEstado === 'conectado') {
+          addLog('Sistema desconectado.', 'danger');
+        }
+      }
+      ultimoEstado = stFinal;
+    }
+
+    async function sincronizarEstadoServidor() {
+      if (!numeroAtual) return;
+      try {
+        socket.emit('check_status', { numero: numeroAtual });
+        socket.emit('get_status', { numero: numeroAtual });
+
+        const res = await fetch(`${CONFIG.SERVER_URL}/api/status?numero=${numeroAtual}`).catch(() => null);
+        if (res && res.ok) {
+          const data = await res.json();
+          if (data && (data.status || data.state)) {
+            processarEventoStatus(data);
+          }
+        }
+      } catch (err) {}
+    }
+
+    setInterval(sincronizarEstadoServidor, 2500);
+
     addLog('A ligar ao servidor...', 'info');
     const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', () => {
       addLog('Conectado ao servidor em tempo real.', 'success');
-      if (numeroAtual) {
-        socket.emit('check_status', { numero: numeroAtual });
-      }
+      sincronizarEstadoServidor();
     });
 
     socket.on('disconnect', () => {
@@ -574,43 +703,9 @@
     });
 
     socket.on('status_change', (dados) => {
-      const numLimpoLocal = (numeroAtual || '').replace(/\D/g, '');
-      const numLimpoEvento = (dados.numero || '').replace(/\D/g, '');
-
-      if (!numLimpoLocal || numLimpoEvento === numLimpoLocal) {
-        processarEventoStatus({
-          status: dados.status,
-          user: dados.numero,
-          code: dados.code
-        });
-      }
+      processarEventoStatus(dados);
     });
 
-    function processarEventoStatus(dados) {
-      if (!dados) return;
-
-      let st = (dados.status || '').toLowerCase();
-      if (st === 'open' || st === 'connected' || st === 'isconnected') {
-        st = 'conectado';
-      }
-
-      aplicarEstadoReal(st, dados.user, dados.code);
-
-      if (st === 'conectado') {
-        if (ultimoEstado !== 'conectado') {
-          addLog(`Sessão iniciada (+${dados.user || numeroAtual})`, 'success');
-        }
-      } else if (st === 'codigo_gerado') {
-        addLog(`Pairing Code: ${dados.code}`, 'info');
-      } else if (st === 'desconectado' || st === 'removido' || st === 'close') {
-        if (ultimoEstado === 'conectado') {
-          addLog('Sistema desconectado.', 'danger');
-        }
-      }
-      ultimoEstado = st;
-    }
-
-    // 5. FUNÇÕES DE INTERAÇÃO E REQUISIÇÕES HTTP
     function copiarCodigo() {
       const codigoText = codeDisplay.innerText.trim();
       if (!codigoText || codigoText === '---- ----') return;
@@ -637,9 +732,10 @@
       const numero = document.getElementById('numInput').value.trim();
       if (!numero) return alert('Por favor, introduza o número!');
 
-      numeroAtual = numero;
-      addLog(`A solicitar código (+${numero})...`, 'info');
-      await enviarPedidoCodigo(numero);
+      numeroAtual = numero.replace(/\D/g, '');
+      aplicarEstadoReal('codigo_gerado', numeroAtual, '---- ----');
+      addLog(`A solicitar código (+${numeroAtual})...`, 'info');
+      await enviarPedidoCodigo(numeroAtual);
     }
 
     async function solicitarNovoCodigo() {
@@ -663,7 +759,12 @@
         });
 
         const data = await res.json();
-        if (!data.success) {
+        if (data.success) {
+          if (data.code) {
+            aplicarEstadoReal('codigo_gerado', numero, data.code);
+            addLog(`Pairing Code: ${data.code}`, 'info');
+          }
+        } else {
           addLog(`Erro: ${data.error}`, 'danger');
           alert('Erro: ' + data.error);
         }
@@ -695,6 +796,7 @@
           logsCache = [];
           logList.innerHTML = '';
           document.getElementById('numInput').value = '';
+          toggleInputIcons();
           aplicarEstadoReal('desconectado');
           addLog('Sessão limpa com sucesso.', 'success');
         } else {
