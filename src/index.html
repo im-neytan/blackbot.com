@@ -183,16 +183,16 @@
       text-shadow: 0 0 10px rgba(0, 168, 132, 0.4);
     }
 
-    /* Banner ASCII Adaptado proporcionalmente */
+    /* Banner ASCII Responsivo */
     .ascii-box {
       font-family: 'Courier New', Courier, monospace;
-      font-size: clamp(0.45rem, 2.5vw, 0.65rem);
+      font-size: clamp(0.42rem, 2.3vw, 0.65rem);
       color: #d946ef;
       background: #000000;
-      padding: 12px 6px;
+      padding: 10px 4px;
       border-radius: 6px;
       border: 1px solid rgba(189, 0, 255, 0.3);
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       line-height: 1.15;
       letter-spacing: -0.5px;
       overflow-x: auto;
@@ -309,7 +309,6 @@
         </div>
       </div>
 
-      <!-- Apenas a secção online com o banner ASCII proporcional -->
       <div id="secOnline" style="display: none; text-align: center;">
         <pre class="ascii-box">░█▀▄░█░░░█▀█░░█▀▀░█░█░░░█▀▄░█▀█░▀█▀
 ░█▀▄░█░░░█▀█░░█░░░█▀▄░░░█▀▄░█░█░░█░
@@ -326,7 +325,7 @@
 
     <div class="log-panel" id="logContainer">
       <div class="log-title">CONSOLE LIVE</div>
-      <div class="log-entry info">[SISTEMA] Sistema pronto para uso!</div>
+      <div class="log-entry info">[SISTEMA] Conectando ao servidor...</div>
     </div>
   </div>
 
@@ -358,10 +357,7 @@
 
     function detectDevice() {
       const ua = navigator.userAgent;
-      if (/android/i.test(ua)) {
-        if (/galaxy/i.test(ua)) return 'Samsung Galaxy';
-        return 'Android Device';
-      }
+      if (/android/i.test(ua)) return 'Android Device';
       if (/iPhone|iPad|iPod/i.test(ua)) return 'Apple iPhone';
       if (/Windows/i.test(ua)) return 'Windows PC';
       if (/Macintosh/i.test(ua)) return 'Mac OS';
@@ -402,31 +398,25 @@
     const txtOnline = document.getElementById('txtOnline');
     const bannerVersion = document.getElementById('bannerVersion');
 
-    let numeroAtual = localStorage.getItem('bl4ck_num') || '';
+    let numeroAtual = '';
 
-    function renderState(state, data = {}) {
-      localStorage.setItem('bl4ck_state', state);
-
+    function aplicarEstadoReal(status, user, code) {
       secForm.style.display = 'none';
       secCodigo.style.display = 'none';
       secOnline.style.display = 'none';
 
-      if (state === 'conectado') {
+      if (status === 'conectado') {
+        numeroAtual = user || numeroAtual;
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Bot Ativo';
         secOnline.style.display = 'block';
         bannerVersion.innerText = `👾 Versão: ${CONFIG.VERSION}`;
-        txtOnline.innerText = `Sessão Ativa: +${data.user || numeroAtual}`;
-      } else if (state === 'codigo_gerado') {
+        txtOnline.innerText = `Sessão Ativa: +${numeroAtual}`;
+      } else if (status === 'codigo_gerado') {
         statusBadge.className = 'status-badge warning';
         statusBadge.innerText = 'Aguardando';
         secCodigo.style.display = 'block';
-        if (data.code) {
-          codeDisplay.innerText = data.code;
-          localStorage.setItem('bl4ck_code', data.code);
-        } else {
-          codeDisplay.innerText = localStorage.getItem('bl4ck_code') || '---- ----';
-        }
+        if (code) codeDisplay.innerText = code;
       } else {
         statusBadge.className = 'status-badge offline';
         statusBadge.innerText = 'Desconectado';
@@ -434,21 +424,28 @@
       }
     }
 
-    // Restaura visualmente o estado guardado antes da resposta da socket
-    const savedState = localStorage.getItem('bl4ck_state');
-    if (savedState) renderState(savedState);
+    // Consulta inicial do estado real no servidor ao abrir a página
+    async function checarEstadoReal() {
+      try {
+        const res = await fetch(`${CONFIG.SERVER_URL}/api/status`);
+        const dados = await res.json();
+        aplicarEstadoReal(dados.status, dados.user, dados.code);
+        addLog('Sincronizado com o servidor.', 'info');
+      } catch (e) {
+        addLog('Aguardando resposta do servidor...', 'info');
+      }
+    }
+    checarEstadoReal();
 
+    // Atualização em tempo real via WebSockets
     socket.on('status', (dados) => {
+      aplicarEstadoReal(dados.status, dados.user, dados.code);
+
       if (dados.status === 'conectado') {
-        numeroAtual = dados.user || numeroAtual;
-        localStorage.setItem('bl4ck_num', numeroAtual);
-        renderState('conectado', dados);
-        addLog(`Sessão iniciada (+${numeroAtual})`, 'success');
+        addLog(`Sessão iniciada (+${dados.user})`, 'success');
       } else if (dados.status === 'codigo_gerado') {
-        renderState('codigo_gerado', dados);
         addLog(`Pairing Code: ${dados.code}`, 'info');
-      } else {
-        renderState('desconectado');
+      } else if (dados.status === 'desconectado') {
         addLog('Sistema desconectado.', 'danger');
       }
     });
@@ -458,14 +455,13 @@
       if (!numero) return alert('Por favor, introduza o número!');
 
       numeroAtual = numero;
-      localStorage.setItem('bl4ck_num', numero);
       addLog(`A solicitar código (+${numero})...`, 'info');
       await enviarPedidoCodigo(numero);
     }
 
     async function solicitarNovoCodigo() {
       if (!numeroAtual) {
-        renderState('desconectado');
+        aplicarEstadoReal('desconectado');
         return;
       }
       addLog('A solicitar novo código...', 'info');
@@ -499,7 +495,7 @@
       if (!confirm('Deseja apagar a sessão atual?')) return;
       
       const targetNumber = numeroAtual || document.getElementById('numInput').value.trim();
-      addLog('A encerrar e limpar a sessão no servidor...', 'danger');
+      addLog('A encerrar sessão...', 'danger');
       
       try {
         const res = await fetch(`${CONFIG.SERVER_URL}/api/resetar-sessao`, { 
@@ -512,14 +508,11 @@
         
         if (data.success) {
           numeroAtual = '';
-          localStorage.removeItem('bl4ck_num');
-          localStorage.removeItem('bl4ck_state');
-          localStorage.removeItem('bl4ck_code');
           document.getElementById('numInput').value = '';
-          renderState('desconectado');
-          addLog('Sessão encerrada e limpa com sucesso.', 'success');
+          aplicarEstadoReal('desconectado');
+          addLog('Sessão limpa com sucesso.', 'success');
         } else {
-          addLog(`Erro ao encerrar sessão: ${data.error}`, 'danger');
+          addLog(`Erro ao encerrar: ${data.error}`, 'danger');
         }
       } catch (err) {
         addLog(`Erro no processo: ${err.message}`, 'danger');
