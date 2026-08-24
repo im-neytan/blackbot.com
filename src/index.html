@@ -28,7 +28,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 12px 14px;
+      padding: 10px 12px;
       overflow-x: hidden;
       position: relative;
     }
@@ -37,8 +37,8 @@
       content: "";
       position: absolute;
       top: 0; left: 0;
-      width: 100%; height: 250px;
-      background: radial-gradient(circle at 10% 10%, rgba(255, 42, 75, 0.15) 0%, transparent 60%);
+      width: 100%; height: 200px;
+      background: radial-gradient(circle at 10% 10%, rgba(255, 42, 75, 0.12) 0%, transparent 60%);
       pointer-events: none;
       z-index: 0;
     }
@@ -47,18 +47,18 @@
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 420px;
+      max-width: 400px;
       margin: 0 auto;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
     }
 
     .header-banner { text-align: left; }
 
     .title-main {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       font-weight: 900;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -71,44 +71,45 @@
     }
 
     .subtitle-sub {
-      font-size: 0.62rem;
+      font-size: 0.60rem;
       color: var(--text-muted);
-      letter-spacing: 1.5px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      margin-top: 3px;
+      margin-top: 2px;
       font-weight: 600;
     }
 
     .meta-info {
       font-family: monospace;
-      font-size: 0.72rem;
+      font-size: 0.70rem;
       color: #a0aab0;
-      margin-top: 8px;
-      line-height: 1.4;
+      margin-top: 6px;
+      line-height: 1.3;
     }
 
     .status-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 10px 14px;
+      border-radius: 8px;
+      padding: 8px 12px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4);
-      min-height: 48px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      min-height: 42px;
     }
 
     .status-badge {
       display: inline-block;
       padding: 4px 10px;
-      border-radius: 16px;
+      border-radius: 14px;
       font-weight: 700;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       text-transform: uppercase;
       letter-spacing: 0.8px;
-      min-width: 110px;
+      min-width: 100px;
       text-align: center;
+      transition: all 0.3s ease-in-out;
     }
 
     .online { background: rgba(0, 168, 132, 0.15); color: var(--primary-green); border: 1px solid var(--primary-green); }
@@ -118,9 +119,9 @@
     .action-panel {
       background: var(--card-bg);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 14px;
-      min-height: 160px;
+      border-radius: 8px;
+      padding: 10px 12px;
+      min-height: 120px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -128,14 +129,14 @@
 
     input {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       border-radius: 6px;
       border: 1px solid #2a3942;
       background: #0d131a;
       color: #fff;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       outline: none;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       text-align: center;
       font-family: monospace;
     }
@@ -148,19 +149,19 @@
     .btn-grid {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 5px;
     }
 
     button {
       width: 100%;
-      padding: 10px;
+      padding: 8px;
       border-radius: 6px;
       border: none;
       background: var(--primary-red);
       color: #fff;
       font-weight: 700;
       cursor: pointer;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       transition: all 0.2s;
@@ -170,34 +171,33 @@
     button:disabled { background: #2a3942; color: var(--text-muted); cursor: not-allowed; }
 
     .code-box {
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       font-weight: 800;
       letter-spacing: 3px;
       color: var(--primary-green);
       background: #0d131a;
-      padding: 8px;
+      padding: 6px;
       border-radius: 6px;
-      margin: 8px 0;
+      margin: 6px 0;
       border: 1px dashed var(--primary-green);
       text-align: center;
       text-shadow: 0 0 10px rgba(0, 168, 132, 0.4);
     }
 
-    /* Estilização Organizacional da Secção Ativa */
     .online-card-box {
       background: rgba(0, 168, 132, 0.05);
       border: 1px solid rgba(0, 168, 132, 0.2);
-      border-radius: 8px;
-      padding: 12px;
-      margin-bottom: 12px;
+      border-radius: 6px;
+      padding: 8px;
+      margin-bottom: 8px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 4px;
       align-items: center;
     }
 
     .online-label {
-      font-size: 0.68rem;
+      font-size: 0.65rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -205,18 +205,18 @@
 
     .online-number {
       font-family: monospace;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 800;
       color: var(--primary-green);
       letter-spacing: 1px;
     }
 
     .online-status-pill {
-      font-size: 0.65rem;
+      font-size: 0.60rem;
       color: #000;
       background: var(--primary-green);
-      padding: 2px 8px;
-      border-radius: 10px;
+      padding: 2px 6px;
+      border-radius: 8px;
       font-weight: 700;
       text-transform: uppercase;
     }
@@ -225,14 +225,15 @@
     .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
     .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
 
+    /* Painel Console Reduzido e Compacto */
     .log-panel {
       background: #000000;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 10px;
-      padding: 10px;
+      border-radius: 8px;
+      padding: 8px;
       font-family: monospace;
-      font-size: 0.72rem;
-      height: 180px;
+      font-size: 0.70rem;
+      height: 120px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
@@ -240,7 +241,7 @@
     }
 
     .log-title {
-      font-size: 0.65rem;
+      font-size: 0.60rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -268,23 +269,23 @@
     .modal-content {
       background: #0d131a;
       border: 1px solid var(--primary-green);
-      padding: 18px;
-      border-radius: 10px;
-      max-width: 340px;
+      padding: 16px;
+      border-radius: 8px;
+      max-width: 320px;
       width: 100%;
     }
 
-    .modal-content h3 { color: var(--primary-green); margin-bottom: 8px; font-size: 1rem; }
-    .modal-content ol { padding-left: 18px; color: var(--text-main); font-size: 0.8rem; line-height: 1.5; }
-    .modal-content button { margin-top: 14px; background: var(--primary-green); color: #000; }
+    .modal-content h3 { color: var(--primary-green); margin-bottom: 8px; font-size: 0.95rem; }
+    .modal-content ol { padding-left: 16px; color: var(--text-main); font-size: 0.78rem; line-height: 1.4; }
+    .modal-content button { margin-top: 12px; background: var(--primary-green); color: #000; }
 
     footer {
       position: relative;
       z-index: 1;
-      font-size: 0.65rem;
+      font-size: 0.60rem;
       color: var(--text-muted);
       text-align: center;
-      margin-top: 10px;
+      margin-top: 8px;
       letter-spacing: 0.5px;
     }
   </style>
@@ -304,8 +305,8 @@
     </div>
 
     <div class="status-card">
-      <span style="font-size: 0.78rem; font-weight: 600;">STATUS SESSÃO</span>
-      <div id="statusBadge" class="status-badge offline">Desconectado</div>
+      <span style="font-size: 0.75rem; font-weight: 600;">STATUS SESSÃO</span>
+      <div id="statusBadge" class="status-badge offline">A carregar...</div>
     </div>
 
     <div class="action-panel">
@@ -319,9 +320,9 @@
       </div>
 
       <div id="secCodigo" style="display: none;">
-        <p style="font-size: 0.78rem; color: var(--text-muted); text-align: center;">Insira no WhatsApp do dispositivo:</p>
+        <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center;">Insira no WhatsApp do dispositivo:</p>
         <div id="codeDisplay" class="code-box">---- ----</div>
-        
+
         <div class="btn-grid">
           <button class="btn-sec" onclick="solicitarNovoCodigo()">Solicitar novo código</button>
           <button class="btn-reset" onclick="resetarSessao()">Resetar sessão</button>
@@ -343,7 +344,6 @@
 
     <div class="log-panel" id="logContainer">
       <div class="log-title">CONSOLE LIVE</div>
-      <div class="log-entry info">[SISTEMA] A ligar ao servidor...</div>
     </div>
   </div>
 
@@ -366,11 +366,6 @@
   </footer>
 
   <script>
-    // Limpa a cache no reload manual do navegador para consultar diretamente o servidor
-    if (performance.getEntriesByType('navigation')[0].type === 'reload') {
-      localStorage.clear();
-    }
-
     const CONFIG = {
       SERVER_URL: 'https://orion-2-production.up.railway.app',
       VERSION: 'v2.4.0'
@@ -449,12 +444,18 @@
       }
     }
 
+    // Mantém o estado guardado no cache ao recarregar a página sem dar o efeito de desconectar
     const cachedState = localStorage.getItem('bl4ck_state');
     const cachedNum = localStorage.getItem('bl4ck_num');
     const cachedCode = localStorage.getItem('bl4ck_code');
     if (cachedState) {
       aplicarEstadoReal(cachedState, cachedNum, cachedCode);
+    } else {
+      aplicarEstadoReal('desconectado');
     }
+
+    // Regista o log inicial via JS para que possa ser empurrado na rolagem
+    addLog('A ligar ao servidor...', 'info');
 
     const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
 
@@ -528,10 +529,10 @@
 
     async function resetarSessao() {
       if (!confirm('Deseja apagar a sessão atual?')) return;
-      
+
       const targetNumber = numeroAtual || document.getElementById('numInput').value.trim();
       addLog('A encerrar sessão...', 'danger');
-      
+
       try {
         const res = await fetch(`${CONFIG.SERVER_URL}/api/resetar-sessao`, { 
           method: 'POST',
@@ -540,7 +541,7 @@
         });
 
         const data = await res.json();
-        
+
         if (data.success) {
           numeroAtual = '';
           localStorage.clear();
