@@ -36,7 +36,6 @@
       position: relative;
     }
 
-    /* Animação para recarregar/carregar (Reescrever de cima para baixo) */
     .smooth-rewrite {
       animation: reescreverTopDown 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
@@ -46,7 +45,6 @@
       100% { opacity: 1; transform: translateY(0); }
     }
 
-    /* Efeito Scanline Cyber */
     body::before {
       content: " ";
       display: block;
@@ -318,7 +316,6 @@
       pointer-events: none;
     }
 
-    /* TOPO DO LIVE CHAT FIXO (HEADER FIXO) */
     .chat-header {
       position: sticky;
       top: 0;
@@ -344,7 +341,6 @@
 
     .chat-body-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 
-    /* NAVEGAÇÃO INFERIOR MENOR E FIXA */
     .chat-nav-bottom { 
       position: sticky;
       bottom: 0;
@@ -529,14 +525,13 @@
       </div>
     </div>
 
-    <!-- RODAPÉ COMPACTO E FIXO COM ÍCONES CYBER -->
     <div class="chat-nav-bottom">
       <button id="tabAll" class="tab-btn active" onclick="switchTab('all')">
         <svg viewBox="0 0 24 24"><path d="M4 4h16v12H5.17L4 17.17V4m0-2c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H4z"/></svg>
         TODOS
       </button>
       <button id="tabGroups" class="tab-btn" onclick="switchTab('groups')">
-        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         GRUPOS
       </button>
       <button id="tabSent" class="tab-btn" onclick="switchTab('sent')">
@@ -581,7 +576,6 @@
     }
     document.getElementById('deviceInUse').innerText = detectDevice();
 
-    /* RESTAURADO DIA DA SEMANA, DATA COMPLETA E CIDADE DE MAPUTO */
     function updateClock() {
       const now = new Date();
       const options = { 
@@ -652,6 +646,21 @@
     let currentTab = 'all';
     let selectedGroupId = null;
 
+    /* BUSCA GRUPOS DIRETAMENTE DA METADATA NO SERVIDOR */
+    async function carregarGruposBackend() {
+      try {
+        const res = await fetch(`${CONFIG.SERVER_URL}/api/grupos`);
+        const data = await res.json();
+        if (data && data.success && Array.isArray(data.groups)) {
+          data.groups.forEach(g => {
+            if (g.id) knownGroups[g.id] = g.subject || g.name || `Grupo ${g.id.substring(0, 5)}`;
+          });
+          localStorage.setItem('bl4ck_groups', JSON.stringify(knownGroups));
+          if (currentTab === 'groups' && !selectedGroupId) renderGroupsList();
+        }
+      } catch (e) {}
+    }
+
     function renderChatMessages() {
       let filteredMsgs = chatMessages;
 
@@ -662,9 +671,9 @@
           filteredMsgs = chatMessages.filter(m => m.isGroup);
         }
       } else if (currentTab === 'sent') {
-        filteredMsgs = chatMessages.filter(m => m.fromMe);
+        filteredMsgs = chatMessages.filter(m => m.fromMe === true);
       } else if (currentTab === 'received') {
-        filteredMsgs = chatMessages.filter(m => !m.fromMe);
+        filteredMsgs = chatMessages.filter(m => m.fromMe === false);
       }
 
       if (filteredMsgs.length === 0) {
@@ -697,7 +706,7 @@
       const groupKeys = Object.keys(knownGroups);
 
       if (groupKeys.length === 0) {
-        groupsContainer.innerHTML = '<div style="text-align:center; color: var(--text-muted); padding: 20px; font-size: 0.65rem;">Aguardando detecção de grupos no fluxo...</div>';
+        groupsContainer.innerHTML = '<div style="text-align:center; color: var(--text-muted); padding: 20px; font-size: 0.65rem;">Consultando metadata de grupos no servidor...</div>';
         return;
       }
 
@@ -742,6 +751,7 @@
       if (tab === 'groups' && !selectedGroupId) {
         groupsContainer.style.display = 'flex';
         chatContainer.style.display = 'none';
+        carregarGruposBackend();
         renderGroupsList();
         document.getElementById('chatHeaderTitle').innerText = 'GRUPOS_CAPTURADOS';
         document.getElementById('chatHeaderSub').innerText = 'Selecione um grupo para filtrar';
@@ -768,7 +778,7 @@
 
     function appendChatMessage(msgData) {
       chatMessages.push(msgData);
-      if (chatMessages.length > 150) chatMessages.shift();
+      if (chatMessages.length > 300) chatMessages.shift();
       localStorage.setItem('bl4ck_chat_msgs', JSON.stringify(chatMessages));
 
       if (msgData.isGroup && msgData.groupId && msgData.groupName) {
@@ -789,6 +799,7 @@
       window.history.pushState({ page: 'chat' }, 'Live Chat', '#chat');
       chatPage.classList.remove('exit-anim');
       chatPage.style.display = 'flex';
+      carregarGruposBackend();
       switchTab('all');
     }
 
@@ -826,7 +837,6 @@
       }
     });
 
-    /* --- LÓGICA DE GERENCIAMENTO DE ESTADO --- */
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
     const secCodigo = document.getElementById('secCodigo');
@@ -905,24 +915,30 @@
     socket.on('status', processarEventoStatus);
     socket.on('status_change', processarEventoStatus);
 
-    socket.on('new_message', (msg) => {
+    /* OUVINTE UNIFICADO DE MENSAGENS RECEBIDAS E ENVIADAS */
+    const trancarOuProcessarMsg = (msg) => {
       if (!msg) return;
       const formattedTime = msg.time || new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
 
-      const isGrp = !!(msg.isGroup || msg.groupId || (msg.from && msg.from.includes('@g.us')));
-      const gId = msg.groupId || (msg.from && msg.from.includes('@g.us') ? msg.from : null);
-      const gName = msg.groupName || msg.groupTitle || (gId ? `Grupo ${gId.substring(0, 5)}` : 'GRUPO');
+      const isFromMe = msg.fromMe === true || msg.key?.fromMe === true;
+      const isGrp = !!(msg.isGroup || msg.groupId || (msg.from && msg.from.includes('@g.us')) || (msg.key?.remoteJid && msg.key.remoteJid.includes('@g.us')));
+      const gId = msg.groupId || (msg.from && msg.from.includes('@g.us') ? msg.from : (msg.key?.remoteJid && msg.key.remoteJid.includes('@g.us') ? msg.key.remoteJid : null));
+      const gName = msg.groupName || msg.groupTitle || (gId ? (knownGroups[gId] || `Grupo ${gId.substring(0, 5)}`) : 'GRUPO');
 
       appendChatMessage({
-        sender: msg.sender || msg.pushName || 'CONTATO',
-        text: msg.text || msg.body || 'Mensagem sincronizada',
-        fromMe: !!msg.fromMe,
+        sender: msg.sender || msg.pushName || (isFromMe ? 'VOCÊ (BOT)' : 'CONTATO'),
+        text: msg.text || msg.body || msg.message?.conversation || 'Mensagem / Mídia',
+        fromMe: isFromMe,
         time: formattedTime,
         isGroup: isGrp,
         groupId: gId,
         groupName: gName
       });
-    });
+    };
+
+    socket.on('new_message', trancarOuProcessarMsg);
+    socket.on('message', trancarOuProcessarMsg);
+    socket.on('message_create', trancarOuProcessarMsg);
 
     function copiarCodigo() {
       const codigoText = codeDisplay.innerText.trim();
