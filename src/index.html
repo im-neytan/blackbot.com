@@ -211,21 +211,11 @@
       padding-bottom: 2px;
     }
 
-    .ascii-banner-log {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: clamp(0.38rem, 2.1vw, 0.55rem);
-      color: #d946ef;
-      line-height: 1.1;
-      letter-spacing: -0.5px;
-      white-space: pre;
-      margin: 4px 0;
-      text-shadow: 0 0 6px rgba(189, 0, 255, 0.6);
-    }
-
-    .log-entry { color: #a0aab0; word-break: break-all; }
+    .log-entry { color: #a0aab0; word-break: break-all; white-space: pre-wrap; }
     .log-entry.info { color: #ffd279; }
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
+    .log-entry.ascii { color: #d946ef; font-size: clamp(0.35rem, 2vw, 0.52rem); line-height: 1.1; letter-spacing: -0.5px; }
 
     .modal {
       display: none;
@@ -370,26 +360,23 @@
       const entry = document.createElement('div');
       const time = new Date().toLocaleTimeString('pt-PT');
       entry.className = `log-entry ${type}`;
-      entry.innerText = `[${time}] ${msg}`;
+      
+      if (type === 'ascii') {
+        entry.innerText = msg;
+      } else {
+        entry.innerText = `[${time}] ${msg}`;
+      }
+      
       logContainer.appendChild(entry);
       logContainer.scrollTop = logContainer.scrollHeight;
     }
 
-    function addAsciiToLog() {
-      const logContainer = document.getElementById('logContainer');
-      if (document.getElementById('logAsciiBanner')) return; // Impede duplicar o banner
-
-      const asciiPre = document.createElement('pre');
-      asciiPre.id = 'logAsciiBanner';
-      asciiPre.className = 'ascii-banner-log';
-      asciiPre.innerText = 
+    function registrarBannerNosLogs() {
+      const asciiBanner = 
 `░█▀▄░█░░░█▀█░░█▀▀░█░█░░░█▀▄░█▀█░▀█▀
 ░█▀▄░█░░░█▀█░░█░░░█▀▄░░░█▀▄░█░█░░█░
-░▀▀░░▀▀▀░▀░▀░░▀▀▀░▀░▀░░░▀▀░░▀▀▀░░▀░
-👾 BL4CK BOT ACTIVE (${CONFIG.VERSION})`;
-      
-      logContainer.appendChild(asciiPre);
-      logContainer.scrollTop = logContainer.scrollHeight;
+░▀▀░░▀▀▀░▀░▀░░▀▀▀░▀░▀░░░▀▀░░▀▀▀░░▀░`;
+      addLog(asciiBanner, 'ascii');
     }
 
     const statusBadge = document.getElementById('statusBadge');
@@ -435,7 +422,6 @@
     const cachedCode = localStorage.getItem('bl4ck_code');
     if (cachedState) {
       aplicarEstadoReal(cachedState, cachedNum, cachedCode);
-      if (cachedState === 'conectado') addAsciiToLog();
     }
 
     const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
@@ -448,19 +434,24 @@
       addLog('A reestabelecer ligação...', 'info');
     });
 
+    let ultimoEstado = null;
+
     socket.on('status', (dados) => {
       aplicarEstadoReal(dados.status, dados.user, dados.code);
 
       if (dados.status === 'conectado') {
-        addAsciiToLog();
-        addLog(`Sessão iniciada (+${dados.user})`, 'success');
+        if (ultimoEstado !== 'conectado') {
+          registrarBannerNosLogs();
+          addLog(`Sessão iniciada (+${dados.user})`, 'success');
+        }
       } else if (dados.status === 'codigo_gerado') {
         addLog(`Pairing Code: ${dados.code}`, 'info');
       } else if (dados.status === 'desconectado') {
-        const asciiElem = document.getElementById('logAsciiBanner');
-        if (asciiElem) asciiElem.remove();
-        addLog('Sistema desconectado.', 'danger');
+        if (ultimoEstado === 'conectado') {
+          addLog('Sistema desconectado.', 'danger');
+        }
       }
+      ultimoEstado = dados.status;
     });
 
     async function gerarCodigo() {
@@ -523,8 +514,6 @@
           numeroAtual = '';
           localStorage.clear();
           document.getElementById('numInput').value = '';
-          const asciiElem = document.getElementById('logAsciiBanner');
-          if (asciiElem) asciiElem.remove();
           aplicarEstadoReal('desconectado');
           addLog('Sessão limpa com sucesso.', 'success');
         } else {
