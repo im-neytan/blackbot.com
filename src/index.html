@@ -137,7 +137,6 @@
       flex-direction: column;
     }
 
-    /* CONTAINER DO INPUT COM OS ÍCONES */
     .input-wrapper {
       position: relative;
       display: flex;
@@ -148,14 +147,14 @@
 
     .input-wrapper input {
       width: 100%;
-      padding: 8px 65px 8px 10px; /* Espaço na direita para os dois ícones */
+      padding: 8px 65px 8px 10px;
       border-radius: 6px;
       border: 1px solid #2a3942;
       background: #0d131a;
       color: #fff;
       font-size: 0.85rem;
       outline: none;
-      text-align: left; /* Digita da esquerda para a direita */
+      text-align: left;
       font-family: monospace;
       margin-bottom: 0;
     }
@@ -199,7 +198,7 @@
     }
 
     #btnClearInput {
-      display: none; /* Inicia oculto */
+      display: none;
     }
 
     .btn-grid {
@@ -496,7 +495,7 @@
 
   <script>
     const CONFIG = {
-      SERVER_URL: 'https://orion-2-production.up.railway.app',
+      SERVER_URL: '', // Vazio assume a mesma origem do backend atual
       VERSION: 'v2.4.0'
     };
 
@@ -525,7 +524,6 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // CONTROLE DOS ÍCONES DE COLAR / LIMPAR
     function toggleInputIcons() {
       const input = document.getElementById('numInput');
       const btnClear = document.getElementById('btnClearInput');
@@ -672,7 +670,6 @@
       if (!numeroAtual) return;
       try {
         socket.emit('check_status', { numero: numeroAtual });
-        socket.emit('get_status', { numero: numeroAtual });
 
         const res = await fetch(`${CONFIG.SERVER_URL}/api/status?numero=${numeroAtual}`).catch(() => null);
         if (res && res.ok) {
