@@ -16,6 +16,8 @@
       --text-main: #e9edef;
       --text-muted: #8696a0;
       --border-color: rgba(255, 42, 75, 0.15);
+      --chat-bg-msg: rgba(255, 255, 255, 0.05);
+      --chat-out-msg: rgba(0, 168, 132, 0.15);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -43,6 +45,24 @@
       z-index: 0;
     }
 
+    /* REESCREVER SUAVE / FADE ANIMATION */
+    .smooth-rewrite {
+      animation: reescreverPagina 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes reescreverPagina {
+      0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+        filter: blur(4px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        filter: blur(0);
+      }
+    }
+
     .container {
       position: relative;
       z-index: 1;
@@ -53,26 +73,13 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
-      animation: reescreverPagina 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    @keyframes reescreverPagina {
-      0% {
-        opacity: 0;
-        transform: translateY(15px) scale(0.98);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
     }
 
     /* CABEÇALHO FIXO */
     .header-banner { 
       text-align: left;
       position: fixed;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       background: rgba(3, 5, 8, 0.95);
       backdrop-filter: blur(8px);
@@ -173,7 +180,6 @@
       outline: none;
       text-align: left;
       font-family: monospace;
-      margin-bottom: 0;
     }
 
     .input-wrapper input:focus {
@@ -198,35 +204,20 @@
       align-items: center;
       justify-content: center;
       padding: 2px;
-      width: auto;
-      height: auto;
-      transition: color 0.2s;
     }
 
-    .icon-btn-inline:hover {
-      color: #fff;
-      opacity: 1;
-    }
-
-    .icon-btn-inline svg {
-      width: 14px;
-      height: 14px;
-      fill: currentColor;
-    }
-
-    #btnClearInput {
-      display: none;
-    }
+    .icon-btn-inline svg { width: 14px; height: 14px; fill: currentColor; }
+    #btnClearInput { display: none; }
 
     .btn-grid {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
 
     button {
       width: 100%;
-      padding: 8px;
+      padding: 9px;
       border-radius: 6px;
       border: none;
       background: var(--primary-red);
@@ -275,31 +266,21 @@
       gap: 4px;
       height: 38px;
       border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
     }
 
-    .btn-copy:hover {
-      background: var(--primary-green);
-      color: #000;
-    }
+    .btn-copy svg { width: 16px; height: 16px; fill: currentColor; }
 
-    .btn-copy svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-
-    /* CARD DISPOSITIVO CONECTADO REESTRUTURADO */
+    /* SEÇÃO ATIVA MELHORADA (CARD ESTILIZADO) */
     .online-card-box {
-      background: rgba(0, 168, 132, 0.05);
-      border: 1px solid rgba(0, 168, 132, 0.2);
-      border-radius: 6px;
-      padding: 10px 12px;
+      background: linear-gradient(145deg, rgba(13, 19, 26, 0.8), rgba(6, 10, 15, 0.95));
+      border: 1px solid rgba(0, 168, 132, 0.3);
+      border-radius: 8px;
+      padding: 12px;
       margin-bottom: 8px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
+      box-shadow: inset 0 0 12px rgba(0, 168, 132, 0.05);
     }
 
     .online-row {
@@ -307,20 +288,21 @@
       justify-content: space-between;
       align-items: center;
       font-size: 0.72rem;
-      padding: 2px 0;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
+      padding-bottom: 6px;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
     }
 
     .online-row:last-child {
       border-bottom: none;
+      padding-bottom: 0;
     }
 
     .online-left {
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      font-size: 0.65rem;
+      letter-spacing: 0.8px;
+      font-size: 0.63rem;
     }
 
     .online-right {
@@ -330,7 +312,6 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      text-align: right;
     }
 
     .neon-dot {
@@ -352,8 +333,19 @@
     .btn-sec { background: transparent; color: var(--text-muted); border: 1px solid #2a3942; }
     .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
     .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
+    
+    .btn-live-chat {
+      background: linear-gradient(90deg, rgba(0, 168, 132, 0.2), rgba(0, 168, 132, 0.05));
+      color: var(--primary-green);
+      border: 1px solid var(--primary-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 800;
+    }
 
-    /* CONSOLE PEQUENO E SEM ROLAGEM */
+    /* CONSOLE PEQUENO */
     .log-panel {
       background: #000000;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -361,11 +353,10 @@
       padding: 0;
       font-family: monospace;
       font-size: 0.68rem;
-      height: 75px; /* ALTURA REDUZIDA CONFORME SOLICITADO */
-      overflow: hidden; /* DESATIVAR ROLAGEM */
+      height: 75px;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      position: relative;
     }
 
     .log-title {
@@ -373,11 +364,9 @@
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin: 0;
       padding: 4px 8px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       background: #000000;
-      z-index: 2;
     }
 
     .log-list {
@@ -395,12 +384,104 @@
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
 
+    /* PÁGINA LIVE CHAT (FULL OVERLAY NATIVO) */
+    .chat-page {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      background: var(--bg-color);
+      z-index: 200;
+      display: none;
+      flex-direction: column;
+      padding: 60px 10px 10px 10px;
+    }
+
+    .chat-header {
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      background: #0d131a;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+    }
+
+    .btn-back-chat {
+      background: transparent;
+      border: none;
+      color: var(--primary-green);
+      width: auto;
+      padding: 4px;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .chat-title-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chat-title-info strong { font-size: 0.85rem; color: #fff; }
+    .chat-title-info span { font-size: 0.62rem; color: var(--primary-green); }
+
+    .chat-messages-container {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 4px;
+    }
+
+    .msg-card {
+      max-width: 82%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      line-height: 1.3;
+      word-wrap: break-word;
+      position: relative;
+    }
+
+    .msg-card.in {
+      align-self: flex-start;
+      background: var(--chat-bg-msg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+
+    .msg-card.out {
+      align-self: flex-end;
+      background: var(--chat-out-msg);
+      border: 1px solid rgba(0, 168, 132, 0.3);
+      color: #fff;
+    }
+
+    .msg-sender {
+      font-size: 0.62rem;
+      color: var(--primary-yellow);
+      font-weight: 700;
+      margin-bottom: 2px;
+      display: block;
+    }
+
+    .msg-time {
+      font-size: 0.58rem;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: 4px;
+      display: block;
+    }
+
     .modal {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.85);
-      z-index: 100;
+      z-index: 300;
       justify-content: center;
       align-items: center;
       padding: 16px;
@@ -421,9 +502,7 @@
 
     footer {
       position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
+      bottom: 0; left: 0; width: 100%;
       background: var(--bg-color);
       padding: 8px 0;
       z-index: 90;
@@ -437,7 +516,7 @@
 </head>
 <body>
 
-  <!-- CABEÇALHO FIXO NO TOPO -->
+  <!-- CABEÇALHO FIXO -->
   <div class="header-banner">
     <div class="header-inner">
       <div class="title-main">
@@ -451,26 +530,23 @@
     </div>
   </div>
 
-  <div class="container">
+  <div class="container smooth-rewrite">
     <div class="status-card">
       <span style="font-size: 0.75rem; font-weight: 600;">STATUS SESSÃO</span>
       <div id="statusBadge" class="status-badge offline">A carregar...</div>
     </div>
 
     <div class="action-panel">
+      <!-- FORMULÁRIO INICIAL -->
       <div id="secForm">
         <div class="input-wrapper">
           <input type="text" id="numInput" placeholder="Ex: 258841234567" oninput="toggleInputIcons()">
           <div class="input-icons-right">
             <button type="button" class="icon-btn-inline" id="btnClearInput" onclick="limparInput()" title="Limpar">
-              <svg viewBox="0 0 24 24">
-                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             </button>
             <button type="button" class="icon-btn-inline" onclick="colarNoInput()" title="Colar">
-              <svg viewBox="0 0 24 24">
-                <path d="M19 2h-4.18C14.4 0.84 13.3 0 12 0c-1.3 0-2.4 0.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"/>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M19 2h-4.18C14.4 0.84 13.3 0 12 0c-1.3 0-2.4 0.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"/></svg>
             </button>
           </div>
         </div>
@@ -481,15 +557,14 @@
         </div>
       </div>
 
+      <!-- PAINEL CÓDIGO -->
       <div id="secCodigo" style="display: none;">
         <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center;">Insira no WhatsApp do dispositivo:</p>
         
         <div class="code-container">
           <div id="codeDisplay" class="code-box">---- ----</div>
           <button id="btnCopy" class="btn-copy" onclick="copiarCodigo()" title="Copiar Código">
-            <svg viewBox="0 0 24 24">
-              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
             <span id="txtCopy" style="font-size: 0.65rem;">COPIAR</span>
           </button>
         </div>
@@ -501,7 +576,7 @@
         </div>
       </div>
 
-      <!-- PAINEL CONECTADO NOVO FORMATO -->
+      <!-- PAINEL CONECTADO (REFORMULADO) -->
       <div id="secOnline" style="display: none;">
         <div class="online-card-box">
           <div class="online-row">
@@ -518,24 +593,43 @@
             <span class="online-left">Conectado a</span>
             <span class="online-right" id="txtConnectTime">--/--/-- - --:--</span>
           </div>
-          <div class="online-row">
-            <span class="online-left">Dispositivo</span>
-            <span class="online-right" id="txtConnectDevice">Detetando...</span>
-          </div>
         </div>
+
         <div class="btn-grid">
-          <button class="btn-reset" onclick="resetarSessao()">Desconectar Atual</button>
+          <button class="btn-live-chat" onclick="abrirLiveChat()">
+            <svg style="width:16px;height:16px;fill:currentColor" viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+            Live Chat
+          </button>
+          <button class="btn-reset" onclick="resetarSessao()">Desconectar</button>
         </div>
       </div>
     </div>
 
-    <!-- CONSOLE LIVE PEQUENO -->
+    <!-- CONSOLE LIVE -->
     <div class="log-panel" id="logContainer">
       <div class="log-title">CONSOLE LIVE</div>
       <div class="log-list" id="logList"></div>
     </div>
   </div>
 
+  <!-- PÁGINA LIVE CHAT (NAVEGAÇÃO NATIVA / DESLIZAR) -->
+  <div id="chatPage" class="chat-page">
+    <div class="chat-header">
+      <button class="btn-back-chat" onclick="fecharLiveChat(true)">&#10094;</button>
+      <div class="chat-title-info">
+        <strong>Mensagens em Tempo Real</strong>
+        <span>● Transmissão Ativa</span>
+      </div>
+    </div>
+
+    <div class="chat-messages-container" id="chatContainer">
+      <div style="text-align: center; color: var(--text-muted); font-size: 0.70rem; margin-top: 20px;">
+        A aguardar novas mensagens...
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL TUTORIAL -->
   <div id="tutorialModal" class="modal">
     <div class="modal-content">
       <h3>Como Conectar</h3>
@@ -570,10 +664,7 @@
       if (/Macintosh/i.test(ua)) return 'Mac OS';
       return 'Dispositivo Móvel';
     }
-    
-    const currentDevice = detectDevice();
-    document.getElementById('deviceInUse').innerText = currentDevice;
-    document.getElementById('txtConnectDevice').innerText = currentDevice;
+    document.getElementById('deviceInUse').innerText = detectDevice();
 
     function updateClock() {
       const now = new Date();
@@ -601,11 +692,7 @@
     function toggleInputIcons() {
       const input = document.getElementById('numInput');
       const btnClear = document.getElementById('btnClearInput');
-      if (input.value.trim().length > 0) {
-        btnClear.style.display = 'flex';
-      } else {
-        btnClear.style.display = 'none';
-      }
+      btnClear.style.display = input.value.trim().length > 0 ? 'flex' : 'none';
     }
 
     function limparInput() {
@@ -626,12 +713,12 @@
       }
     }
 
+    /* SISTEMA DE LOGS DO CONSOLE */
     const logList = document.getElementById('logList');
     let logsCache = JSON.parse(localStorage.getItem('bl4ck_logs') || '[]');
 
     function renderLogs() {
       logList.innerHTML = '';
-      // Exibe até 3 mensagens para não estourar o console pequeno
       const ultimosLogs = logsCache.slice(-3);
       ultimosLogs.forEach(item => {
         const entry = document.createElement('div');
@@ -643,17 +730,66 @@
 
     function addLog(msg, type = 'entry') {
       const time = new Date().toLocaleTimeString('pt-PT');
-      const item = { time, msg, type };
-      logsCache.push(item);
-      
+      logsCache.push({ time, msg, type });
       if (logsCache.length > 50) logsCache.shift();
       localStorage.setItem('bl4ck_logs', JSON.stringify(logsCache));
-
       renderLogs();
     }
-
     renderLogs();
 
+    /* GERENCIAMENTO DE TELA E NAVEGAÇÃO CHAT */
+    const chatPage = document.getElementById('chatPage');
+    const chatContainer = document.getElementById('chatContainer');
+    let chatMessages = JSON.parse(localStorage.getItem('bl4ck_chat_msgs') || '[]');
+
+    function renderChatMessages() {
+      if (chatMessages.length === 0) {
+        chatContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 0.70rem; margin-top: 20px;">A aguardar novas mensagens...</div>';
+        return;
+      }
+      chatContainer.innerHTML = '';
+      chatMessages.forEach(msg => {
+        const card = document.createElement('div');
+        card.className = `msg-card ${msg.fromMe ? 'out' : 'in'}`;
+        card.innerHTML = `
+          <span class="msg-sender">${msg.fromMe ? 'Bot (Enviada)' : (msg.sender || 'Contacto')}</span>
+          <div>${msg.text}</div>
+          <span class="msg-time">${msg.time}</span>
+        `;
+        chatContainer.appendChild(card);
+      });
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function appendChatMessage(msgData) {
+      chatMessages.push(msgData);
+      if (chatMessages.length > 100) chatMessages.shift();
+      localStorage.setItem('bl4ck_chat_msgs', JSON.stringify(chatMessages));
+      renderChatMessages();
+    }
+
+    function abrirLiveChat() {
+      window.history.pushState({ page: 'chat' }, 'Live Chat', '#chat');
+      chatPage.style.display = 'flex';
+      chatPage.classList.add('smooth-rewrite');
+      renderChatMessages();
+    }
+
+    function fecharLiveChat(useHistory = false) {
+      chatPage.style.display = 'none';
+      if (useHistory && window.location.hash === '#chat') {
+        window.history.back();
+      }
+    }
+
+    // SUPORTE PARA BOTÃO VOLTAR DO TELEFONE OU DESLIZAR DO IPHONE (POPSTATE)
+    window.addEventListener('popstate', (e) => {
+      if (!e.state || e.state.page !== 'chat') {
+        fecharLiveChat(false);
+      }
+    });
+
+    /* CONTROLE DE SESSÃO */
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
     const secCodigo = document.getElementById('secCodigo');
@@ -703,26 +839,22 @@
       }
     }
 
-    const cachedState = localStorage.getItem('bl4ck_state') || 'desconectado';
-    const cachedNum = localStorage.getItem('bl4ck_num') || '';
-    const cachedCode = localStorage.getItem('bl4ck_code') || '';
-    aplicarEstadoReal(cachedState, cachedNum, cachedCode);
+    aplicarEstadoReal(
+      localStorage.getItem('bl4ck_state') || 'desconectado',
+      localStorage.getItem('bl4ck_num') || '',
+      localStorage.getItem('bl4ck_code') || ''
+    );
 
     function parseStatus(st) {
       if (!st) return 'desconectado';
       const s = String(st).toLowerCase();
-      if (['conectado', 'connected', 'open', 'isconnected', 'authenticated', 'online', 'ready', 'true'].includes(s)) {
-        return 'conectado';
-      }
-      if (['codigo_gerado', 'code', 'pairing', 'connecting', 'qr', 'waiting'].includes(s)) {
-        return 'codigo_gerado';
-      }
+      if (['conectado', 'connected', 'open', 'isconnected', 'authenticated', 'online', 'ready', 'true'].includes(s)) return 'conectado';
+      if (['codigo_gerado', 'code', 'pairing', 'connecting', 'qr', 'waiting'].includes(s)) return 'codigo_gerado';
       return 'desconectado';
     }
 
     function processarEventoStatus(dados) {
       if (!dados) return;
-
       const numEvento = (dados.user || dados.numero || dados.phone || '').toString().replace(/\D/g, '');
       const numLocal = (numeroAtual || '').toString().replace(/\D/g, '');
 
@@ -731,16 +863,12 @@
       const stFinal = parseStatus(dados.status || dados.state);
       aplicarEstadoReal(stFinal, dados.user || dados.numero || numeroAtual, dados.code);
 
-      if (stFinal === 'conectado') {
-        if (ultimoEstado !== 'conectado') {
-          addLog(`Sessão iniciada (+${numeroAtual})`, 'success');
-        }
-      } else if (stFinal === 'codigo_gerado') {
-        if (dados.code) addLog(`Pairing Code: ${dados.code}`, 'info');
-      } else if (stFinal === 'desconectado') {
-        if (ultimoEstado === 'conectado') {
-          addLog('Sistema desconectado.', 'danger');
-        }
+      if (stFinal === 'conectado' && ultimoEstado !== 'conectado') {
+        addLog(`Sessão iniciada (+${numeroAtual})`, 'success');
+      } else if (stFinal === 'codigo_gerado' && dados.code) {
+        addLog(`Pairing Code: ${dados.code}`, 'info');
+      } else if (stFinal === 'desconectado' && ultimoEstado === 'conectado') {
+        addLog('Sistema desconectado.', 'danger');
       }
       ultimoEstado = stFinal;
     }
@@ -749,20 +877,16 @@
       if (!numeroAtual) return;
       try {
         socket.emit('check_status', { numero: numeroAtual });
-
         const res = await fetch(`${CONFIG.SERVER_URL}/api/status?numero=${numeroAtual}`).catch(() => null);
         if (res && res.ok) {
           const data = await res.json();
-          if (data && (data.status || data.state)) {
-            processarEventoStatus(data);
-          }
+          if (data && (data.status || data.state)) processarEventoStatus(data);
         }
       } catch (err) {}
     }
 
     setInterval(sincronizarEstadoServidor, 2500);
 
-    addLog('A ligar ao servidor...', 'info');
     const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', () => {
@@ -770,16 +894,20 @@
       sincronizarEstadoServidor();
     });
 
-    socket.on('disconnect', () => {
-      addLog('A reestabelecer ligação...', 'info');
-    });
+    socket.on('disconnect', () => addLog('A reestabelecer ligação...', 'info'));
+    socket.on('status', (dados) => processarEventoStatus(dados));
+    socket.on('status_change', (dados) => processarEventoStatus(dados));
 
-    socket.on('status', (dados) => {
-      processarEventoStatus(dados);
-    });
-
-    socket.on('status_change', (dados) => {
-      processarEventoStatus(dados);
+    /* RECEBER MENSAGENS EM TEMPO REAL */
+    socket.on('new_message', (msg) => {
+      if (msg) {
+        appendChatMessage({
+          sender: msg.sender || msg.from || 'Contacto',
+          text: msg.text || msg.body || msg.message || '',
+          fromMe: !!msg.fromMe,
+          time: new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })
+        });
+      }
     });
 
     function copiarCodigo() {
@@ -789,18 +917,14 @@
       navigator.clipboard.writeText(codigoText).then(() => {
         const txtCopy = document.getElementById('txtCopy');
         const btnCopy = document.getElementById('btnCopy');
-        
         txtCopy.innerText = 'COPIADO!';
         btnCopy.style.background = 'var(--primary-green)';
         btnCopy.style.color = '#000';
-
         setTimeout(() => {
           txtCopy.innerText = 'COPIAR';
           btnCopy.style.background = 'rgba(0, 168, 132, 0.15)';
           btnCopy.style.color = 'var(--primary-green)';
         }, 2000);
-      }).catch(() => {
-        addLog('Erro ao copiar código.', 'danger');
       });
     }
 
@@ -815,10 +939,7 @@
     }
 
     async function solicitarNovoCodigo() {
-      if (!numeroAtual) {
-        aplicarEstadoReal('desconectado');
-        return;
-      }
+      if (!numeroAtual) return aplicarEstadoReal('desconectado');
       addLog('A solicitar novo código...', 'info');
       await enviarPedidoCodigo(numeroAtual);
     }
@@ -833,16 +954,12 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ numero })
         });
-
         const data = await res.json();
-        if (data.success) {
-          if (data.code) {
-            aplicarEstadoReal('codigo_gerado', numero, data.code);
-            addLog(`Pairing Code: ${data.code}`, 'info');
-          }
+        if (data.success && data.code) {
+          aplicarEstadoReal('codigo_gerado', numero, data.code);
+          addLog(`Pairing Code: ${data.code}`, 'info');
         } else {
           addLog(`Erro: ${data.error}`, 'danger');
-          alert('Erro: ' + data.error);
         }
       } catch (err) {
         addLog(`Falha na ligação: ${err.message}`, 'danger');
@@ -853,7 +970,6 @@
 
     async function resetarSessao() {
       if (!confirm('Deseja apagar a sessão atual?')) return;
-
       const targetNumber = numeroAtual || document.getElementById('numInput').value.trim();
       addLog('A encerrar sessão...', 'danger');
 
@@ -863,20 +979,17 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ numero: targetNumber })
         });
-
         const data = await res.json();
-
         if (data.success) {
           numeroAtual = '';
           localStorage.clear();
           logsCache = [];
+          chatMessages = [];
           logList.innerHTML = '';
           document.getElementById('numInput').value = '';
           toggleInputIcons();
           aplicarEstadoReal('desconectado');
           addLog('Sessão limpa com sucesso.', 'success');
-        } else {
-          addLog(`Erro ao encerrar: ${data.error}`, 'danger');
         }
       } catch (err) {
         addLog(`Erro no processo: ${err.message}`, 'danger');
