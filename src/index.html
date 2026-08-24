@@ -225,19 +225,17 @@
     .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
     .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
 
-    /* Painel Console Reduzido, Compacto com Título Fixo */
+    /* CONSOLE LIVE CORRIGIDO COM LINHAS MULTIPLAS E SCROLL FUNCIONAL */
     .log-panel {
       background: #000000;
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 8px;
       padding: 8px;
-      font-family: monospace;
+      font-family: 'Courier New', Courier, monospace;
       font-size: 0.70rem;
-      height: 120px;
+      height: 130px;
       overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+      display: block;
       position: relative;
     }
 
@@ -246,9 +244,9 @@
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 2px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      padding-bottom: 2px;
+      margin-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 4px;
       position: sticky;
       top: 0;
       background: #000000;
@@ -256,12 +254,20 @@
     }
 
     .log-list {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+      display: block;
+      width: 100%;
     }
 
-    .log-entry { color: #a0aab0; word-break: break-all; }
+    .log-entry {
+      display: block;
+      width: 100%;
+      color: #a0aab0;
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
     .log-entry.info { color: #ffd279; }
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
@@ -429,7 +435,6 @@
       const item = { time, msg, type };
       logsCache.push(item);
       
-      // Limita o histórico local aos últimos 100 logs para evitar sobrecarregar a memória
       if (logsCache.length > 100) logsCache.shift();
       
       localStorage.setItem('bl4ck_logs', JSON.stringify(logsCache));
@@ -439,11 +444,11 @@
       entry.innerText = `[${time}] ${msg}`;
       logList.appendChild(entry);
 
-      // Garante a rolagem contínua para exibir a mensagem mais recente v v v
+      // Rola até o fundo para ver a mensagem mais recente
       logContainer.scrollTop = logContainer.scrollHeight;
     }
 
-    // Carrega o histórico de logs ao iniciar a página
+    // Restaura o histórico guardado
     renderLogs();
 
     const statusBadge = document.getElementById('statusBadge');
@@ -484,7 +489,6 @@
       }
     }
 
-    // Mantém o estado guardado no cache ao recarregar a página sem dar o efeito de desconectar
     const cachedState = localStorage.getItem('bl4ck_state');
     const cachedNum = localStorage.getItem('bl4ck_num');
     const cachedCode = localStorage.getItem('bl4ck_code');
