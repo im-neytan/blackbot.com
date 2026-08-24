@@ -303,54 +303,75 @@
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
 
-    /* CHAT LIVE MODAL & TRANSIÇÃO DE SAÍDA */
+    /* CHAT LIVE MODAL */
     .chat-page {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background-color: #020408; z-index: 200; display: none; flex-direction: column;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      transition: opacity 0.25s ease, transform 0.25s ease;
       opacity: 1;
       transform: scale(1);
     }
 
     .chat-page.exit-anim {
       opacity: 0;
-      transform: scale(0.95) translateY(15px);
+      transform: scale(0.96) translateY(10px);
       pointer-events: none;
     }
 
+    /* TOPO DO LIVE CHAT FIXO (HEADER FIXO) */
     .chat-header {
-      background: #060b13; padding: 12px; display: flex; align-items: center; gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: #060b13; 
+      padding: 10px 12px; 
+      display: flex; 
+      align-items: center; 
+      gap: 12px;
       border-bottom: 1px solid var(--border-color);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
 
     .btn-back-chat {
       background: rgba(255, 0, 60, 0.1); border: 1px solid var(--primary-red); color: var(--primary-red);
-      font-size: 0.75rem; cursor: pointer; padding: 6px 12px; width: auto; font-weight: 700;
-      transition: all 0.2s;
+      font-size: 0.70rem; cursor: pointer; padding: 5px 10px; width: auto; font-weight: 700;
+      border-radius: 2px; transition: all 0.2s;
     }
-    .btn-back-chat:active {
-      transform: scale(0.92);
-    }
+    .btn-back-chat:active { transform: scale(0.92); }
 
-    .chat-title-info strong { font-size: 0.85rem; color: #fff; display: block; }
-    .chat-title-info span { font-size: 0.60rem; color: var(--primary-green); }
+    .chat-title-info strong { font-size: 0.82rem; color: #fff; display: block; }
+    .chat-title-info span { font-size: 0.58rem; color: var(--primary-green); }
 
-    /* NOVA NAVEGAÇÃO DE TABS NO RODAPÉ DO CHAT */
     .chat-body-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
-    
+
+    /* NAVEGAÇÃO INFERIOR MENOR E FIXA */
     .chat-nav-bottom { 
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
       display: flex; 
-      background: #060b13; 
-      border-top: 1px solid var(--border-color);
-      padding: 6px;
+      background: #040810; 
+      border-top: 1px solid rgba(255, 0, 60, 0.3);
+      padding: 4px;
       gap: 4px;
     }
 
     .tab-btn {
-      flex: 1; padding: 8px 4px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05);
-      color: var(--text-muted); font-size: 0.60rem; font-weight: 700;
-      text-transform: uppercase; border-radius: 2px; display: flex; flex-direction: column;
-      align-items: center; gap: 3px; cursor: pointer; transition: all 0.2s;
+      flex: 1; 
+      padding: 5px 2px; 
+      background: rgba(0,0,0,0.6); 
+      border: 1px solid rgba(255,255,255,0.05);
+      color: var(--text-muted); 
+      font-size: 0.55rem; 
+      font-weight: 700;
+      text-transform: uppercase; 
+      border-radius: 2px; 
+      display: flex; 
+      flex-direction: column;
+      align-items: center; 
+      gap: 2px; 
+      cursor: pointer; 
+      transition: all 0.2s;
     }
 
     .tab-btn svg { width: 14px; height: 14px; fill: currentColor; }
@@ -358,25 +379,25 @@
     .tab-btn.active { 
       color: var(--cyber-blue); 
       border-color: var(--cyber-blue); 
-      background: rgba(0, 240, 255, 0.1); 
-      box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+      background: rgba(0, 240, 255, 0.12); 
+      box-shadow: 0 0 6px rgba(0, 240, 255, 0.25);
     }
 
     .groups-list-container { display: none; flex-direction: column; height: 100%; overflow-y: auto; background: #020408; }
 
     .group-item {
-      display: flex; align-items: center; gap: 12px; padding: 12px;
+      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer;
     }
     .group-item:hover { background: rgba(0, 240, 255, 0.05); }
     .group-avatar {
-      width: 34px; height: 34px; border-radius: 2px; background: var(--cyber-blue);
-      display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000;
+      width: 30px; height: 30px; border-radius: 2px; background: var(--cyber-blue);
+      display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; font-size: 0.75rem;
     }
 
     .group-info { flex: 1; }
-    .group-name { font-size: 0.80rem; font-weight: 700; color: #fff; }
-    .group-sub { font-size: 0.60rem; color: var(--text-muted); margin-top: 2px; }
+    .group-name { font-size: 0.78rem; font-weight: 700; color: #fff; }
+    .group-sub { font-size: 0.58rem; color: var(--text-muted); margin-top: 2px; }
 
     .chat-messages-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px; }
     .msg-card {
@@ -508,22 +529,22 @@
       </div>
     </div>
 
-    <!-- NAVEGAÇÃO REESTILIZADA NO BOTTOM COM ÍCONES E NOVAS TABS -->
+    <!-- RODAPÉ COMPACTO E FIXO COM ÍCONES CYBER -->
     <div class="chat-nav-bottom">
       <button id="tabAll" class="tab-btn active" onclick="switchTab('all')">
-        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M4 4h16v12H5.17L4 17.17V4m0-2c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2H4z"/></svg>
         TODOS
       </button>
       <button id="tabGroups" class="tab-btn" onclick="switchTab('groups')">
-        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         GRUPOS
       </button>
       <button id="tabSent" class="tab-btn" onclick="switchTab('sent')">
         <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-        ENVIADAS (BOT)
+        ENVIADAS
       </button>
       <button id="tabReceived" class="tab-btn" onclick="switchTab('received')">
-        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
         RECEBIDAS
       </button>
     </div>
@@ -560,11 +581,20 @@
     }
     document.getElementById('deviceInUse').innerText = detectDevice();
 
-    /* RELÓGIO COM LOCALIZAÇÃO ATUAL AO LADO DA HORA */
+    /* RESTAURADO DIA DA SEMANA, DATA COMPLETA E CIDADE DE MAPUTO */
     function updateClock() {
       const now = new Date();
-      const timeStr = now.toLocaleTimeString('pt-PT', { timeZone: 'Africa/Maputo' });
-      document.getElementById('liveClock').innerText = `${timeStr}  •  Maputo`;
+      const options = { 
+        timeZone: 'Africa/Maputo', 
+        weekday: 'short', 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit' 
+      };
+      document.getElementById('liveClock').innerText = `${now.toLocaleString('pt-PT', options)} • Maputo`;
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -667,7 +697,7 @@
       const groupKeys = Object.keys(knownGroups);
 
       if (groupKeys.length === 0) {
-        groupsContainer.innerHTML = '<div style="text-align:center; color: var(--text-muted); padding: 20px; font-size: 0.65rem;">Aguardando detecção de grupos no fluxo de mensagens...</div>';
+        groupsContainer.innerHTML = '<div style="text-align:center; color: var(--text-muted); padding: 20px; font-size: 0.65rem;">Aguardando detecção de grupos no fluxo...</div>';
         return;
       }
 
@@ -692,7 +722,7 @@
           <div class="group-avatar">${gName.charAt(0).toUpperCase()}</div>
           <div class="group-info">
             <div class="group-name">${gName}</div>
-            <div class="group-sub">ID: ${gId.substring(0, 15)}...</div>
+            <div class="group-sub">ID: ${gId.substring(0, 14)}...</div>
           </div>
         `;
         groupsContainer.appendChild(item);
@@ -741,7 +771,6 @@
       if (chatMessages.length > 150) chatMessages.shift();
       localStorage.setItem('bl4ck_chat_msgs', JSON.stringify(chatMessages));
 
-      // Mapeia e salva automaticamente qualquer grupo detectado
       if (msgData.isGroup && msgData.groupId && msgData.groupName) {
         knownGroups[msgData.groupId] = msgData.groupName;
         localStorage.setItem('bl4ck_groups', JSON.stringify(knownGroups));
@@ -763,7 +792,6 @@
       switchTab('all');
     }
 
-    /* SISTEMA DE SAÍDA SUAVE COM ANIMAÇÃO */
     let isExiting = false;
     function fecharLiveChat(useHistory = false) {
       if (isExiting) return;
@@ -784,7 +812,7 @@
         if (useHistory && window.location.hash === '#chat') {
           window.history.back();
         }
-      }, 280);
+      }, 250);
     }
 
     if (window.location.hash === '#chat') abrirLiveChat();
@@ -881,7 +909,6 @@
       if (!msg) return;
       const formattedTime = msg.time || new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
 
-      // Garante captura precisa de ID e Nome de grupos para a lista
       const isGrp = !!(msg.isGroup || msg.groupId || (msg.from && msg.from.includes('@g.us')));
       const gId = msg.groupId || (msg.from && msg.from.includes('@g.us') ? msg.from : null);
       const gName = msg.groupName || msg.groupTitle || (gId ? `Grupo ${gId.substring(0, 5)}` : 'GRUPO');
