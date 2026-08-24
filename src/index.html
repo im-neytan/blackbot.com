@@ -510,7 +510,7 @@
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Bot Ativo';
         secOnline.style.display = 'block';
-        txtOnlineNumber.innerText = `+${numeroAtual}`;
+        txtOnlineNumber.innerText = `+${(numeroAtual || '').replace(/\D/g, '')}`;
       } else if (status === 'codigo_gerado') {
         statusBadge.className = 'status-badge warning';
         statusBadge.innerText = 'Aguardando';
@@ -533,26 +533,30 @@
       aplicarEstadoReal('desconectado');
     }
 
-    // 4. INTEGRAÇÃO SOCKET.IO (EM ORDEM DE CONEXÃO)
+    // 4. INTEGRAÇÃO SOCKET.IO (CORRIGIDO E OTIMIZADO)
     addLog('A ligar ao servidor...', 'info');
     const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', () => {
-      addLog('Conetado ao servidor em tempo real.', 'success');
+      addLog('Conectado ao servidor em tempo real.', 'success');
+      if (numeroAtual) {
+        socket.emit('check_status', { numero: numeroAtual });
+      }
     });
 
     socket.on('disconnect', () => {
       addLog('A reestabelecer ligação...', 'info');
     });
 
-    // Escuta estado global da sessão
     socket.on('status', (dados) => {
       processarEventoStatus(dados);
     });
 
-    // Escuta atualizações de sessões dinâmicas
     socket.on('status_change', (dados) => {
-      if (!numeroAtual || dados.numero === numeroAtual) {
+      const numLimpoLocal = (numeroAtual || '').replace(/\D/g, '');
+      const numLimpoEvento = (dados.numero || '').replace(/\D/g, '');
+
+      if (!numLimpoLocal || numLimpoEvento === numLimpoLocal) {
         processarEventoStatus({
           status: dados.status,
           user: dados.numero,
@@ -562,20 +566,27 @@
     });
 
     function processarEventoStatus(dados) {
-      aplicarEstadoReal(dados.status, dados.user, dados.code);
+      if (!dados) return;
 
-      if (dados.status === 'conectado') {
+      let st = (dados.status || '').toLowerCase();
+      if (st === 'open' || st === 'connected' || st === 'isconnected') {
+        st = 'conectado';
+      }
+
+      aplicarEstadoReal(st, dados.user, dados.code);
+
+      if (st === 'conectado') {
         if (ultimoEstado !== 'conectado') {
           addLog(`Sessão iniciada (+${dados.user || numeroAtual})`, 'success');
         }
-      } else if (dados.status === 'codigo_gerado') {
+      } else if (st === 'codigo_gerado') {
         addLog(`Pairing Code: ${dados.code}`, 'info');
-      } else if (dados.status === 'desconectado' || dados.status === 'removido') {
+      } else if (st === 'desconectado' || st === 'removido' || st === 'close') {
         if (ultimoEstado === 'conectado') {
           addLog('Sistema desconectado.', 'danger');
         }
       }
-      ultimoEstado = dados.status;
+      ultimoEstado = st;
     }
 
     // 5. FUNÇÕES DE INTERAÇÃO E REQUISIÇÕES HTTP
