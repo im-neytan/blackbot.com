@@ -225,7 +225,7 @@
     .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
     .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
 
-    /* Painel Console Reduzido e Compacto */
+    /* Painel Console Reduzido, Compacto com Título Fixo */
     .log-panel {
       background: #000000;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -238,6 +238,7 @@
       display: flex;
       flex-direction: column;
       gap: 4px;
+      position: relative;
     }
 
     .log-title {
@@ -248,6 +249,16 @@
       margin-bottom: 2px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       padding-bottom: 2px;
+      position: sticky;
+      top: 0;
+      background: #000000;
+      z-index: 2;
+    }
+
+    .log-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
     }
 
     .log-entry { color: #a0aab0; word-break: break-all; }
@@ -344,6 +355,7 @@
 
     <div class="log-panel" id="logContainer">
       <div class="log-title">CONSOLE LIVE</div>
+      <div class="log-list" id="logList"></div>
     </div>
   </div>
 
@@ -396,15 +408,43 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    function addLog(msg, type = 'entry') {
-      const logContainer = document.getElementById('logContainer');
-      const entry = document.createElement('div');
-      const time = new Date().toLocaleTimeString('pt-PT');
-      entry.className = `log-entry ${type}`;
-      entry.innerText = `[${time}] ${msg}`;
-      logContainer.appendChild(entry);
+    // GERENCIAMENTO E PERSISTÊNCIA DOS LOGS
+    const logContainer = document.getElementById('logContainer');
+    const logList = document.getElementById('logList');
+    let logsCache = JSON.parse(localStorage.getItem('bl4ck_logs') || '[]');
+
+    function renderLogs() {
+      logList.innerHTML = '';
+      logsCache.forEach(item => {
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${item.type}`;
+        entry.innerText = `[${item.time}] ${item.msg}`;
+        logList.appendChild(entry);
+      });
       logContainer.scrollTop = logContainer.scrollHeight;
     }
+
+    function addLog(msg, type = 'entry') {
+      const time = new Date().toLocaleTimeString('pt-PT');
+      const item = { time, msg, type };
+      logsCache.push(item);
+      
+      // Limita o histórico local aos últimos 100 logs para evitar sobrecarregar a memória
+      if (logsCache.length > 100) logsCache.shift();
+      
+      localStorage.setItem('bl4ck_logs', JSON.stringify(logsCache));
+
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.innerText = `[${time}] ${msg}`;
+      logList.appendChild(entry);
+
+      // Garante a rolagem contínua para exibir a mensagem mais recente v v v
+      logContainer.scrollTop = logContainer.scrollHeight;
+    }
+
+    // Carrega o histórico de logs ao iniciar a página
+    renderLogs();
 
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
@@ -454,7 +494,6 @@
       aplicarEstadoReal('desconectado');
     }
 
-    // Regista o log inicial via JS para que possa ser empurrado na rolagem
     addLog('A ligar ao servidor...', 'info');
 
     const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
@@ -545,6 +584,8 @@
         if (data.success) {
           numeroAtual = '';
           localStorage.clear();
+          logsCache = [];
+          logList.innerHTML = '';
           document.getElementById('numInput').value = '';
           aplicarEstadoReal('desconectado');
           addLog('Sessão limpa com sucesso.', 'success');
