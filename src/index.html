@@ -28,7 +28,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 95px 12px 40px 12px; /* Espaço para não cobrir o cabeçalho fixo */
+      padding: 95px 12px 40px 12px;
       overflow-x: hidden;
       position: relative;
     }
@@ -67,7 +67,7 @@
       }
     }
 
-    /* CABEÇALHO FIXO NO TOPO */
+    /* CABEÇALHO FIXO */
     .header-banner { 
       text-align: left;
       position: fixed;
@@ -290,69 +290,91 @@
       fill: currentColor;
     }
 
+    /* CARD DISPOSITIVO CONECTADO REESTRUTURADO */
     .online-card-box {
       background: rgba(0, 168, 132, 0.05);
       border: 1px solid rgba(0, 168, 132, 0.2);
       border-radius: 6px;
-      padding: 8px;
+      padding: 10px 12px;
       margin-bottom: 8px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 6px;
+    }
+
+    .online-row {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
+      font-size: 0.72rem;
+      padding: 2px 0;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.05);
     }
 
-    .online-label {
-      font-size: 0.65rem;
+    .online-row:last-child {
+      border-bottom: none;
+    }
+
+    .online-left {
       color: var(--text-muted);
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+      font-size: 0.65rem;
     }
 
-    .online-number {
-      font-family: monospace;
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--primary-green);
-      letter-spacing: 1px;
-    }
-
-    .online-status-pill {
-      font-size: 0.60rem;
-      color: #000;
-      background: var(--primary-green);
-      padding: 2px 6px;
-      border-radius: 8px;
+    .online-right {
+      color: var(--text-main);
       font-weight: 700;
-      text-transform: uppercase;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-align: right;
+    }
+
+    .neon-dot {
+      width: 8px;
+      height: 8px;
+      background-color: var(--primary-green);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--primary-green);
+      display: inline-block;
+      animation: pulseNeon 1.5s infinite;
+    }
+
+    @keyframes pulseNeon {
+      0% { opacity: 0.4; box-shadow: 0 0 2px var(--primary-green); }
+      50% { opacity: 1; box-shadow: 0 0 10px var(--primary-green); }
+      100% { opacity: 0.4; box-shadow: 0 0 2px var(--primary-green); }
     }
 
     .btn-sec { background: transparent; color: var(--text-muted); border: 1px solid #2a3942; }
     .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
     .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
 
-    /* PAINEL DE CONSOLE FIXO SEM ROLAGEM */
+    /* CONSOLE PEQUENO E SEM ROLAGEM */
     .log-panel {
       background: #000000;
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 8px;
       padding: 0;
       font-family: monospace;
-      font-size: 0.70rem;
-      height: 120px;
-      overflow: hidden; /* IMPEDE ROLAGEM TOTAL */
+      font-size: 0.68rem;
+      height: 75px; /* ALTURA REDUZIDA CONFORME SOLICITADO */
+      overflow: hidden; /* DESATIVAR ROLAGEM */
       display: flex;
       flex-direction: column;
       position: relative;
     }
 
     .log-title {
-      font-size: 0.60rem;
+      font-size: 0.58rem;
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
       margin: 0;
-      padding: 6px 8px;
+      padding: 4px 8px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       background: #000000;
       z-index: 2;
@@ -361,14 +383,14 @@
     .log-list {
       display: flex;
       flex-direction: column;
-      justify-content: flex-end; /* MANTÉM MENSAGENS NOVAS NO FINAL */
-      gap: 4px;
-      padding: 6px 8px;
+      justify-content: flex-end;
+      gap: 3px;
+      padding: 4px 8px;
       height: 100%;
-      overflow: hidden; /* MANTÉM CONTEÚDO SEM BARRAS */
+      overflow: hidden;
     }
 
-    .log-entry { color: #a0aab0; word-break: break-all; }
+    .log-entry { color: #a0aab0; word-break: break-all; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .log-entry.info { color: #ffd279; }
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
@@ -415,7 +437,7 @@
 </head>
 <body>
 
-  <!-- CABEÇALHO FIXO -->
+  <!-- CABEÇALHO FIXO NO TOPO -->
   <div class="header-banner">
     <div class="header-inner">
       <div class="title-main">
@@ -479,11 +501,27 @@
         </div>
       </div>
 
+      <!-- PAINEL CONECTADO NOVO FORMATO -->
       <div id="secOnline" style="display: none;">
         <div class="online-card-box">
-          <span class="online-label">Dispositivo Conectado</span>
-          <span class="online-number" id="txtOnlineNumber">+258 --</span>
-          <span class="online-status-pill">SESSÃO ATIVA</span>
+          <div class="online-row">
+            <span class="online-left">Sessão</span>
+            <span class="online-right" style="color: var(--primary-green);">
+              Ativa <span class="neon-dot"></span>
+            </span>
+          </div>
+          <div class="online-row">
+            <span class="online-left">Número</span>
+            <span class="online-right" id="txtOnlineNumber">+258 --</span>
+          </div>
+          <div class="online-row">
+            <span class="online-left">Conectado a</span>
+            <span class="online-right" id="txtConnectTime">--/--/-- - --:--</span>
+          </div>
+          <div class="online-row">
+            <span class="online-left">Dispositivo</span>
+            <span class="online-right" id="txtConnectDevice">Detetando...</span>
+          </div>
         </div>
         <div class="btn-grid">
           <button class="btn-reset" onclick="resetarSessao()">Desconectar Atual</button>
@@ -491,7 +529,7 @@
       </div>
     </div>
 
-    <!-- LOGS SEM ROLAGEM -->
+    <!-- CONSOLE LIVE PEQUENO -->
     <div class="log-panel" id="logContainer">
       <div class="log-title">CONSOLE LIVE</div>
       <div class="log-list" id="logList"></div>
@@ -532,7 +570,10 @@
       if (/Macintosh/i.test(ua)) return 'Mac OS';
       return 'Dispositivo Móvel';
     }
-    document.getElementById('deviceInUse').innerText = detectDevice();
+    
+    const currentDevice = detectDevice();
+    document.getElementById('deviceInUse').innerText = currentDevice;
+    document.getElementById('txtConnectDevice').innerText = currentDevice;
 
     function updateClock() {
       const now = new Date();
@@ -546,6 +587,16 @@
     }
     setInterval(updateClock, 1000);
     updateClock();
+
+    function getFormattedDateNow() {
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2, '0');
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const yy = String(now.getFullYear()).slice(-2);
+      const hh = String(now.getHours()).padStart(2, '0');
+      const min = String(now.getMinutes()).padStart(2, '0');
+      return `${dd}/${mm}/${yy} - ${hh}:${min}`;
+    }
 
     function toggleInputIcons() {
       const input = document.getElementById('numInput');
@@ -580,8 +631,8 @@
 
     function renderLogs() {
       logList.innerHTML = '';
-      // Limita exibições visualmente curtas para não estourar a tela sem rolagem
-      const ultimosLogs = logsCache.slice(-5);
+      // Exibe até 3 mensagens para não estourar o console pequeno
+      const ultimosLogs = logsCache.slice(-3);
       ultimosLogs.forEach(item => {
         const entry = document.createElement('div');
         entry.className = `log-entry ${item.type}`;
@@ -609,6 +660,7 @@
     const secOnline = document.getElementById('secOnline');
     const codeDisplay = document.getElementById('codeDisplay');
     const txtOnlineNumber = document.getElementById('txtOnlineNumber');
+    const txtConnectTime = document.getElementById('txtConnectTime');
 
     let numeroAtual = localStorage.getItem('bl4ck_num') || '';
     let ultimoEstado = null;
@@ -630,6 +682,14 @@
         statusBadge.innerText = 'Bot Ativo';
         secOnline.style.display = 'block';
         txtOnlineNumber.innerText = `+${numeroAtual}`;
+        
+        let connTime = localStorage.getItem('bl4ck_conn_time');
+        if (!connTime) {
+          connTime = getFormattedDateNow();
+          localStorage.setItem('bl4ck_conn_time', connTime);
+        }
+        txtConnectTime.innerText = connTime;
+
       } else if (status === 'codigo_gerado') {
         statusBadge.className = 'status-badge warning';
         statusBadge.innerText = 'Aguardando';
@@ -639,6 +699,7 @@
         statusBadge.className = 'status-badge offline';
         statusBadge.innerText = 'Desconectado';
         secForm.style.display = 'block';
+        localStorage.removeItem('bl4ck_conn_time');
       }
     }
 
@@ -705,7 +766,7 @@
     const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', () => {
-      addLog('Conectado ao servidor em tempo real.', 'success');
+      addLog('Conectado ao servidor.', 'success');
       sincronizarEstadoServidor();
     });
 
