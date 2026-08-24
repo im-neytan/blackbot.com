@@ -28,7 +28,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 10px 12px 40px 12px;
+      padding: 95px 12px 40px 12px; /* Espaço para não cobrir o cabeçalho fixo */
       overflow-x: hidden;
       position: relative;
     }
@@ -67,7 +67,24 @@
       }
     }
 
-    .header-banner { text-align: left; }
+    /* CABEÇALHO FIXO NO TOPO */
+    .header-banner { 
+      text-align: left;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(3, 5, 8, 0.95);
+      backdrop-filter: blur(8px);
+      padding: 10px 12px;
+      z-index: 90;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .header-inner {
+      max-width: 400px;
+      margin: 0 auto;
+    }
 
     .title-main {
       font-size: 1.4rem;
@@ -314,6 +331,7 @@
     .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
     .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
 
+    /* PAINEL DE CONSOLE FIXO SEM ROLAGEM */
     .log-panel {
       background: #000000;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -322,7 +340,7 @@
       font-family: monospace;
       font-size: 0.70rem;
       height: 120px;
-      overflow-y: auto;
+      overflow: hidden; /* IMPEDE ROLAGEM TOTAL */
       display: flex;
       flex-direction: column;
       position: relative;
@@ -336,8 +354,6 @@
       margin: 0;
       padding: 6px 8px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      position: sticky;
-      top: 0;
       background: #000000;
       z-index: 2;
     }
@@ -345,8 +361,11 @@
     .log-list {
       display: flex;
       flex-direction: column;
+      justify-content: flex-end; /* MANTÉM MENSAGENS NOVAS NO FINAL */
       gap: 4px;
       padding: 6px 8px;
+      height: 100%;
+      overflow: hidden; /* MANTÉM CONTEÚDO SEM BARRAS */
     }
 
     .log-entry { color: #a0aab0; word-break: break-all; }
@@ -359,7 +378,7 @@
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.85);
-      z-index: 10;
+      z-index: 100;
       justify-content: center;
       align-items: center;
       padding: 16px;
@@ -385,7 +404,7 @@
       width: 100%;
       background: var(--bg-color);
       padding: 8px 0;
-      z-index: 100;
+      z-index: 90;
       font-size: 0.60rem;
       color: var(--text-muted);
       text-align: center;
@@ -396,8 +415,9 @@
 </head>
 <body>
 
-  <div class="container">
-    <div class="header-banner">
+  <!-- CABEÇALHO FIXO -->
+  <div class="header-banner">
+    <div class="header-inner">
       <div class="title-main">
         <span class="highlight">BL4CK</span> <span class="white">BOT</span>
       </div>
@@ -407,7 +427,9 @@
         <div>Versão: <span id="appVersion">v4.10.0</span> • Dispositivo: <span id="deviceInUse">Detetando...</span></div>
       </div>
     </div>
+  </div>
 
+  <div class="container">
     <div class="status-card">
       <span style="font-size: 0.75rem; font-weight: 600;">STATUS SESSÃO</span>
       <div id="statusBadge" class="status-badge offline">A carregar...</div>
@@ -469,6 +491,7 @@
       </div>
     </div>
 
+    <!-- LOGS SEM ROLAGEM -->
     <div class="log-panel" id="logContainer">
       <div class="log-title">CONSOLE LIVE</div>
       <div class="log-list" id="logList"></div>
@@ -495,7 +518,7 @@
 
   <script>
     const CONFIG = {
-      SERVER_URL: '', // Vazio assume a mesma origem do backend atual
+      SERVER_URL: '',
       VERSION: 'v2.4.0'
     };
 
@@ -552,19 +575,19 @@
       }
     }
 
-    const logContainer = document.getElementById('logContainer');
     const logList = document.getElementById('logList');
     let logsCache = JSON.parse(localStorage.getItem('bl4ck_logs') || '[]');
 
     function renderLogs() {
       logList.innerHTML = '';
-      logsCache.forEach(item => {
+      // Limita exibições visualmente curtas para não estourar a tela sem rolagem
+      const ultimosLogs = logsCache.slice(-5);
+      ultimosLogs.forEach(item => {
         const entry = document.createElement('div');
         entry.className = `log-entry ${item.type}`;
         entry.innerText = `[${item.time}] ${item.msg}`;
         logList.appendChild(entry);
       });
-      logContainer.scrollTop = logContainer.scrollHeight;
     }
 
     function addLog(msg, type = 'entry') {
@@ -572,15 +595,10 @@
       const item = { time, msg, type };
       logsCache.push(item);
       
-      if (logsCache.length > 100) logsCache.shift();
+      if (logsCache.length > 50) logsCache.shift();
       localStorage.setItem('bl4ck_logs', JSON.stringify(logsCache));
 
-      const entry = document.createElement('div');
-      entry.className = `log-entry ${type}`;
-      entry.innerText = `[${time}] ${msg}`;
-      logList.appendChild(entry);
-
-      logContainer.scrollTop = logContainer.scrollHeight;
+      renderLogs();
     }
 
     renderLogs();
