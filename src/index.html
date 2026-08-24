@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>bl4ck_bot | LIVE</title>
+  <title>bl4ck_bot | PAINEL LIVE</title>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   <style>
     :root {
@@ -183,6 +183,44 @@
       text-shadow: 0 0 10px rgba(0, 168, 132, 0.4);
     }
 
+    /* Estilização Organizacional da Secção Ativa */
+    .online-card-box {
+      background: rgba(0, 168, 132, 0.05);
+      border: 1px solid rgba(0, 168, 132, 0.2);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .online-label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .online-number {
+      font-family: monospace;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--primary-green);
+      letter-spacing: 1px;
+    }
+
+    .online-status-pill {
+      font-size: 0.65rem;
+      color: #000;
+      background: var(--primary-green);
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
     .btn-sec { background: transparent; color: var(--text-muted); border: 1px solid #2a3942; }
     .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
     .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
@@ -211,11 +249,10 @@
       padding-bottom: 2px;
     }
 
-    .log-entry { color: #a0aab0; word-break: break-all; white-space: pre-wrap; }
+    .log-entry { color: #a0aab0; word-break: break-all; }
     .log-entry.info { color: #ffd279; }
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
-    .log-entry.ascii { color: #d946ef; font-size: clamp(0.35rem, 2vw, 0.52rem); line-height: 1.1; letter-spacing: -0.5px; }
 
     .modal {
       display: none;
@@ -257,7 +294,7 @@
   <div class="container">
     <div class="header-banner">
       <div class="title-main">
-        <span class="highlight">BL4CK</span> <span class="white">BOT</span>
+        <span class="highlight">BL4CK</span> <span class="white">BOT SYSTEM</span>
       </div>
       <div class="subtitle-sub">bl4ck bot • PAINEL DE CONEXÃO EM TEMPO REAL</div>
       <div class="meta-info">
@@ -292,8 +329,12 @@
         </div>
       </div>
 
-      <div id="secOnline" style="display: none; text-align: center;">
-        <p id="txtOnline" style="color: var(--primary-green); font-weight: 700; font-size: 0.9rem; margin-bottom: 14px;"></p>
+      <div id="secOnline" style="display: none;">
+        <div class="online-card-box">
+          <span class="online-label">Dispositivo Conectado</span>
+          <span class="online-number" id="txtOnlineNumber">+258 --</span>
+          <span class="online-status-pill">SESSÃO ATIVA</span>
+        </div>
         <div class="btn-grid">
           <button class="btn-reset" onclick="resetarSessao()">Desconectar Atual</button>
         </div>
@@ -302,7 +343,7 @@
 
     <div class="log-panel" id="logContainer">
       <div class="log-title">CONSOLE LIVE</div>
-      <div class="log-entry info">[SISTEMA] Conectando ao servidor...</div>
+      <div class="log-entry info">[SISTEMA] A ligar ao servidor...</div>
     </div>
   </div>
 
@@ -325,6 +366,11 @@
   </footer>
 
   <script>
+    // Limpa a cache no reload manual do navegador para consultar diretamente o servidor
+    if (performance.getEntriesByType('navigation')[0].type === 'reload') {
+      localStorage.clear();
+    }
+
     const CONFIG = {
       SERVER_URL: 'https://orion-2-production.up.railway.app',
       VERSION: 'v2.4.0'
@@ -360,23 +406,9 @@
       const entry = document.createElement('div');
       const time = new Date().toLocaleTimeString('pt-PT');
       entry.className = `log-entry ${type}`;
-      
-      if (type === 'ascii') {
-        entry.innerText = msg;
-      } else {
-        entry.innerText = `[${time}] ${msg}`;
-      }
-      
+      entry.innerText = `[${time}] ${msg}`;
       logContainer.appendChild(entry);
       logContainer.scrollTop = logContainer.scrollHeight;
-    }
-
-    function registrarBannerNosLogs() {
-      const asciiBanner = 
-`░█▀▄░█░░░█▀█░░█▀▀░█░█░░░█▀▄░█▀█░▀█▀
-░█▀▄░█░░░█▀█░░█░░░█▀▄░░░█▀▄░█░█░░█░
-░▀▀░░▀▀▀░▀░▀░░▀▀▀░▀░▀░░░▀▀░░▀▀▀░░▀░`;
-      addLog(asciiBanner, 'ascii');
     }
 
     const statusBadge = document.getElementById('statusBadge');
@@ -384,7 +416,7 @@
     const secCodigo = document.getElementById('secCodigo');
     const secOnline = document.getElementById('secOnline');
     const codeDisplay = document.getElementById('codeDisplay');
-    const txtOnline = document.getElementById('txtOnline');
+    const txtOnlineNumber = document.getElementById('txtOnlineNumber');
 
     let numeroAtual = localStorage.getItem('bl4ck_num') || '';
 
@@ -404,7 +436,7 @@
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Bot Ativo';
         secOnline.style.display = 'block';
-        txtOnline.innerText = `Sessão Ativa: +${numeroAtual}`;
+        txtOnlineNumber.innerText = `+${numeroAtual}`;
       } else if (status === 'codigo_gerado') {
         statusBadge.className = 'status-badge warning';
         statusBadge.innerText = 'Aguardando';
@@ -441,7 +473,6 @@
 
       if (dados.status === 'conectado') {
         if (ultimoEstado !== 'conectado') {
-          registrarBannerNosLogs();
           addLog(`Sessão iniciada (+${dados.user})`, 'success');
         }
       } else if (dados.status === 'codigo_gerado') {
