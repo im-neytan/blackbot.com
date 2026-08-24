@@ -183,20 +183,22 @@
       text-shadow: 0 0 10px rgba(0, 168, 132, 0.4);
     }
 
-    /* Caixa ASCII Adaptada */
+    /* Banner ASCII Adaptado proporcionalmente */
     .ascii-box {
-      font-family: monospace;
-      font-size: 0.65rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: clamp(0.45rem, 2.5vw, 0.65rem);
       color: #d946ef;
       background: #000000;
-      padding: 10px;
+      padding: 12px 6px;
       border-radius: 6px;
       border: 1px solid rgba(189, 0, 255, 0.3);
-      margin-bottom: 10px;
-      line-height: 1.2;
+      margin-bottom: 12px;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
       overflow-x: auto;
       text-shadow: 0 0 8px rgba(189, 0, 255, 0.5);
       white-space: pre;
+      text-align: center;
     }
 
     .btn-sec { background: transparent; color: var(--text-muted); border: 1px solid #2a3942; }
@@ -307,14 +309,12 @@
         </div>
       </div>
 
-      <!-- Banner ASCII exibido ao conectar -->
+      <!-- Apenas a secção online com o banner ASCII proporcional -->
       <div id="secOnline" style="display: none; text-align: center;">
-        <pre class="ascii-box">
-░█▀▄░█░░░█▀█░░█▀▀░█░█░░░█▀▄░█▀█░▀█▀
+        <pre class="ascii-box">░█▀▄░█░░░█▀█░░█▀▀░█░█░░░█▀▄░█▀█░▀█▀
 ░█▀▄░█░░░█▀█░░█░░░█▀▄░░░█▀▄░█░█░░█░
 ░▀▀░░▀▀▀░▀░▀░░▀▀▀░▀░▀░░░▀▀░░▀▀▀░░▀░
-<span id="bannerVersion" style="color: var(--text-main);"></span>
-        </pre>
+<span id="bannerVersion" style="color: var(--text-main);"></span></pre>
         
         <p id="txtOnline" style="color: var(--primary-green); font-weight: 700; font-size: 0.85rem; margin-bottom: 12px;"></p>
         
@@ -350,7 +350,7 @@
 
   <script>
     const CONFIG = {
-      RAILWAY_URL: 'https://orion-2-production.up.railway.app',
+      SERVER_URL: window.location.origin,
       VERSION: 'v2.4.0'
     };
 
@@ -392,7 +392,7 @@
       logContainer.scrollTop = logContainer.scrollHeight;
     }
 
-    const socket = io(CONFIG.RAILWAY_URL, { transports: ['websocket', 'polling'] });
+    const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
 
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
@@ -402,36 +402,53 @@
     const txtOnline = document.getElementById('txtOnline');
     const bannerVersion = document.getElementById('bannerVersion');
 
-    let numeroAtual = '';
+    let numeroAtual = localStorage.getItem('bl4ck_num') || '';
 
-    socket.on('status', (dados) => {
-      if (dados.status === 'conectado') {
-        numeroAtual = dados.user || numeroAtual;
+    function renderState(state, data = {}) {
+      localStorage.setItem('bl4ck_state', state);
+
+      secForm.style.display = 'none';
+      secCodigo.style.display = 'none';
+      secOnline.style.display = 'none';
+
+      if (state === 'conectado') {
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Bot Ativo';
-        secForm.style.display = 'none';
-        secCodigo.style.display = 'none';
         secOnline.style.display = 'block';
-        
-        // Atualiza a linha da versão dentro do banner ASCII
         bannerVersion.innerText = `👾 Versão: ${CONFIG.VERSION}`;
-        txtOnline.innerText = `Sessão Ativa: +${dados.user}`;
-        
-        addLog(`Sessão iniciada (+${dados.user})`, 'success');
-      } else if (dados.status === 'codigo_gerado') {
+        txtOnline.innerText = `Sessão Ativa: +${data.user || numeroAtual}`;
+      } else if (state === 'codigo_gerado') {
         statusBadge.className = 'status-badge warning';
         statusBadge.innerText = 'Aguardando';
-        secForm.style.display = 'none';
         secCodigo.style.display = 'block';
-        secOnline.style.display = 'none';
-        codeDisplay.innerText = dados.code;
-        addLog(`Pairing Code: ${dados.code}`, 'info');
+        if (data.code) {
+          codeDisplay.innerText = data.code;
+          localStorage.setItem('bl4ck_code', data.code);
+        } else {
+          codeDisplay.innerText = localStorage.getItem('bl4ck_code') || '---- ----';
+        }
       } else {
         statusBadge.className = 'status-badge offline';
         statusBadge.innerText = 'Desconectado';
         secForm.style.display = 'block';
-        secCodigo.style.display = 'none';
-        secOnline.style.display = 'none';
+      }
+    }
+
+    // Restaura visualmente o estado guardado antes da resposta da socket
+    const savedState = localStorage.getItem('bl4ck_state');
+    if (savedState) renderState(savedState);
+
+    socket.on('status', (dados) => {
+      if (dados.status === 'conectado') {
+        numeroAtual = dados.user || numeroAtual;
+        localStorage.setItem('bl4ck_num', numeroAtual);
+        renderState('conectado', dados);
+        addLog(`Sessão iniciada (+${numeroAtual})`, 'success');
+      } else if (dados.status === 'codigo_gerado') {
+        renderState('codigo_gerado', dados);
+        addLog(`Pairing Code: ${dados.code}`, 'info');
+      } else {
+        renderState('desconectado');
         addLog('Sistema desconectado.', 'danger');
       }
     });
@@ -441,14 +458,14 @@
       if (!numero) return alert('Por favor, introduza o número!');
 
       numeroAtual = numero;
+      localStorage.setItem('bl4ck_num', numero);
       addLog(`A solicitar código (+${numero})...`, 'info');
       await enviarPedidoCodigo(numero);
     }
 
     async function solicitarNovoCodigo() {
       if (!numeroAtual) {
-        secCodigo.style.display = 'none';
-        secForm.style.display = 'block';
+        renderState('desconectado');
         return;
       }
       addLog('A solicitar novo código...', 'info');
@@ -460,7 +477,7 @@
       btn.disabled = true;
 
       try {
-        const res = await fetch(`${CONFIG.RAILWAY_URL}/api/solicitar-codigo`, {
+        const res = await fetch(`${CONFIG.SERVER_URL}/api/solicitar-codigo`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ numero })
@@ -482,10 +499,10 @@
       if (!confirm('Deseja apagar a sessão atual?')) return;
       
       const targetNumber = numeroAtual || document.getElementById('numInput').value.trim();
-      addLog('A apagar sessão no servidor...', 'danger');
+      addLog('A encerrar e limpar a sessão no servidor...', 'danger');
       
       try {
-        const res = await fetch(`${CONFIG.RAILWAY_URL}/api/resetar-sessao`, { 
+        const res = await fetch(`${CONFIG.SERVER_URL}/api/resetar-sessao`, { 
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ numero: targetNumber })
@@ -495,13 +512,17 @@
         
         if (data.success) {
           numeroAtual = '';
+          localStorage.removeItem('bl4ck_num');
+          localStorage.removeItem('bl4ck_state');
+          localStorage.removeItem('bl4ck_code');
           document.getElementById('numInput').value = '';
-          addLog('Sessão limpa do MongoDB e diretório local redefinido.', 'success');
+          renderState('desconectado');
+          addLog('Sessão encerrada e limpa com sucesso.', 'success');
         } else {
-          addLog(`Erro ao resetar: ${data.error}`, 'danger');
+          addLog(`Erro ao encerrar sessão: ${data.error}`, 'danger');
         }
       } catch (err) {
-        addLog(`Erro no reset: ${err.message}`, 'danger');
+        addLog(`Erro no processo: ${err.message}`, 'danger');
       }
     }
 
