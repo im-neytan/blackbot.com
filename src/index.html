@@ -16,8 +16,8 @@
       --text-main: #e9edef;
       --text-muted: #8696a0;
       --border-color: rgba(255, 42, 75, 0.15);
-      --chat-bg-msg: rgba(255, 255, 255, 0.05);
-      --chat-out-msg: rgba(0, 168, 132, 0.15);
+      --chat-bg-msg: #111b21;
+      --chat-out-msg: #005c4b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,20 +45,21 @@
       z-index: 0;
     }
 
+    /* --- ANIMAÇÃO DE REESCRITA DE CIMA PARA BAIXO COM DADOS SÍNCRONOS --- */
     .smooth-rewrite {
-      animation: reescreverPagina 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: reescreverTopDown 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
     }
 
-    @keyframes reescreverPagina {
+    @keyframes reescreverTopDown {
       0% {
         opacity: 0;
-        transform: translateY(12px) scale(0.98);
-        filter: blur(4px);
+        transform: translateY(-20px);
+        clip-path: inset(0 0 100% 0);
       }
       100% {
         opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
+        transform: translateY(0);
+        clip-path: inset(0 0 0 0);
       }
     }
 
@@ -380,27 +381,29 @@
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
 
+    /* --- ESTILO REFORMULADO DO LIVE CHAT (TIPO WHATSAPP DARK MODERNO) --- */
     .chat-page {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: var(--bg-color);
+      background: #0b141a;
       z-index: 200;
       display: none;
       flex-direction: column;
-      padding: 60px 10px 10px 10px;
+      padding: 60px 0 10px 0;
     }
 
     .chat-header {
       position: absolute;
       top: 0; left: 0; width: 100%;
-      background: #0d131a;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 10px 12px;
+      background: #202c33;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 10px 14px;
       display: flex;
       align-items: center;
       gap: 12px;
       z-index: 10;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
     .btn-back-chat {
@@ -409,9 +412,10 @@
       color: var(--primary-green);
       width: auto;
       padding: 4px;
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       display: flex;
       align-items: center;
+      cursor: pointer;
     }
 
     .chat-title-info {
@@ -419,53 +423,59 @@
       flex-direction: column;
     }
 
-    .chat-title-info strong { font-size: 0.85rem; color: #fff; }
-    .chat-title-info span { font-size: 0.62rem; color: var(--primary-green); }
+    .chat-title-info strong { font-size: 0.90rem; color: #e9edef; font-weight: 700; }
+    .chat-title-info span { font-size: 0.65rem; color: var(--primary-green); font-weight: 600; }
 
     .chat-messages-container {
       flex: 1;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      padding: 10px 4px;
+      gap: 6px;
+      padding: 12px;
+      background: radial-gradient(circle at 50% 50%, rgba(18, 27, 34, 0.5) 0%, rgba(11, 20, 26, 1) 100%);
     }
 
     .msg-card {
-      max-width: 82%;
-      padding: 8px 10px;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      line-height: 1.3;
+      max-width: 80%;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 0.82rem;
+      line-height: 1.4;
       word-wrap: break-word;
       position: relative;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
 
     .msg-card.in {
       align-self: flex-start;
       background: var(--chat-bg-msg);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top-left-radius: 0px;
       color: var(--text-main);
     }
 
     .msg-card.out {
       align-self: flex-end;
       background: var(--chat-out-msg);
-      border: 1px solid rgba(0, 168, 132, 0.3);
-      color: #fff;
+      border-top-right-radius: 0px;
+      color: #e9edef;
     }
 
     .msg-sender {
-      font-size: 0.62rem;
-      color: var(--primary-yellow);
+      font-size: 0.65rem;
+      color: #53bdeb;
       font-weight: 700;
       margin-bottom: 2px;
       display: block;
     }
 
+    .msg-card.out .msg-sender {
+      color: #85d2be;
+    }
+
     .msg-time {
       font-size: 0.58rem;
-      color: var(--text-muted);
+      color: rgba(241, 241, 241, 0.6);
       text-align: right;
       margin-top: 4px;
       display: block;
@@ -606,7 +616,7 @@
     <div class="chat-header">
       <button class="btn-back-chat" onclick="fecharLiveChat(true)">&#10094;</button>
       <div class="chat-title-info">
-        <strong>Mensagens em Tempo Real</strong>
+        <strong>Live Chat (WhatsApp)</strong>
         <span>● Transmissão Ativa</span>
       </div>
     </div>
@@ -738,7 +748,7 @@
         const card = document.createElement('div');
         card.className = `msg-card ${msg.fromMe ? 'out' : 'in'}`;
         card.innerHTML = `
-          <span class="msg-sender">${msg.fromMe ? 'Bot (Enviada)' : (msg.sender || 'Contacto')}</span>
+          <span class="msg-sender">${msg.fromMe ? 'Você (Bot)' : (msg.sender || 'Contacto')}</span>
           <div>${msg.text}</div>
           <span class="msg-time">${msg.time}</span>
         `;
@@ -768,8 +778,16 @@
       }
     }
 
+    // PERSISTÊNCIA DA PÁGINA LIVE CHAT AO RECARREGAR
+    if (window.location.hash === '#chat') {
+      abrirLiveChat();
+    }
+
     window.addEventListener('popstate', (e) => {
-      if (!e.state || e.state.page !== 'chat') {
+      if (window.location.hash === '#chat') {
+        chatPage.style.display = 'flex';
+        renderChatMessages();
+      } else {
         fecharLiveChat(false);
       }
     });
@@ -882,11 +900,10 @@
     socket.on('status', (dados) => processarEventoStatus(dados));
     socket.on('status_change', (dados) => processarEventoStatus(dados));
 
-    /* RECEPÇÃO DE MENSAGENS COMPATÍVEL COM O SCRIPT ONMESSAGESUPSERT.JS */
+    /* RECEPÇÃO DE MENSAGENS REAL-TIME */
     socket.on('new_message', (msg) => {
       if (!msg) return;
 
-      // Valida se o botNumber do evento corresponde ao número ativo no dispositivo
       const activeNum = (numeroAtual || '').toString().replace(/\D/g, '');
       const msgBotNum = (msg.botNumber || '').toString().replace(/\D/g, '');
 
