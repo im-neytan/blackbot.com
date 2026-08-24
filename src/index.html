@@ -28,7 +28,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 10px 12px;
+      padding: 10px 12px 40px 12px; /* Espaço para o footer fixo */
       overflow-x: hidden;
       position: relative;
     }
@@ -43,6 +43,7 @@
       z-index: 0;
     }
 
+    /* EFEITO DE ANIMAÇÃO AO RECARREGAR A PÁGINA */
     .container {
       position: relative;
       z-index: 1;
@@ -53,6 +54,18 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      animation: reescreverPagina 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes reescreverPagina {
+      0% {
+        opacity: 0;
+        transform: translateY(15px) scale(0.98);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     .header-banner { text-align: left; }
@@ -321,14 +334,20 @@
     .modal-content ol { padding-left: 16px; color: var(--text-main); font-size: 0.78rem; line-height: 1.4; }
     .modal-content button { margin-top: 12px; background: var(--primary-green); color: #000; }
 
+    /* FOOTER FIXO SEMENTE / SEM ALTERAR NADA */
     footer {
-      position: relative;
-      z-index: 1;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: var(--bg-color);
+      padding: 8px 0;
+      z-index: 100;
       font-size: 0.60rem;
       color: var(--text-muted);
       text-align: center;
-      margin-top: 8px;
       letter-spacing: 0.5px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
     }
   </style>
 </head>
@@ -523,17 +542,19 @@
       }
     }
 
-    // Carregar cache inicial se existir
+    // CORREÇÃO DO TRAVAMENTO:
+    // Se não estiver confirmado como conectado, ao recarregar volta ao formulário
     const cachedState = localStorage.getItem('bl4ck_state');
     const cachedNum = localStorage.getItem('bl4ck_num');
     const cachedCode = localStorage.getItem('bl4ck_code');
-    if (cachedState) {
-      aplicarEstadoReal(cachedState, cachedNum, cachedCode);
+
+    if (cachedState === 'conectado') {
+      aplicarEstadoReal('conectado', cachedNum, cachedCode);
     } else {
       aplicarEstadoReal('desconectado');
     }
 
-    // 4. INTEGRAÇÃO SOCKET.IO (CORRIGIDO E OTIMIZADO)
+    // 4. INTEGRAÇÃO SOCKET.IO
     addLog('A ligar ao servidor...', 'info');
     const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
 
