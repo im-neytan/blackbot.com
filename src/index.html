@@ -168,7 +168,6 @@
     button:hover { opacity: 0.9; }
     button:disabled { background: #2a3942; color: var(--text-muted); cursor: not-allowed; }
 
-    /* ESTRUTURA PARA CÓDIGO + BOTÃO COPIAR */
     .code-container {
       display: flex;
       align-items: center;
@@ -258,7 +257,6 @@
     .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
     .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
 
-    /* Painel Console Reduzido e Perfeitamente Ajustado */
     .log-panel {
       background: #000000;
       border: 1px solid rgba(255, 255, 255, 0.08);
@@ -420,6 +418,7 @@
   </footer>
 
   <script>
+    // 1. CONFIGURAÇÃO E DADOS GERAIS
     const CONFIG = {
       SERVER_URL: 'https://orion-2-production.up.railway.app',
       VERSION: 'v2.4.0'
@@ -450,7 +449,7 @@
     setInterval(updateClock, 1000);
     updateClock();
 
-    // GERENCIAMENTO E PERSISTÊNCIA DOS LOGS
+    // 2. SISTEMA DE LOGS
     const logContainer = document.getElementById('logContainer');
     const logList = document.getElementById('logList');
     let logsCache = JSON.parse(localStorage.getItem('bl4ck_logs') || '[]');
@@ -472,7 +471,6 @@
       logsCache.push(item);
       
       if (logsCache.length > 100) logsCache.shift();
-      
       localStorage.setItem('bl4ck_logs', JSON.stringify(logsCache));
 
       const entry = document.createElement('div');
@@ -485,6 +483,7 @@
 
     renderLogs();
 
+    // 3. REFERÊNCIAS DO DOM E ESTADO LOCAL
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
     const secCodigo = document.getElementById('secCodigo');
@@ -493,6 +492,7 @@
     const txtOnlineNumber = document.getElementById('txtOnlineNumber');
 
     let numeroAtual = localStorage.getItem('bl4ck_num') || '';
+    let ultimoEstado = null;
 
     function aplicarEstadoReal(status, user, code) {
       if (status) localStorage.setItem('bl4ck_state', status);
@@ -523,6 +523,7 @@
       }
     }
 
+    // Carregar cache inicial se existir
     const cachedState = localStorage.getItem('bl4ck_state');
     const cachedNum = localStorage.getItem('bl4ck_num');
     const cachedCode = localStorage.getItem('bl4ck_code');
@@ -532,8 +533,8 @@
       aplicarEstadoReal('desconectado');
     }
 
+    // 4. INTEGRAÇÃO SOCKET.IO (EM ORDEM DE CONEXÃO)
     addLog('A ligar ao servidor...', 'info');
-
     const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
 
     socket.on('connect', () => {
@@ -544,26 +545,40 @@
       addLog('A reestabelecer ligação...', 'info');
     });
 
-    let ultimoEstado = null;
-
+    // Escuta estado global da sessão
     socket.on('status', (dados) => {
+      processarEventoStatus(dados);
+    });
+
+    // Escuta atualizações de sessões dinâmicas
+    socket.on('status_change', (dados) => {
+      if (!numeroAtual || dados.numero === numeroAtual) {
+        processarEventoStatus({
+          status: dados.status,
+          user: dados.numero,
+          code: dados.code
+        });
+      }
+    });
+
+    function processarEventoStatus(dados) {
       aplicarEstadoReal(dados.status, dados.user, dados.code);
 
       if (dados.status === 'conectado') {
         if (ultimoEstado !== 'conectado') {
-          addLog(`Sessão iniciada (+${dados.user})`, 'success');
+          addLog(`Sessão iniciada (+${dados.user || numeroAtual})`, 'success');
         }
       } else if (dados.status === 'codigo_gerado') {
         addLog(`Pairing Code: ${dados.code}`, 'info');
-      } else if (dados.status === 'desconectado') {
+      } else if (dados.status === 'desconectado' || dados.status === 'removido') {
         if (ultimoEstado === 'conectado') {
           addLog('Sistema desconectado.', 'danger');
         }
       }
       ultimoEstado = dados.status;
-    });
+    }
 
-    // FUNÇÃO PARA COPIAR O CÓDIGO COM FEEDBACK VISUAL
+    // 5. FUNÇÕES DE INTERAÇÃO E REQUISIÇÕES HTTP
     function copiarCodigo() {
       const codigoText = codeDisplay.innerText.trim();
       if (!codigoText || codigoText === '---- ----') return;
@@ -581,7 +596,7 @@
           btnCopy.style.background = 'rgba(0, 168, 132, 0.15)';
           btnCopy.style.color = 'var(--primary-green)';
         }, 2000);
-      }).catch(err => {
+      }).catch(() => {
         addLog('Erro ao copiar código.', 'danger');
       });
     }
@@ -606,7 +621,7 @@
 
     async function enviarPedidoCodigo(numero) {
       const btn = document.getElementById('btnGerar');
-      btn.disabled = true;
+      if (btn) btn.disabled = true;
 
       try {
         const res = await fetch(`${CONFIG.SERVER_URL}/api/solicitar-codigo`, {
@@ -623,7 +638,7 @@
       } catch (err) {
         addLog(`Falha na ligação: ${err.message}`, 'danger');
       } finally {
-        btn.disabled = false;
+        if (btn) btn.disabled = false;
       }
     }
 
