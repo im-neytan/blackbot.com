@@ -183,7 +183,6 @@
       text-shadow: 0 0 10px rgba(0, 168, 132, 0.4);
     }
 
-    /* Banner ASCII Responsivo */
     .ascii-box {
       font-family: 'Courier New', Courier, monospace;
       font-size: clamp(0.42rem, 2.3vw, 0.65rem);
@@ -279,7 +278,7 @@
       <div class="subtitle-sub">bl4ck bot • PAINEL DE CONEXÃO EM TEMPO REAL</div>
       <div class="meta-info">
         <div id="liveClock">--</div>
-        <div>Versão: <span id="appVersion">4.10.0</span> • Dispositivo: <span id="deviceInUse">Detetando...</span></div>
+        <div>Versão: <span id="appVersion">v2.4.0</span> • Dispositivo: <span id="deviceInUse">Detetando...</span></div>
       </div>
     </div>
 
@@ -349,7 +348,7 @@
 
   <script>
     const CONFIG = {
-      SERVER_URL: window.location.origin,
+      SERVER_URL: 'https://orion-2-production.up.railway.app',
       VERSION: 'v2.4.0'
     };
 
@@ -388,8 +387,6 @@
       logContainer.scrollTop = logContainer.scrollHeight;
     }
 
-    const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
-
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
     const secCodigo = document.getElementById('secCodigo');
@@ -398,15 +395,21 @@
     const txtOnline = document.getElementById('txtOnline');
     const bannerVersion = document.getElementById('bannerVersion');
 
-    let numeroAtual = '';
+    let numeroAtual = localStorage.getItem('bl4ck_num') || '';
 
     function aplicarEstadoReal(status, user, code) {
+      if (status) localStorage.setItem('bl4ck_state', status);
+      if (user) {
+        numeroAtual = user;
+        localStorage.setItem('bl4ck_num', user);
+      }
+      if (code) localStorage.setItem('bl4ck_code', code);
+
       secForm.style.display = 'none';
       secCodigo.style.display = 'none';
       secOnline.style.display = 'none';
 
       if (status === 'conectado') {
-        numeroAtual = user || numeroAtual;
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Bot Ativo';
         secOnline.style.display = 'block';
@@ -416,7 +419,7 @@
         statusBadge.className = 'status-badge warning';
         statusBadge.innerText = 'Aguardando';
         secCodigo.style.display = 'block';
-        if (code) codeDisplay.innerText = code;
+        codeDisplay.innerText = code || localStorage.getItem('bl4ck_code') || '---- ----';
       } else {
         statusBadge.className = 'status-badge offline';
         statusBadge.innerText = 'Desconectado';
@@ -424,20 +427,24 @@
       }
     }
 
-    // Consulta inicial do estado real no servidor ao abrir a página
-    async function checarEstadoReal() {
-      try {
-        const res = await fetch(`${CONFIG.SERVER_URL}/api/status`);
-        const dados = await res.json();
-        aplicarEstadoReal(dados.status, dados.user, dados.code);
-        addLog('Sincronizado com o servidor.', 'info');
-      } catch (e) {
-        addLog('Aguardando resposta do servidor...', 'info');
-      }
+    // Carregamento instantâneo da cache
+    const cachedState = localStorage.getItem('bl4ck_state');
+    const cachedNum = localStorage.getItem('bl4ck_num');
+    const cachedCode = localStorage.getItem('bl4ck_code');
+    if (cachedState) {
+      aplicarEstadoReal(cachedState, cachedNum, cachedCode);
     }
-    checarEstadoReal();
 
-    // Atualização em tempo real via WebSockets
+    const socket = io(CONFIG.SERVER_URL, { transports: ['websocket', 'polling'] });
+
+    socket.on('connect', () => {
+      addLog('Conetado ao servidor em tempo real.', 'success');
+    });
+
+    socket.on('disconnect', () => {
+      addLog('A reestabelecer ligação...', 'info');
+    });
+
     socket.on('status', (dados) => {
       aplicarEstadoReal(dados.status, dados.user, dados.code);
 
@@ -508,6 +515,7 @@
         
         if (data.success) {
           numeroAtual = '';
+          localStorage.clear();
           document.getElementById('numInput').value = '';
           aplicarEstadoReal('desconectado');
           addLog('Sessão limpa com sucesso.', 'success');
