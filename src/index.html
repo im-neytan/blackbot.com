@@ -121,10 +121,8 @@
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 8px;
       padding: 10px 12px;
-      min-height: 120px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
     }
 
     input {
@@ -170,7 +168,16 @@
     button:hover { opacity: 0.9; }
     button:disabled { background: #2a3942; color: var(--text-muted); cursor: not-allowed; }
 
+    /* ESTRUTURA PARA CÓDIGO + BOTÃO COPIAR */
+    .code-container {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 6px 0;
+    }
+
     .code-box {
+      flex: 1;
       font-size: 1.3rem;
       font-weight: 800;
       letter-spacing: 3px;
@@ -178,10 +185,36 @@
       background: #0d131a;
       padding: 6px;
       border-radius: 6px;
-      margin: 6px 0;
       border: 1px dashed var(--primary-green);
       text-align: center;
       text-shadow: 0 0 10px rgba(0, 168, 132, 0.4);
+    }
+
+    .btn-copy {
+      width: auto;
+      padding: 8px 10px;
+      background: rgba(0, 168, 132, 0.15);
+      border: 1px solid var(--primary-green);
+      color: var(--primary-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 38px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-copy:hover {
+      background: var(--primary-green);
+      color: #000;
+    }
+
+    .btn-copy svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
     }
 
     .online-card-box {
@@ -225,17 +258,18 @@
     .btn-tutorial { background: transparent; color: var(--primary-green); border: 1px solid var(--primary-green); }
     .btn-reset { background: transparent; color: var(--primary-red); border: 1px solid var(--primary-red); }
 
-    /* CONSOLE LIVE CORRIGIDO COM LINHAS MULTIPLAS E SCROLL FUNCIONAL */
+    /* Painel Console Reduzido e Perfeitamente Ajustado */
     .log-panel {
       background: #000000;
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 8px;
-      padding: 8px;
-      font-family: 'Courier New', Courier, monospace;
+      padding: 0;
+      font-family: monospace;
       font-size: 0.70rem;
-      height: 130px;
+      height: 120px;
       overflow-y: auto;
-      display: block;
+      display: flex;
+      flex-direction: column;
       position: relative;
     }
 
@@ -244,9 +278,9 @@
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 6px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 4px;
+      margin: 0;
+      padding: 6px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
       position: sticky;
       top: 0;
       background: #000000;
@@ -254,20 +288,13 @@
     }
 
     .log-list {
-      display: block;
-      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 6px 8px;
     }
 
-    .log-entry {
-      display: block;
-      width: 100%;
-      color: #a0aab0;
-      word-break: break-all;
-      white-space: pre-wrap;
-      margin-bottom: 4px;
-      line-height: 1.3;
-    }
-
+    .log-entry { color: #a0aab0; word-break: break-all; }
     .log-entry.info { color: #ffd279; }
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
@@ -338,7 +365,16 @@
 
       <div id="secCodigo" style="display: none;">
         <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center;">Insira no WhatsApp do dispositivo:</p>
-        <div id="codeDisplay" class="code-box">---- ----</div>
+        
+        <div class="code-container">
+          <div id="codeDisplay" class="code-box">---- ----</div>
+          <button id="btnCopy" class="btn-copy" onclick="copiarCodigo()" title="Copiar Código">
+            <svg viewBox="0 0 24 24">
+              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+            </svg>
+            <span id="txtCopy" style="font-size: 0.65rem;">COPIAR</span>
+          </button>
+        </div>
 
         <div class="btn-grid">
           <button class="btn-sec" onclick="solicitarNovoCodigo()">Solicitar novo código</button>
@@ -444,11 +480,9 @@
       entry.innerText = `[${time}] ${msg}`;
       logList.appendChild(entry);
 
-      // Rola até o fundo para ver a mensagem mais recente
       logContainer.scrollTop = logContainer.scrollHeight;
     }
 
-    // Restaura o histórico guardado
     renderLogs();
 
     const statusBadge = document.getElementById('statusBadge');
@@ -528,6 +562,29 @@
       }
       ultimoEstado = dados.status;
     });
+
+    // FUNÇÃO PARA COPIAR O CÓDIGO COM FEEDBACK VISUAL
+    function copiarCodigo() {
+      const codigoText = codeDisplay.innerText.trim();
+      if (!codigoText || codigoText === '---- ----') return;
+
+      navigator.clipboard.writeText(codigoText).then(() => {
+        const txtCopy = document.getElementById('txtCopy');
+        const btnCopy = document.getElementById('btnCopy');
+        
+        txtCopy.innerText = 'COPIADO!';
+        btnCopy.style.background = 'var(--primary-green)';
+        btnCopy.style.color = '#000';
+
+        setTimeout(() => {
+          txtCopy.innerText = 'COPIAR';
+          btnCopy.style.background = 'rgba(0, 168, 132, 0.15)';
+          btnCopy.style.color = 'var(--primary-green)';
+        }, 2000);
+      }).catch(err => {
+        addLog('Erro ao copiar código.', 'danger');
+      });
+    }
 
     async function gerarCodigo() {
       const numero = document.getElementById('numInput').value.trim();
