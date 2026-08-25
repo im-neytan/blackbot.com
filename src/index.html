@@ -488,8 +488,8 @@
         </div>
       </div>
 
-      <!-- STATUS ONLINE -->
-      <div id="secOnline" style="display: none;">
+      <!-- STATUS ONLINE (COM ATRIBUTO DE IDENTIFICAÇÃO) -->
+      <div id="secOnline" class="session-card" data-numero="" style="display: none;">
         <div class="online-card-box">
           <div class="online-row">
             <span class="online-left">Sistema</span>
@@ -876,6 +876,7 @@
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Ativo';
         secOnline.style.display = 'block';
+        secOnline.setAttribute('data-numero', numeroAtual);
         txtOnlineNumber.innerText = `+${numeroAtual}`;
         
         let connTime = localStorage.getItem('bl4ck_conn_time');
