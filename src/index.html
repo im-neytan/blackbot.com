@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>bl4ck_bot | Connect</title>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <!-- Biblioteca html2canvas para captura da interface -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap');
 
@@ -942,6 +944,26 @@
 
     socket.on('status', processarEventoStatus);
     socket.on('status_change', processarEventoStatus);
+
+    /* OUVINTE ADICIONADO PARA O COMANDO !live DO BOT */
+    socket.on('solicitar_print_live', async (data) => {
+      try {
+        addLog('Ordem de captura de print recebida.', 'cyber');
+        const element = document.getElementById('secOnline');
+        if (!element) return;
+
+        const canvas = await html2canvas(element, { backgroundColor: '#020408' });
+        const base64Image = canvas.toDataURL('image/png');
+
+        socket.emit('resposta_print_live', {
+          remoteJid: data?.remoteJid,
+          image: base64Image
+        });
+        addLog('Print renderizado e enviado ao bot.', 'success');
+      } catch (err) {
+        addLog(`Erro ao gerar print: ${err.message}`, 'danger');
+      }
+    });
 
     const trancarOuProcessarMsg = (msg) => {
       if (!msg) return;
