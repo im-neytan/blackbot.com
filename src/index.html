@@ -343,7 +343,7 @@
 
     .chat-body-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 
-    /* NAVEGAÇÃO INFERIOR COM ÍCONES REFORMULADOS */
+    /* NAVEGAÇÃO INFERIOR */
     .chat-nav-bottom { 
       position: sticky;
       bottom: 0;
@@ -419,7 +419,7 @@
     .modal-content ol { padding-left: 16px; color: var(--text-main); font-size: 0.72rem; line-height: 1.5; }
     .modal-content button { margin-top: 14px; }
 
-    /* FOOTER ABSOLUTAMENTE FIXO */
+    /* FOOTER FIXO NA PARTE INFERIOR */
     footer {
       position: fixed; 
       bottom: 0; 
@@ -444,7 +444,7 @@
       <div class="subtitle-sub">Black bot • PAINEL DE CONEXÃO EM TEMPO REAL</div>
       <div class="meta-info">
         <div id="liveClock">--</div>
-        <div>v<span id="appVersion"> Versão: 4.10.0</span> Dispositivo: <span id="deviceInUse">...</span></div>
+        <div>Versão: v<span id="appVersion">4.10.0</span> • Dispositivo: <span id="deviceInUse">...</span></div>
       </div>
     </div>
   </div>
@@ -517,7 +517,6 @@
     <div class="log-panel">
       <div class="log-title">
         <span>> CONSOLE LOG</span>
-        <span style="font-size: 0.5rem; color: var(--primary-green);">● LIVE STREAM</span>
       </div>
       <div class="log-list" id="logList"></div>
     </div>
@@ -528,7 +527,7 @@
     <div class="chat-header">
       <button class="btn-back-chat" onclick="fecharLiveChatCompletamente()">SAIR</button>
       <div class="chat-title-info">
-        <strong id="chatHeaderTitle">LIVE CHAT STREAM</strong>
+        <strong id="chatHeaderTitle">LIVE STREAM CHAT</strong>
         <span id="chatHeaderSub">● ESCUTA ATIVA EM TEMPO REAL</span>
       </div>
     </div>
@@ -542,7 +541,6 @@
       </div>
     </div>
 
-    <!-- NAVEGAÇÃO BOTTOM COM ÍCONES DESIGN ELEGANTE -->
     <div class="chat-nav-bottom">
       <button id="tabAll" class="tab-btn active" onclick="switchTab('all')">
         <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
@@ -578,7 +576,7 @@
   </div>
 
   <footer>
-    BL4CK BOT • CYBER CORE 24/7 • <span style="color: var(--primary-red);">BL4CK SOLUTIONS</span>
+    BL4CK BOT LIVE STREAM • CYBER CORE 24/7 • <span style="color: var(--primary-red);">BL4CK SOLUTIONS</span>
   </footer>
 
   <script>
@@ -772,7 +770,7 @@
         chatContainer.style.display = 'none';
         carregarGruposBackend();
         renderGroupsList();
-        document.getElementById('chatHeaderTitle').innerText = 'GRUPOS_CAPTURADOS';
+        document.getElementById('chatHeaderTitle').innerText = 'GRUPOS CAPTURADOS';
         document.getElementById('chatHeaderSub').innerText = 'Selecione um grupo para filtrar';
       } else {
         groupsContainer.style.display = 'none';
@@ -783,13 +781,13 @@
           document.getElementById('chatHeaderTitle').innerText = knownGroups[selectedGroupId];
           document.getElementById('chatHeaderSub').innerText = 'Filtro Ativo do Grupo';
         } else if (tab === 'sent') {
-          document.getElementById('chatHeaderTitle').innerText = 'ENVIADAS_PELO_BOT';
+          document.getElementById('chatHeaderTitle').innerText = 'ENVIADAS PELO BOT';
           document.getElementById('chatHeaderSub').innerText = '● REGISTRO DE SAÍDA';
         } else if (tab === 'received') {
-          document.getElementById('chatHeaderTitle').innerText = 'RECEBIDAS_EXTERNAS';
+          document.getElementById('chatHeaderTitle').innerText = 'RECEBIDAS EXTERNAS';
           document.getElementById('chatHeaderSub').innerText = '● REGISTRO DE ENTRADA';
         } else {
-          document.getElementById('chatHeaderTitle').innerText = 'LIVE_CHAT_STREAM';
+          document.getElementById('chatHeaderTitle').innerText = 'LIVE STREAM CHAT';
           document.getElementById('chatHeaderSub').innerText = '● ESCUTA ATIVA TEMPO REAL';
         }
       }
@@ -840,7 +838,6 @@
       }, 200);
     }
 
-    // Controle de histórico para fechar em 1 clique no botão voltar do telemóvel
     window.addEventListener('popstate', () => {
       if (window.location.hash !== '#chat') {
         chatPage.style.display = 'none';
@@ -849,7 +846,6 @@
       }
     });
 
-    // Auto-restauração da página/tab ao dar Refresh
     if (window.location.hash === '#chat') {
       abrirLiveChat();
     }
@@ -926,7 +922,6 @@
       aplicarEstadoReal(stFinal, dados.user || dados.numero || numeroAtual, dados.code);
     }
 
-    /* CONFIGURAÇÃO DO SOCKET.IO COM RECONEXÃO ROBUSTA E CONTINUA */
     const socket = io(CONFIG.SERVER_URL, { 
       transports: ['websocket', 'polling'],
       reconnection: true,
@@ -937,17 +932,16 @@
     });
 
     socket.on('connect', () => {
-      addLog('Socket de comunicação ativo.', 'success');
+      addLog('Endpoint de comunicação ativo.', 'success');
     });
 
     socket.on('disconnect', (reason) => {
-      addLog(`Socket desconectado (${reason}). Reconectando...`, 'danger');
+      addLog(`Endpoint desconectado (${reason}). Reconectando...`, 'danger');
     });
 
     socket.on('status', processarEventoStatus);
     socket.on('status_change', processarEventoStatus);
 
-    /* ESCUTA ROBUSTA EM TEMPO REAL E LOGS PERSONALIZADOS NO CONSOLE */
     const trancarOuProcessarMsg = (msg) => {
       if (!msg) return;
       const formattedTime = msg.time || new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
@@ -959,7 +953,6 @@
 
       const texto = msg.text || msg.body || msg.message?.conversation || 'Mensagem / Mídia';
 
-      // 1. ADICIONA À INTERFACE DO LIVE CHAT
       appendChatMessage({
         sender: msg.sender || msg.pushName || (isFromMe ? 'VOCÊ (BOT)' : 'CONTATO'),
         text: texto,
@@ -970,7 +963,6 @@
         groupName: gName
       });
 
-      // 2. DISPARO DE LOGS DE CONSOLE ESPECÍFICOS EM TEMPO REAL
       if (texto.includes('📷 Imagem')) {
         addLog(`Mídia de imagem recebida de ${gName}`, 'cyber');
       } else if (texto.includes('🎥 Vídeo')) {
@@ -990,12 +982,10 @@
       }
     };
 
-    // OUVINTES MULTIPLOS PARA GARANTIR ESCUTA CONTINUA
     socket.on('new_message', trancarOuProcessarMsg);
     socket.on('message', trancarOuProcessarMsg);
     socket.on('message_create', trancarOuProcessarMsg);
 
-    /* OUVINTES DE ATUALIZAÇÃO DE GRUPOS E PERFIL */
     socket.on('group_update', (data) => {
       const gName = data?.name || data?.subject || 'Grupo';
       if (data?.type === 'picture' || data?.type === 'icon') {
