@@ -861,7 +861,7 @@
 
       if (status === 'conectado') {
         statusBadge.className = 'status-badge online';
-        statusBadge.innerText = 'ATIVA';
+        statusBadge.innerText = 'Ativo';
         secOnline.style.display = 'block';
         txtOnlineNumber.innerText = `+${numeroAtual}`;
         
@@ -980,7 +980,7 @@
     }
 
     async function resetarSessao() {
-      if (!confirm('Deseja encerrar e purgar a sessão ativa?')) return;
+      if (!confirm('Deseja encerrar a sessão ativa?')) return;
       try {
         await fetch(`${CONFIG.SERVER_URL}/api/resetar-sessao`, {
           method: 'POST',
