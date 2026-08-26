@@ -419,6 +419,7 @@
     .modal-content ol { padding-left: 16px; color: var(--text-main); font-size: 0.72rem; line-height: 1.5; }
     .modal-content button { margin-top: 14px; }
 
+    /* FOOTER FIXO NA PARTE INFERIOR */
     footer {
       position: fixed; 
       bottom: 0; 
@@ -487,7 +488,7 @@
         </div>
       </div>
 
-      <!-- STATUS ONLINE -->
+      <!-- STATUS ONLINE (COM ATRIBUTO DE IDENTIFICAÇÃO) -->
       <div id="secOnline" class="session-card" data-numero="" style="display: none;">
         <div class="online-card-box">
           <div class="online-row">
@@ -595,7 +596,7 @@
       const now = new Date();
       const options = { 
         timeZone: 'Africa/Maputo', 
-        weekday: 'short', 
+        weekday: 'long', 
         day: '2-digit', 
         month: '2-digit', 
         year: 'numeric', 
@@ -661,36 +662,6 @@
     let knownGroups = JSON.parse(localStorage.getItem('bl4ck_groups') || '{}');
     let currentTab = localStorage.getItem('bl4ck_active_tab') || 'all';
     let selectedGroupId = null;
-    let numeroAtual = localStorage.getItem('bl4ck_num') || '';
-
-    // --- CARREGAR HISTÓRICO OFFLINE DO SERVIDOR FILTRADO POR SESSÃO ---
-    async function carregarMensagensOfflineBackend() {
-      if (!numeroAtual) return;
-      try {
-        const res = await fetch(`${CONFIG.SERVER_URL}/api/mensagens-recentes?numero=${numeroAtual}`);
-        const data = await res.json();
-        
-        if (data && data.success && Array.isArray(data.messages)) {
-          data.messages.forEach(msg => {
-            const formattedTime = msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-
-            appendChatMessage({
-              id: msg.id,
-              botNumber: msg.botNumber,
-              sender: msg.sender,
-              text: msg.text,
-              fromMe: msg.fromMe,
-              time: formattedTime,
-              isGroup: msg.isGroup,
-              groupId: msg.groupId,
-              groupName: msg.groupName || (msg.groupId ? (knownGroups[msg.groupId] || `Grupo ${msg.groupId.substring(0, 5)}`) : 'Contato')
-            });
-          });
-        }
-      } catch (e) {
-        console.error("Erro ao sincronizar histórico de mensagens offline:", e);
-      }
-    }
 
     async function carregarGruposBackend() {
       try {
@@ -707,19 +678,18 @@
     }
 
     function renderChatMessages() {
-      // Garante que só vemos no Chat as mensagens desta sessão ativa
-      let filteredMsgs = chatMessages.filter(m => !m.botNumber || m.botNumber === numeroAtual);
+      let filteredMsgs = chatMessages;
 
       if (currentTab === 'groups') {
         if (selectedGroupId) {
-          filteredMsgs = filteredMsgs.filter(m => m.isGroup && (m.groupId === selectedGroupId || m.from === selectedGroupId));
+          filteredMsgs = chatMessages.filter(m => m.isGroup && (m.groupId === selectedGroupId || m.from === selectedGroupId));
         } else {
-          filteredMsgs = filteredMsgs.filter(m => m.isGroup);
+          filteredMsgs = chatMessages.filter(m => m.isGroup);
         }
       } else if (currentTab === 'sent') {
-        filteredMsgs = filteredMsgs.filter(m => m.fromMe === true);
+        filteredMsgs = chatMessages.filter(m => m.fromMe === true);
       } else if (currentTab === 'received') {
-        filteredMsgs = filteredMsgs.filter(m => m.fromMe === false);
+        filteredMsgs = chatMessages.filter(m => m.fromMe === false);
       }
 
       if (filteredMsgs.length === 0) {
@@ -824,11 +794,6 @@
     }
 
     function appendChatMessage(msgData) {
-      // Evita gravar duplicados se a mensagem já existe na lista em memória do navegador
-      if (msgData.id && chatMessages.some(m => m.id === msgData.id)) {
-        return;
-      }
-
       chatMessages.push(msgData);
       if (chatMessages.length > 300) chatMessages.shift();
       localStorage.setItem('bl4ck_chat_msgs', JSON.stringify(chatMessages));
@@ -847,15 +812,12 @@
       }
     }
 
-    async function abrirLiveChat() {
+    function abrirLiveChat() {
       if (window.location.hash !== '#chat') {
         window.history.pushState({ page: 'chat' }, 'Live Chat', '#chat');
       }
       chatPage.classList.remove('exit-anim');
       chatPage.style.display = 'flex';
-      
-      // Carrega históricos e dados
-      await carregarMensagensOfflineBackend();
       carregarGruposBackend();
       switchTab(currentTab);
     }
@@ -895,6 +857,8 @@
     const codeDisplay = document.getElementById('codeDisplay');
     const txtOnlineNumber = document.getElementById('txtOnlineNumber');
     const txtConnectTime = document.getElementById('txtConnectTime');
+
+    let numeroAtual = localStorage.getItem('bl4ck_num') || '';
 
     function aplicarEstadoReal(status, user, code) {
       if (status) localStorage.setItem('bl4ck_state', status);
@@ -970,7 +934,6 @@
 
     socket.on('connect', () => {
       addLog('Endpoint de comunicação ativo.', 'success');
-      carregarMensagensOfflineBackend(); // Sincroniza dados históricos ao conectar no socket
     });
 
     socket.on('disconnect', (reason) => {
@@ -983,13 +946,16 @@
     const trancarOuProcessarMsg = (msg) => {
       if (!msg) return;
 
-      // FILTRO DE SEGURANÇA: ignora mensagens se vierem de uma sessão diferente da selecionada no painel
-      if (msg.botNumber && numeroAtual && msg.botNumber !== numeroAtual) {
+      // Trata os números para comparar apenas dígitos
+      const numBotConectado = (numeroAtual || '').replace(/\D/g, '');
+      const numBotMsg = (msg.botNumber || '').replace(/\D/g, '');
+
+      // SE HOUVER UM NÚMERO DE BOT NA MENSAGEM E ELE FOR DIFERENTE DO LOGADO, IGNORA
+      if (numBotMsg && numBotConectado && numBotMsg !== numBotConectado) {
         return;
       }
 
-      const formattedTime = msg.time || (msg.timestamp ? new Date(msg.timestamp).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }) : new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' }));
-
+      const formattedTime = msg.time || new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
       const isFromMe = msg.fromMe === true || msg.key?.fromMe === true;
       const isGrp = !!(msg.isGroup || msg.groupId || (msg.from && msg.from.includes('@g.us')) || (msg.key?.remoteJid && msg.key.remoteJid.includes('@g.us')));
       const gId = msg.groupId || (msg.from && msg.from.includes('@g.us') ? msg.from : (msg.key?.remoteJid && msg.key.remoteJid.includes('@g.us') ? msg.key.remoteJid : null));
@@ -998,8 +964,7 @@
       const texto = msg.text || msg.body || msg.message?.conversation || 'Mensagem / Mídia';
 
       appendChatMessage({
-        id: msg.id,
-        botNumber: msg.botNumber || numeroAtual,
+        botNumber: numBotMsg || numBotConectado,
         sender: msg.sender || msg.pushName || (isFromMe ? 'VOCÊ (BOT)' : 'CONTATO'),
         text: texto,
         fromMe: isFromMe,
