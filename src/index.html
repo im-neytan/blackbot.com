@@ -224,7 +224,6 @@
       box-shadow: 0 0 12px var(--primary-green);
     }
 
-    /* ESTILO FIXO EXCLUSIVO PARA O BOTÃO DO LIVE CHAT */
     .btn-live-chat-custom {
       border: 1px solid var(--primary-green) !important;
       background: rgba(0, 255, 102, 0.08) !important;
@@ -317,7 +316,6 @@
     .log-entry.danger { color: var(--primary-red); }
     .log-entry.cyber { color: var(--cyber-blue); }
 
-    /* CHAT LIVE MODAL */
     .chat-page {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background-color: #020408; z-index: 200; display: none; flex-direction: column;
@@ -357,7 +355,6 @@
 
     .chat-body-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 
-    /* NAVEGAÇÃO INFERIOR */
     .chat-nav-bottom { 
       position: sticky;
       bottom: 0;
@@ -424,7 +421,6 @@
     .msg-card.out .msg-sender { color: var(--primary-green); }
     .msg-time { font-size: 0.55rem; color: var(--text-muted); text-align: right; margin-top: 4px; display: block; }
 
-    /* TAG SEPARADORA DE DATAS NO CHAT */
     .date-separator {
       align-self: center;
       margin: 12px 0 6px 0;
@@ -449,7 +445,6 @@
     .modal-content ol { padding-left: 16px; color: var(--text-main); font-size: 0.72rem; line-height: 1.5; }
     .modal-content button { margin-top: 14px; }
 
-    /* FOOTER FIXO NA PARTE INFERIOR */
     footer {
       position: fixed; 
       bottom: 0; 
@@ -518,7 +513,7 @@
         </div>
       </div>
 
-      <!-- STATUS ONLINE (USANDO A NOVA CLASSEbtn-live-chat-custom) -->
+      <!-- STATUS ONLINE -->
       <div id="secOnline" class="session-card" data-numero="" style="display: none;">
         <div class="online-card-box">
           <div class="online-row">
@@ -606,7 +601,7 @@
   </div>
 
   <footer>
-    BL4CK BOT LIVE STREAM • CYBER CORE 24/7 • <span style="color: var(--primary-red);">BL4CK SOLUTIONS</span>
+    BL4CK BOT • PAINEL DE CONEXÃO 24/7 • <span style="color: var(--primary-red);">BL4CK SOLUTIONS</span>
   </footer>
 
   <script>
@@ -707,7 +702,6 @@
       } catch (e) {}
     }
 
-    // HELPER PARA FORMATAR TAGS DE DATA (HOJE, ONTEM, DD/MM/AAAA)
     function getDateLabel(timestamp) {
       if (!timestamp) return 'HOJE';
       const msgDate = new Date(timestamp);
@@ -750,7 +744,6 @@
       filteredMsgs.forEach(msg => {
         const currentDateLabel = getDateLabel(msg.timestamp);
 
-        // INSERE A TAG DE SEPARAÇÃO QUANDO MUDAR A DATA
         if (currentDateLabel !== lastDateLabel) {
           const sep = document.createElement('div');
           sep.className = 'date-separator';
@@ -945,6 +938,11 @@
           localStorage.setItem('bl4ck_conn_time', connTime);
         }
         txtConnectTime.innerText = connTime;
+
+        // Entra na sala correspondente do Socket para escuta isolada
+        if (socket && socket.connected && numeroAtual) {
+          socket.emit('join_room', numeroAtual);
+        }
       } else if (status === 'codigo_gerado') {
         statusBadge.className = 'status-badge warning';
         statusBadge.innerText = 'AGUARDANDO';
@@ -957,12 +955,6 @@
         localStorage.removeItem('bl4ck_conn_time');
       }
     }
-
-    aplicarEstadoReal(
-      localStorage.getItem('bl4ck_state') || 'desconectado',
-      localStorage.getItem('bl4ck_num') || '',
-      localStorage.getItem('bl4ck_code') || ''
-    );
 
     function parseStatus(st) {
       if (!st) return 'desconectado';
@@ -994,7 +986,18 @@
 
     socket.on('connect', () => {
       addLog('Endpoint de comunicação ativo.', 'success');
+      // Se houver número ativo salvo no localStorage, re-inscreve na sala ao conectar
+      if (numeroAtual && (localStorage.getItem('bl4ck_state') === 'conectado')) {
+        socket.emit('join_room', numeroAtual);
+      }
     });
+
+    // Aplica o estado inicial recuperado após iniciar o socket
+    aplicarEstadoReal(
+      localStorage.getItem('bl4ck_state') || 'desconectado',
+      localStorage.getItem('bl4ck_num') || '',
+      localStorage.getItem('bl4ck_code') || ''
+    );
 
     socket.on('disconnect', (reason) => {
       addLog(`Endpoint desconectado (${reason}). Reconectando...`, 'danger');
@@ -1009,6 +1012,7 @@
       const numBotConectado = (numeroAtual || '').replace(/\D/g, '');
       const numBotMsg = (msg.botNumber || '').replace(/\D/g, '');
 
+      // Trava adicional no lado do cliente: ignora mensagens pertencentes a outro bot
       if (numBotMsg && numBotConectado && numBotMsg !== numBotConectado) {
         return;
       }
