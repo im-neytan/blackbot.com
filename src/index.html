@@ -68,7 +68,6 @@
       gap: 10px;
     }
 
-    /* HEADER BANNER */
     .header-banner { 
       text-align: left;
       position: fixed;
@@ -80,19 +79,12 @@
       z-index: 90;
       border-bottom: 1px solid var(--border-color);
       box-shadow: 0 0 15px rgba(255, 0, 60, 0.15);
-      transition: transform 0.3s ease;
     }
 
-    .header-inner { 
-      max-width: 400px; 
-      margin: 0 auto; 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-    }
+    .header-inner { max-width: 400px; margin: 0 auto; }
 
     .title-main {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: 900;
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -119,120 +111,6 @@
       line-height: 1.3;
     }
 
-    .btn-hamburger {
-      background: transparent;
-      border: 1px solid var(--cyber-blue);
-      color: var(--cyber-blue);
-      padding: 6px;
-      border-radius: 2px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-    .btn-hamburger:hover {
-      background: rgba(0, 240, 255, 0.15);
-      box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
-    }
-    .btn-hamburger svg { width: 20px; height: 20px; fill: currentColor; }
-
-    /* MENU OFF-CANVAS */
-    .menu-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(3px);
-      z-index: 400;
-      display: none;
-    }
-
-    .side-menu {
-      position: fixed;
-      top: 0; right: 0; width: 280px; height: 100vh;
-      background: #060b13;
-      border-l: 1px solid var(--border-color);
-      z-index: 500;
-      transform: translateX(100%);
-      transition: transform 0.3s ease-in-out;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.8);
-    }
-
-    .side-menu.open {
-      transform: translateX(0);
-    }
-
-    .menu-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .menu-title {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--cyber-blue);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .menu-close {
-      background: transparent;
-      border: none;
-      color: var(--primary-red);
-      font-size: 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      width: auto;
-      padding: 0;
-    }
-
-    .menu-section {
-      margin-top: 16px;
-    }
-
-    .menu-label {
-      font-size: 0.6rem;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    .search-box {
-      width: 100%;
-      padding: 8px;
-      background: #000;
-      border: 1px solid var(--cyber-blue);
-      color: #fff;
-      font-size: 0.75rem;
-      border-radius: 2px;
-      outline: none;
-    }
-
-    .toggle-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(0, 0, 0, 0.4);
-      padding: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      margin-bottom: 8px;
-    }
-
-    .toggle-row span {
-      font-size: 0.7rem;
-      color: var(--text-main);
-    }
-
-    /* STATUS & CARDS */
     .status-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
@@ -438,7 +316,6 @@
     .log-entry.danger { color: var(--primary-red); }
     .log-entry.cyber { color: var(--cyber-blue); }
 
-    /* CHAT PAGE */
     .chat-page {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
       background-color: #020408; z-index: 200; display: none; flex-direction: column;
@@ -534,29 +411,6 @@
     .group-sub { font-size: 0.58rem; color: var(--text-muted); margin-top: 2px; }
 
     .chat-messages-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px; }
-    
-    /* BOTÃO SCROLL FLUTUANTE */
-    #btnScrollBottom {
-      display: none;
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      z-index: 50;
-      background: var(--cyber-blue);
-      color: #000;
-      border: none;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 0 10px var(--cyber-blue);
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s ease;
-    }
-    #btnScrollBottom:hover { transform: scale(1.1); }
-    #btnScrollBottom svg { width: 20px; height: 20px; fill: currentColor; }
-
     .msg-card {
       max-width: 85%; padding: 8px 10px; border-radius: 2px;
       font-size: 0.75rem; line-height: 1.3; position: relative; word-wrap: break-word;
@@ -609,54 +463,16 @@
 </head>
 <body class="smooth-rewrite">
 
-  <!-- HEADER COM BOTÃO DO MENU -->
-  <div class="header-banner" id="mainHeader">
+  <div class="header-banner">
     <div class="header-inner">
-      <div>
-        <div class="title-main"><span class="highlight">BL4CK BOT</span> AUTOMATICO</div>
-        <div class="subtitle-sub">BL4CK BOT • PAINEL DE CONEXÃO EM TEMPO REAL</div>
-        <div class="meta-info">
-          <div id="liveClock">--</div>
-          <div>Versão: v<span id="appVersion">4.10.0</span> • Dispositivo: <span id="deviceInUse">...</span></div>
-        </div>
+      <div class="title-main"><span class="highlight"> BL4CK  BOT</span>  AUTOMATICO</div>
+      <div class="subtitle-sub">Black bot • PAINEL DE CONEXÃO EM TEMPO REAL</div>
+      <div class="meta-info">
+        <div id="liveClock">--</div>
+        <div>Versão: v<span id="appVersion">4.10.0</span> • Dispositivo: <span id="deviceInUse">...</span></div>
       </div>
-      <button class="btn-hamburger" onclick="toggleMenu()" title="Abrir Menu">
-        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-      </button>
     </div>
   </div>
-
-  <!-- MENU OFF-CANVAS E OVERLAY -->
-  <div id="menuOverlay" class="menu-overlay" onclick="toggleMenu()"></div>
-  
-  <aside id="sideMenu" class="side-menu">
-    <div>
-      <div class="menu-header">
-        <span class="menu-title">> CONTROL_PANEL</span>
-        <button class="menu-close" onclick="toggleMenu()">✕</button>
-      </div>
-
-      <div class="menu-section">
-        <label class="menu-label">Filtrar Mensagens</label>
-        <input type="text" id="searchInput" class="search-box" placeholder="Buscar no chat..." onkeyup="filterMessages()">
-      </div>
-
-      <div class="menu-section">
-        <label class="menu-label">Preferências</label>
-        <div class="toggle-row">
-          <span>Alertas Sonoros</span>
-          <input type="checkbox" id="toggleSound" class="accent-cyan-500">
-        </div>
-        <button class="btn-cyber-blue" style="font-size: 0.6rem; padding: 6px;" onclick="requestPushPermission()">
-          [ Push Notifications ]
-        </button>
-      </div>
-    </div>
-
-    <div style="font-size: 0.55rem; color: var(--text-muted); text-align: center;">
-      BL4CK SOLUTIONS • SYSTEM v4.10.0
-    </div>
-  </aside>
 
   <div class="container">
     <div class="status-card">
@@ -748,11 +564,6 @@
           Aguardando fluxo de pacotes de mensagem...
         </div>
       </div>
-      
-      <!-- BOTÃO DE ROLAGEM AUTOMÁTICA -->
-      <button id="btnScrollBottom" onclick="scrollToBottom(true)" title="Rolar para o fim">
-        <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
-      </button>
     </div>
 
     <div class="chat-nav-bottom">
@@ -796,14 +607,6 @@
   <script>
     const CONFIG = { SERVER_URL: 'https://orion-2-production.up.railway.app', VERSION: '4.10.0' };
     document.getElementById('appVersion').innerText = CONFIG.VERSION;
-
-    // SANITIZAÇÃO CONTRA XSS
-    function escapeHTML(str) {
-      if (!str) return '';
-      return String(str).replace(/[&<>'"]/g, 
-        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
-      );
-    }
 
     function detectDevice() {
       const ua = navigator.userAgent;
@@ -879,49 +682,11 @@
     const chatPage = document.getElementById('chatPage');
     const chatContainer = document.getElementById('chatContainer');
     const groupsContainer = document.getElementById('groupsContainer');
-    const btnScrollBottom = document.getElementById('btnScrollBottom');
-    const mainHeader = document.getElementById('mainHeader');
     
     let chatMessages = JSON.parse(localStorage.getItem('bl4ck_chat_msgs') || '[]');
     let knownGroups = JSON.parse(localStorage.getItem('bl4ck_groups') || '{}');
     let currentTab = localStorage.getItem('bl4ck_active_tab') || 'all';
     let selectedGroupId = null;
-
-    // GERENCIAMENTO DE SCROLL AUTOMÁTICO E BOTÃO FLUTUANTE
-    chatContainer.addEventListener('scroll', () => {
-      const distanceToBottom = chatContainer.scrollHeight - chatContainer.scrollTop - chatContainer.clientHeight;
-      if (distanceToBottom > 100) {
-        btnScrollBottom.style.display = 'flex';
-      } else {
-        btnScrollBottom.style.display = 'none';
-      }
-    });
-
-    function scrollToBottom(smooth = true) {
-      chatContainer.scrollTo({
-        top: chatContainer.scrollHeight,
-        behavior: smooth ? 'smooth' : 'auto'
-      });
-    }
-
-    // OTIMIZAÇÃO PERFORMANCE HEADER ROLL
-    let isTicking = false;
-    let lastScrollTop = 0;
-    chatContainer.addEventListener('scroll', () => {
-      if (!isTicking) {
-        window.requestAnimationFrame(() => {
-          const st = chatContainer.scrollTop;
-          if (st > lastScrollTop && st > 50) {
-            mainHeader.style.transform = 'translateY(-100%)';
-          } else {
-            mainHeader.style.transform = 'translateY(0)';
-          }
-          lastScrollTop = st <= 0 ? 0 : st;
-          isTicking = false;
-        });
-        isTicking = true;
-      }
-    });
 
     async function carregarGruposBackend() {
       try {
@@ -996,13 +761,13 @@
         }
 
         card.innerHTML = `
-          <span class="msg-sender">${escapeHTML(senderLabel)}</span>
-          <div>${escapeHTML(msg.text)}</div>
-          <span class="msg-time">${escapeHTML(msg.time)}</span>
+          <span class="msg-sender">${senderLabel}</span>
+          <div>${msg.text}</div>
+          <span class="msg-time">${msg.time}</span>
         `;
         chatContainer.appendChild(card);
       });
-      scrollToBottom(false);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
     function renderGroupsList() {
@@ -1032,10 +797,10 @@
         item.className = 'group-item';
         item.onclick = () => { selectedGroupId = gId; switchTab('groups'); };
         item.innerHTML = `
-          <div class="group-avatar">${escapeHTML(gName.charAt(0).toUpperCase())}</div>
+          <div class="group-avatar">${gName.charAt(0).toUpperCase()}</div>
           <div class="group-info">
-            <div class="group-name">${escapeHTML(gName)}</div>
-            <div class="group-sub">ID: ${escapeHTML(gId.substring(0, 14))}...</div>
+            <div class="group-name">${gName}</div>
+            <div class="group-sub">ID: ${gId.substring(0, 14)}...</div>
           </div>
         `;
         groupsContainer.appendChild(item);
@@ -1098,10 +863,6 @@
           renderChatMessages();
         }
       }
-
-      if (document.getElementById('toggleSound').checked) {
-        playSoundNotification();
-      }
     }
 
     function abrirLiveChat() {
@@ -1142,52 +903,6 @@
       abrirLiveChat();
     }
 
-    // MENU OFF-CANVAS E BUSCA
-    function toggleMenu() {
-      const menu = document.getElementById('sideMenu');
-      const overlay = document.getElementById('menuOverlay');
-      menu.classList.toggle('open');
-      overlay.style.display = menu.classList.contains('open') ? 'block' : 'none';
-    }
-
-    function filterMessages() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const messages = chatContainer.getElementsByClassName('msg-card');
-
-      Array.from(messages).forEach(msg => {
-        const text = msg.textContent.toLowerCase();
-        msg.style.display = text.includes(query) ? 'block' : 'none';
-      });
-    }
-
-    function requestPushPermission() {
-      if ('Notification' in window) {
-        Notification.requestPermission().then(permission => {
-          if (permission === 'granted') {
-            alert('Notificações Web Push Ativadas!');
-          } else {
-            alert('Permissão para notificações negada.');
-          }
-        });
-      } else {
-        alert('Este navegador não suporta notificações Push.');
-      }
-    }
-
-    function playSoundNotification() {
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.frequency.value = 800;
-        gain.gain.setValueAtTime(0.05, ctx.currentTime);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.1);
-      } catch (e) {}
-    }
-
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
     const secCodigo = document.getElementById('secCodigo');
@@ -1224,6 +939,7 @@
         }
         txtConnectTime.innerText = connTime;
 
+        // Entra na sala correspondente do Socket para escuta isolada
         if (socket && socket.connected && numeroAtual) {
           socket.emit('join_room', numeroAtual);
         }
@@ -1270,11 +986,13 @@
 
     socket.on('connect', () => {
       addLog('Endpoint de comunicação ativo.', 'success');
+      // Se houver número ativo salvo no localStorage, re-inscreve na sala ao conectar
       if (numeroAtual && (localStorage.getItem('bl4ck_state') === 'conectado')) {
         socket.emit('join_room', numeroAtual);
       }
     });
 
+    // Aplica o estado inicial recuperado após iniciar o socket
     aplicarEstadoReal(
       localStorage.getItem('bl4ck_state') || 'desconectado',
       localStorage.getItem('bl4ck_num') || '',
@@ -1294,6 +1012,7 @@
       const numBotConectado = (numeroAtual || '').replace(/\D/g, '');
       const numBotMsg = (msg.botNumber || '').replace(/\D/g, '');
 
+      // Trava adicional no lado do cliente: ignora mensagens pertencentes a outro bot
       if (numBotMsg && numBotConectado && numBotMsg !== numBotConectado) {
         return;
       }
