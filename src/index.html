@@ -79,6 +79,11 @@
       z-index: 90;
       border-bottom: 1px solid var(--border-color);
       box-shadow: 0 0 15px rgba(255, 0, 60, 0.15);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .header-banner.hide-header {
+      transform: translateY(-100%);
     }
 
     .header-inner { max-width: 400px; margin: 0 auto; }
@@ -463,7 +468,7 @@
 </head>
 <body class="smooth-rewrite">
 
-  <div class="header-banner">
+  <div class="header-banner" id="headerBanner">
     <div class="header-inner">
       <div class="title-main"><span class="highlight"> BL4CK  BOT</span>  AUTOMATICO</div>
       <div class="subtitle-sub">Black bot • PAINEL DE CONEXÃO EM TEMPO REAL</div>
@@ -601,12 +606,26 @@
   </div>
 
   <footer>
-    BL4CK BOT • PAINEL DE CONEXÃO 24/7 • <span style="color: var(--primary-red);">BL4CK SOLUTIONS</span>
+    BL4CK BOT LIVE STREAM • CYBER CORE 24/7 • <span style="color: var(--primary-red);">BL4CK SOLUTIONS</span>
   </footer>
 
   <script>
     const CONFIG = { SERVER_URL: 'https://orion-2-production.up.railway.app', VERSION: '4.10.0' };
     document.getElementById('appVersion').innerText = CONFIG.VERSION;
+
+    /* Lógica para ocultar/reexibir o cabeçalho no scroll (efeito navegadores mobile) */
+    let lastScrollY = window.scrollY;
+    const headerBanner = document.getElementById('headerBanner');
+
+    window.addEventListener('scroll', () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY && currentScrollY > 60) {
+        headerBanner.classList.add('hide-header');
+      } else {
+        headerBanner.classList.remove('hide-header');
+      }
+      lastScrollY = currentScrollY;
+    }, { passive: true });
 
     function detectDevice() {
       const ua = navigator.userAgent;
@@ -939,7 +958,6 @@
         }
         txtConnectTime.innerText = connTime;
 
-        // Entra na sala correspondente do Socket para escuta isolada
         if (socket && socket.connected && numeroAtual) {
           socket.emit('join_room', numeroAtual);
         }
@@ -986,13 +1004,11 @@
 
     socket.on('connect', () => {
       addLog('Endpoint de comunicação ativo.', 'success');
-      // Se houver número ativo salvo no localStorage, re-inscreve na sala ao conectar
       if (numeroAtual && (localStorage.getItem('bl4ck_state') === 'conectado')) {
         socket.emit('join_room', numeroAtual);
       }
     });
 
-    // Aplica o estado inicial recuperado após iniciar o socket
     aplicarEstadoReal(
       localStorage.getItem('bl4ck_state') || 'desconectado',
       localStorage.getItem('bl4ck_num') || '',
@@ -1012,7 +1028,6 @@
       const numBotConectado = (numeroAtual || '').replace(/\D/g, '');
       const numBotMsg = (msg.botNumber || '').replace(/\D/g, '');
 
-      // Trava adicional no lado do cliente: ignora mensagens pertencentes a outro bot
       if (numBotMsg && numBotConectado && numBotMsg !== numBotConectado) {
         return;
       }
