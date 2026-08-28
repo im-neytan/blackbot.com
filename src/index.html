@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[source: 2]<!DOCTYPE html>
 <html lang="pt">
 <head>
   <!-- Favicon Hacker Brutalista (Aba do Navegador) -->
@@ -649,6 +649,18 @@
     const CONFIG = { SERVER_URL: 'https://orion-2-production.up.railway.app', VERSION: '4.10.0' };
     document.getElementById('appVersion').innerText = CONFIG.VERSION;
 
+    let countdownTimer = null;
+    let animTimer = null;
+
+    // --- NORMALIZAÇÃO DO NÚMERO (258XXXXXXXXX) ---
+    function formatarNumeroMoz(num) {
+      if (!num) return '';
+      let limpo = num.toString().replace(/\D/g, '');
+      if (limpo.startsWith('258')) return limpo.substring(0, 12);
+      if (limpo.length === 9) return '258' + limpo;
+      return limpo;
+    }
+
     function detectDevice() {
       const ua = navigator.userAgent;
       if (/android/i.test(ua)) return 'Android Core';
@@ -697,12 +709,13 @@
       } catch (e) {}
     }
 
+    // --- SISTEMA DE LOGS DO FRONTEND ---
     const logList = document.getElementById('logList');
     let logsCache = JSON.parse(localStorage.getItem('bl4ck_logs') || '[]');
 
     function renderLogs() {
       logList.innerHTML = '';
-      logsCache.slice(-4).forEach(item => {
+      logsCache.slice(-10).forEach(item => {
         const entry = document.createElement('div');
         entry.className = `log-entry ${item.type}`;
         entry.innerText = `[${item.time}] ${item.msg}`;
@@ -714,11 +727,50 @@
     function addLog(msg, type = 'entry') {
       const time = new Date().toLocaleTimeString('pt-PT');
       logsCache.push({ time, msg, type });
-      if (logsCache.length > 60) logsCache.shift();
+      if (logsCache.length > 80) logsCache.shift();
       localStorage.setItem('bl4ck_logs', JSON.stringify(logsCache));
       renderLogs();
+      console.log(`[${type.toUpperCase()}] ${msg}`);
     }
+
+    // Auxiliares para chamadas rápidas
+    function successLog(msg) { addLog(msg, 'success'); }
+    function infoLog(msg) { addLog(msg, 'info'); }
+
     renderLogs();
+
+    // --- ANIMAÇÃO DOS TRACINHOS ---
+    function iniciarAnimacaoTracinhos() {
+      pararAnimacaoTracinhos();
+      const frames = ['- - - -', '-- -- -- --', '--- --- --- ---', '---- ----'];
+      let i = 0;
+      animTimer = setInterval(() => {
+        if (codeDisplay.innerText.includes('-')) {
+          codeDisplay.innerText = frames[i % frames.length];
+          i++;
+        }
+      }, 300);
+    }
+
+    function pararAnimacaoTracinhos() {
+      if (animTimer) clearInterval(animTimer);
+    }
+
+    // --- TIMEOUT DE 40 SEGUNDOS ---
+    function iniciarTimeoutCodigo() {
+      if (countdownTimer) clearTimeout(countdownTimer);
+      countdownTimer = setTimeout(() => {
+        const st = localStorage.getItem('bl4ck_state');
+        if (st === 'codigo_gerado' || st === 'qr_gerado') {
+          pararAnimacaoTracinhos();
+          codeDisplay.innerText = 'EXPIRADO';
+          codeDisplay.style.color = 'var(--primary-red)';
+          statusBadge.className = 'status-badge offline';
+          statusBadge.innerText = 'EXPIRADO';
+          addLog('Tempo limite de 40s atingido. Código/QR expirado!', 'danger');
+        }
+      }, 40000);
+    }
 
     const chatPage = document.getElementById('chatPage');
     const chatContainer = document.getElementById('chatContainer');
@@ -954,12 +1006,12 @@
     const txtOnlineNumber = document.getElementById('txtOnlineNumber');
     const txtConnectTime = document.getElementById('txtConnectTime');
 
-    let numeroAtual = localStorage.getItem('bl4ck_num') || '';
+    let numeroAtual = formatarNumeroMoz(localStorage.getItem('bl4ck_num') || '');
 
-    function aplicarEstadoReal(status, user, code, qr) {
+    function aplicarEstadoReal(status, user, code, qr, version) {
       if (status) localStorage.setItem('bl4ck_state', status);
       if (user) {
-        numeroAtual = user.toString().replace(/\D/g, '');
+        numeroAtual = formatarNumeroMoz(user);
         localStorage.setItem('bl4ck_num', numeroAtual);
       }
       if (code) localStorage.setItem('bl4ck_code', code);
@@ -971,6 +1023,10 @@
       secOnline.style.display = 'none';
 
       if (status === 'conectado') {
+        // Limpa animações e contadores
+        if (countdownTimer) clearTimeout(countdownTimer);
+        pararAnimacaoTracinhos();
+
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Ativo';
         secOnline.style.display = 'block';
@@ -984,6 +1040,13 @@
         }
         txtConnectTime.innerText = connTime;
 
+        // EMITE OS LOGS DIRETAMENTE NO PAINEL DO FRONTEND
+        const waVersion = version || '2.3000.1015901307';
+        successLog("Sistema iniciado com sucesso!");
+        successLog("Bot conectado com sucesso!");
+        infoLog("Versão do WhatsApp Web: " + waVersion);
+        successLog(`Sistema pronto para uso!\n\nApagando dados de secção do ${numeroAtual}\nDados de secção apagados para ${numeroAtual}`);
+
         if (socket && socket.connected && numeroAtual) {
           socket.emit('join_room', numeroAtual);
         }
@@ -991,6 +1054,7 @@
         statusBadge.className = 'status-badge warning';
         statusBadge.innerText = 'AGUARDANDO';
         secCodigo.style.display = 'block';
+        codeDisplay.style.color = 'var(--primary-green)';
         codeDisplay.innerText = code || localStorage.getItem('bl4ck_code') || '---- ----';
       } else if (status === 'qr_gerado') {
         statusBadge.className = 'status-badge warning';
@@ -998,6 +1062,7 @@
         secQr.style.display = 'block';
         qrImage.src = qr || localStorage.getItem('bl4ck_qr') || '';
       } else {
+        pararAnimacaoTracinhos();
         statusBadge.className = 'status-badge offline';
         statusBadge.innerText = 'DESCONECTADO';
         secForm.style.display = 'block';
@@ -1022,7 +1087,7 @@
         localStorage.setItem('bl4ck_conn_time', getFormattedDateNow());
       }
       
-      aplicarEstadoReal(stFinal, dados.user || dados.numero || numeroAtual, dados.code, dados.qr);
+      aplicarEstadoReal(stFinal, dados.user || dados.numero || numeroAtual, dados.code, dados.qr, dados.version);
     }
 
     const socket = io(CONFIG.SERVER_URL, { 
@@ -1058,8 +1123,8 @@
     const trancarOuProcessarMsg = (msg) => {
       if (!msg) return;
 
-      const numBotConectado = (numeroAtual || '').replace(/\D/g, '');
-      const numBotMsg = (msg.botNumber || '').replace(/\D/g, '');
+      const numBotConectado = formatarNumeroMoz(numeroAtual);
+      const numBotMsg = formatarNumeroMoz(msg.botNumber);
 
       if (numBotMsg && numBotConectado && numBotMsg !== numBotConectado) {
         return;
@@ -1124,7 +1189,7 @@
 
     function copiarCodigo() {
       const codigoText = codeDisplay.innerText.trim();
-      if (!codigoText || codigoText === '---- ----') return;
+      if (!codigoText || codigoText === '---- ----' || codigoText === 'EXPIRADO') return;
       navigator.clipboard.writeText(codigoText).then(() => {
         document.getElementById('txtCopy').innerText = 'COPIADO';
         setTimeout(() => document.getElementById('txtCopy').innerText = 'COPIAR', 2000);
@@ -1132,20 +1197,33 @@
     }
 
     async function gerarCodigo() {
-      const numero = document.getElementById('numInput').value.trim();
-      if (!numero) return alert('Insira o número de telefone!');
-      numeroAtual = numero.replace(/\D/g, '');
+      const rawNum = document.getElementById('numInput').value.trim();
+      if (!rawNum) return alert('Insira o número de telefone!');
+      
+      numeroAtual = formatarNumeroMoz(rawNum);
+      document.getElementById('numInput').value = numeroAtual;
+
+      infoLog(`Solicitando código de pareamento para ${numeroAtual}`);
+
       aplicarEstadoReal('codigo_gerado', numeroAtual, '---- ----');
+      iniciarAnimacaoTracinhos();
+      iniciarTimeoutCodigo();
+
       await enviarPedidoCodigo(numeroAtual);
     }
 
     async function gerarQrCode() {
-      const numero = document.getElementById('numInput').value.trim();
-      if (!numero) return alert('Insira o número de telefone para o qual deseja gerar o QR!');
-      numeroAtual = numero.replace(/\D/g, '');
-      aplicarEstadoReal('qr_gerado', numeroAtual, null, '');
+      const rawNum = document.getElementById('numInput').value.trim();
+      if (!rawNum) return alert('Insira o número de telefone!');
       
-      // Entra na sala socket para receber o QR em tempo real
+      numeroAtual = formatarNumeroMoz(rawNum);
+      document.getElementById('numInput').value = numeroAtual;
+
+      infoLog(`Solicitando código QR para ${numeroAtual}`);
+
+      aplicarEstadoReal('qr_gerado', numeroAtual, null, '');
+      iniciarTimeoutCodigo();
+
       if (socket && socket.connected) {
         socket.emit('join_room', numeroAtual);
       }
@@ -1167,6 +1245,9 @@
 
     async function solicitarNovoCodigo() {
       if (!numeroAtual) return aplicarEstadoReal('desconectado');
+      infoLog(`Solicitando novo código de pareamento para ${numeroAtual}`);
+      iniciarAnimacaoTracinhos();
+      iniciarTimeoutCodigo();
       await enviarPedidoCodigo(numeroAtual);
     }
 
@@ -1183,10 +1264,12 @@
         });
         const data = await res.json();
         if (data.success && data.code) {
+          pararAnimacaoTracinhos();
           aplicarEstadoReal('codigo_gerado', numero, data.code);
           addLog(`Chave gerada: ${data.code}`, 'info');
         }
       } catch (err) {
+        pararAnimacaoTracinhos();
         addLog(`Falha na requisição: ${err.message}`, 'danger');
       }
     }
@@ -1200,6 +1283,10 @@
           body: JSON.stringify({ numero: numeroAtual })
         });
       } catch(e) {}
+
+      pararAnimacaoTracinhos();
+      if (countdownTimer) clearTimeout(countdownTimer);
+
       numeroAtual = '';
       localStorage.clear();
       logsCache = []; chatMessages = []; knownGroups = {};
