@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <!-- Favicon Hacker Brutalista (Aba do Navegador) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><filter id='brutalGlow' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='14' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><linearGradient id='cyberRedGreen' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23ff003c'/><stop offset='50%' stop-color='%2300ff66'/><stop offset='100%' stop-color='%2300f0ff'/></linearGradient></defs><rect width='512' height='512' rx='96' fill='%23000000'/><g filter='url(%23brutalGlow)' fill='none' stroke='url(%23cyberRedGreen)' stroke-width='20' stroke-linecap='square' stroke-linejoin='miter'><path d='M 140 180 L 256 90 L 372 180 L 372 290 L 330 330 L 330 400 L 182 400 L 182 330 L 140 290 Z'/><polygon points='175,210 230,240 175,250' fill='%23ff003c' stroke='none'/><polygon points='337,210 282,240 337,250' fill='%2300ff66' stroke='none'/><line x1='220' y1='340' x2='220' y2='400'/><line x1='256' y1='340' x2='256' y2='400'/><line x1='292' y1='340' x2='292' y2='400'/><polygon points='256,260 240,295 272,295' fill='url(%23cyberRedGreen)' stroke='none'/></g></svg>">
-
-  <!-- Ícone App Mobile (iOS e Android) -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><filter id='brutalGlow' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='14' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><linearGradient id='cyberRedGreen' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23ff003c'/><stop offset='50%' stop-color='%2300ff66'/><stop offset='100%' stop-color='%2300f0ff'/></linearGradient></defs><rect width='512' height='512' rx='96' fill='%23000000'/><g filter='url(%23brutalGlow)' fill='none' stroke='url(%23cyberRedGreen)' stroke-width='20' stroke-linecap='square' stroke-linejoin='miter'><path d='M 140 180 L 256 90 L 372 180 L 372 290 L 330 330 L 330 400 L 182 400 L 182 330 L 140 290 Z'/><polygon points='175,210 230,240 175,250' fill='%23ff003c' stroke='none'/><polygon points='337,210 282,240 337,250' fill='%2300ff66' stroke='none'/><line x1='220' y1='340' x2='220' y2='400'/><line x1='256' y1='340' x2='256' y2='400'/><line x1='292' y1='340' x2='292' y2='400'/><polygon points='256,260 240,295 272,295' fill='url(%23cyberRedGreen)' stroke='none'/></g></svg>">
-
-  <meta name="theme-color" content="#000000">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>bl4ck_bot | Connect</title>
@@ -163,7 +156,7 @@
 
     .input-wrapper input {
       width: 100%;
-      padding: 10px 95px 10px 10px;
+      padding: 10px 65px 10px 10px;
       border-radius: 2px;
       border: 1px solid rgba(0, 240, 255, 0.3);
       background: #000;
@@ -191,7 +184,6 @@
       cursor: pointer;
       display: flex;
       align-items: center;
-      padding: 2px;
     }
     .icon-btn-inline svg { width: 16px; height: 16px; fill: currentColor; }
     #btnClearInput { display: none; color: var(--primary-red); }
@@ -275,27 +267,6 @@
       border: 1px dashed var(--primary-green);
       text-align: center;
       text-shadow: 0 0 5px var(--primary-green);
-    }
-
-    .qr-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: 10px 0;
-      padding: 12px;
-      background: #000;
-      border: 1px dashed var(--cyber-blue);
-      border-radius: 2px;
-    }
-
-    .qr-container img {
-      width: 200px;
-      height: 200px;
-      border: 2px solid var(--cyber-blue);
-      border-radius: 4px;
-      padding: 4px;
-      background: #fff;
     }
 
     .btn-copy {
@@ -515,9 +486,8 @@
         <div class="input-wrapper">
           <input type="text" id="numInput" placeholder="Ex: 258841234567" oninput="toggleInputIcons()">
           <div class="input-icons-right">
-            <button type="button" class="icon-btn-inline" id="btnClearInput" title="Limpar" onclick="limparInput()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
-            <button type="button" class="icon-btn-inline" title="Colar" onclick="colarNoInput()"><svg viewBox="0 0 24 24"><path d="M19 2h-4.18C14.4 0.84 13.3 0 12 0c-1.3 0-2.4 0.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"/></svg></button>
-            <button type="button" class="icon-btn-inline" title="Escanear via QR Code" onclick="gerarQrCode()"><svg viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13 2h3v4h-3v-4zm0-4h-4v3h4v-3zm-4 4h3v4h-3v-4z"/></svg></button>
+            <button type="button" class="icon-btn-inline" id="btnClearInput" onclick="limparInput()"><svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></button>
+            <button type="button" class="icon-btn-inline" onclick="colarNoInput()"><svg viewBox="0 0 24 24"><path d="M19 2h-4.18C14.4 0.84 13.3 0 12 0c-1.3 0-2.4 0.84-2.82 2H5c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm7 18H5V4h2v3h10V4h2v16z"/></svg></button>
           </div>
         </div>
         <div class="btn-grid">
@@ -527,7 +497,7 @@
         </div>
       </div>
 
-      <!-- PAINEL DE PAREAMENTO POR CÓDIGO -->
+      <!-- PAINEL DE PAREAMENTO -->
       <div id="secCodigo" style="display: none;">
         <p style="font-size: 0.68rem; color: var(--cyber-blue); text-align: center;">Insira este código no WhatsApp do dispositivo:</p>
         <div class="code-container">
@@ -539,17 +509,6 @@
         </div>
         <div class="btn-grid">
           <button class="btn-cyber-blue" onclick="solicitarNovoCodigo()">[ R ] Re-solicitar Código</button>
-          <button class="btn-cyber-reset" onclick="resetarSessao()">[ X ] Forçar Desconexão</button>
-        </div>
-      </div>
-
-      <!-- PAINEL DE PAREAMENTO POR QR CODE -->
-      <div id="secQr" style="display: none;">
-        <p style="font-size: 0.68rem; color: var(--cyber-blue); text-align: center;">Escaneie este QR Code no WhatsApp:</p>
-        <div class="qr-container">
-          <img id="qrImage" src="" alt="A carregar QR Code...">
-        </div>
-        <div class="btn-grid">
           <button class="btn-cyber-reset" onclick="resetarSessao()">[ X ] Forçar Desconexão</button>
         </div>
       </div>
@@ -634,7 +593,8 @@
         <li>Abra o WhatsApp no dispositivo.</li>
         <li>Navegue até <b>Aparelhos Conectados</b>.</li>
         <li>Toque em <b>Conectar um aparelho</b>.</li>
-        <li>Insira o Código de Telefone OU escaneie a imagem QR Code gerada.</li>
+        <li>Escolha <b>Conectar com código de telefone</b>.</li>
+        <li>Insira a chave criptográfica gerada.</li>
       </ol>
       <button class="btn-cyber-green" onclick="toggleTutorial(false)">[ CONFIRMAR ]</button>
     </div>
@@ -647,27 +607,6 @@
   <script>
     const CONFIG = { SERVER_URL: 'https://orion-2-production.up.railway.app', VERSION: '4.10.0' };
     document.getElementById('appVersion').innerText = CONFIG.VERSION;
-
-    let countdownTimer = null;
-    let animTimer = null;
-
-    // --- NORMALIZAÇÃO DO NÚMERO (258XXXXXXXXX) ---
-    function formatarNumeroMoz(num) {
-      if (!num) return '';
-      let limpo = num.toString().replace(/\D/g, '');
-      if (limpo.startsWith('258')) return limpo.substring(0, 12);
-      if (limpo.length === 9) return '258' + limpo;
-      return limpo;
-    }
-
-    function formatarCodigoPairing(code) {
-      if (!code) return '---- ----';
-      let clean = code.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-      if (clean.length === 8) {
-        return clean.slice(0, 4) + ' ' + clean.slice(4);
-      }
-      return code;
-    }
 
     function detectDevice() {
       const ua = navigator.userAgent;
@@ -717,13 +656,12 @@
       } catch (e) {}
     }
 
-    // --- SISTEMA DE LOGS DO FRONTEND ---
     const logList = document.getElementById('logList');
     let logsCache = JSON.parse(localStorage.getItem('bl4ck_logs') || '[]');
 
     function renderLogs() {
       logList.innerHTML = '';
-      logsCache.slice(-10).forEach(item => {
+      logsCache.slice(-4).forEach(item => {
         const entry = document.createElement('div');
         entry.className = `log-entry ${item.type}`;
         entry.innerText = `[${item.time}] ${item.msg}`;
@@ -735,49 +673,11 @@
     function addLog(msg, type = 'entry') {
       const time = new Date().toLocaleTimeString('pt-PT');
       logsCache.push({ time, msg, type });
-      if (logsCache.length > 80) logsCache.shift();
+      if (logsCache.length > 60) logsCache.shift();
       localStorage.setItem('bl4ck_logs', JSON.stringify(logsCache));
       renderLogs();
-      console.log(`[${type.toUpperCase()}] ${msg}`);
     }
-
-    function successLog(msg) { addLog(msg, 'success'); }
-    function infoLog(msg) { addLog(msg, 'info'); }
-
     renderLogs();
-
-    // --- ANIMAÇÃO DOS TRACINHOS ---
-    function iniciarAnimacaoTracinhos() {
-      pararAnimacaoTracinhos();
-      const frames = ['- - - -', '-- -- -- --', '--- --- --- ---', '---- ----'];
-      let i = 0;
-      animTimer = setInterval(() => {
-        if (codeDisplay.innerText.includes('-')) {
-          codeDisplay.innerText = frames[i % frames.length];
-          i++;
-        }
-      }, 300);
-    }
-
-    function pararAnimacaoTracinhos() {
-      if (animTimer) clearInterval(animTimer);
-    }
-
-    // --- TIMEOUT DE 40 SEGUNDOS ---
-    function iniciarTimeoutCodigo() {
-      if (countdownTimer) clearTimeout(countdownTimer);
-      countdownTimer = setTimeout(() => {
-        const st = localStorage.getItem('bl4ck_state');
-        if (st === 'codigo_gerado' || st === 'qr_gerado') {
-          pararAnimacaoTracinhos();
-          codeDisplay.innerText = 'EXPIRADO';
-          codeDisplay.style.color = 'var(--primary-red)';
-          statusBadge.className = 'status-badge offline';
-          statusBadge.innerText = 'EXPIRADO';
-          addLog('Tempo limite de 40s atingido. Código/QR expirado!', 'danger');
-        }
-      }, 40000);
-    }
 
     const chatPage = document.getElementById('chatPage');
     const chatContainer = document.getElementById('chatContainer');
@@ -1006,34 +906,26 @@
     const statusBadge = document.getElementById('statusBadge');
     const secForm = document.getElementById('secForm');
     const secCodigo = document.getElementById('secCodigo');
-    const secQr = document.getElementById('secQr');
     const secOnline = document.getElementById('secOnline');
     const codeDisplay = document.getElementById('codeDisplay');
-    const qrImage = document.getElementById('qrImage');
     const txtOnlineNumber = document.getElementById('txtOnlineNumber');
     const txtConnectTime = document.getElementById('txtConnectTime');
 
-    let numeroAtual = formatarNumeroMoz(localStorage.getItem('bl4ck_num') || '');
+    let numeroAtual = localStorage.getItem('bl4ck_num') || '';
 
-    // FUNÇÃO PRINCIPAL QUE RENDERIZA O ESTADO NA TELA
-    function aplicarEstadoReal(status, user, code, qr, version) {
+    function aplicarEstadoReal(status, user, code) {
       if (status) localStorage.setItem('bl4ck_state', status);
       if (user) {
-        numeroAtual = formatarNumeroMoz(user);
+        numeroAtual = user.toString().replace(/\D/g, '');
         localStorage.setItem('bl4ck_num', numeroAtual);
       }
       if (code) localStorage.setItem('bl4ck_code', code);
-      if (qr) localStorage.setItem('bl4ck_qr', qr);
 
       secForm.style.display = 'none';
       secCodigo.style.display = 'none';
-      secQr.style.display = 'none';
       secOnline.style.display = 'none';
 
       if (status === 'conectado') {
-        if (countdownTimer) clearTimeout(countdownTimer);
-        pararAnimacaoTracinhos();
-
         statusBadge.className = 'status-badge online';
         statusBadge.innerText = 'Ativo';
         secOnline.style.display = 'block';
@@ -1047,12 +939,7 @@
         }
         txtConnectTime.innerText = connTime;
 
-        const waVersion = version || '2.3000.1015901307';
-        successLog("Sistema iniciado com sucesso!");
-        successLog("Bot conectado com sucesso!");
-        infoLog("Versão do WhatsApp Web: " + waVersion);
-        successLog(`Sistema pronto para uso!\n\nApagando dados de secção do ${numeroAtual}\nDados de secção apagados para ${numeroAtual}`);
-
+        // Entra na sala correspondente do Socket para escuta isolada
         if (socket && socket.connected && numeroAtual) {
           socket.emit('join_room', numeroAtual);
         }
@@ -1060,20 +947,8 @@
         statusBadge.className = 'status-badge warning';
         statusBadge.innerText = 'AGUARDANDO';
         secCodigo.style.display = 'block';
-        codeDisplay.style.color = 'var(--primary-green)';
-        const c = code || localStorage.getItem('bl4ck_code');
-        if (c && c !== '---- ----') {
-          pararAnimacaoTracinhos();
-          codeDisplay.innerText = formatarCodigoPairing(c);
-        }
-      } else if (status === 'qr_gerado') {
-        statusBadge.className = 'status-badge warning';
-        statusBadge.innerText = 'AGUARDANDO QR';
-        secQr.style.display = 'block';
-        const q = qr || localStorage.getItem('bl4ck_qr');
-        if (q) qrImage.src = q;
+        codeDisplay.innerText = code || localStorage.getItem('bl4ck_code') || '---- ----';
       } else {
-        pararAnimacaoTracinhos();
         statusBadge.className = 'status-badge offline';
         statusBadge.innerText = 'DESCONECTADO';
         secForm.style.display = 'block';
@@ -1085,8 +960,7 @@
       if (!st) return 'desconectado';
       const s = String(st).toLowerCase();
       if (['conectado', 'connected', 'open', 'isconnected', 'ready', 'true'].includes(s)) return 'conectado';
-      if (['codigo_gerado', 'code', 'pairing'].includes(s)) return 'codigo_gerado';
-      if (['qr_gerado', 'qr'].includes(s)) return 'qr_gerado';
+      if (['codigo_gerado', 'code', 'pairing', 'connecting', 'qr'].includes(s)) return 'codigo_gerado';
       return 'desconectado';
     }
 
@@ -1097,9 +971,8 @@
       if (stFinal === 'conectado' && !localStorage.getItem('bl4ck_conn_time')) {
         localStorage.setItem('bl4ck_conn_time', getFormattedDateNow());
       }
-
-      // Aplica o estado recebido via WebSocket diretamente
-      aplicarEstadoReal(stFinal, dados.user || dados.numero || numeroAtual, dados.code, dados.qr, dados.version);
+      
+      aplicarEstadoReal(stFinal, dados.user || dados.numero || numeroAtual, dados.code);
     }
 
     const socket = io(CONFIG.SERVER_URL, { 
@@ -1113,16 +986,17 @@
 
     socket.on('connect', () => {
       addLog('Endpoint de comunicação ativo.', 'success');
-      if (numeroAtual && (localStorage.getItem('bl4ck_state') === 'conectado' || localStorage.getItem('bl4ck_state') === 'qr_gerado')) {
+      // Se houver número ativo salvo no localStorage, re-inscreve na sala ao conectar
+      if (numeroAtual && (localStorage.getItem('bl4ck_state') === 'conectado')) {
         socket.emit('join_room', numeroAtual);
       }
     });
 
+    // Aplica o estado inicial recuperado após iniciar o socket
     aplicarEstadoReal(
       localStorage.getItem('bl4ck_state') || 'desconectado',
       localStorage.getItem('bl4ck_num') || '',
-      localStorage.getItem('bl4ck_code') || '',
-      localStorage.getItem('bl4ck_qr') || ''
+      localStorage.getItem('bl4ck_code') || ''
     );
 
     socket.on('disconnect', (reason) => {
@@ -1131,23 +1005,14 @@
 
     socket.on('status', processarEventoStatus);
     socket.on('status_change', processarEventoStatus);
-    socket.on('qr', (data) => {
-      if (data && (data.qr || data)) {
-        aplicarEstadoReal('qr_gerado', numeroAtual, null, data.qr || data);
-      }
-    });
-    socket.on('code', (data) => {
-      if (data && (data.code || data)) {
-        aplicarEstadoReal('codigo_gerado', numeroAtual, data.code || data);
-      }
-    });
 
     const trancarOuProcessarMsg = (msg) => {
       if (!msg) return;
 
-      const numBotConectado = formatarNumeroMoz(numeroAtual);
-      const numBotMsg = formatarNumeroMoz(msg.botNumber);
+      const numBotConectado = (numeroAtual || '').replace(/\D/g, '');
+      const numBotMsg = (msg.botNumber || '').replace(/\D/g, '');
 
+      // Trava adicional no lado do cliente: ignora mensagens pertencentes a outro bot
       if (numBotMsg && numBotConectado && numBotMsg !== numBotConectado) {
         return;
       }
@@ -1210,8 +1075,8 @@
     });
 
     function copiarCodigo() {
-      const codigoText = codeDisplay.innerText.replace(/\s+/g, '').trim();
-      if (!codigoText || codigoText === '------------' || codigoText === 'EXPIRADO') return;
+      const codigoText = codeDisplay.innerText.trim();
+      if (!codigoText || codigoText === '---- ----') return;
       navigator.clipboard.writeText(codigoText).then(() => {
         document.getElementById('txtCopy').innerText = 'COPIADO';
         setTimeout(() => document.getElementById('txtCopy').innerText = 'COPIAR', 2000);
@@ -1219,66 +1084,19 @@
     }
 
     async function gerarCodigo() {
-      const rawNum = document.getElementById('numInput').value.trim();
-      if (!rawNum) return alert('Insira o número de telefone!');
-      
-      numeroAtual = formatarNumeroMoz(rawNum);
-      document.getElementById('numInput').value = numeroAtual;
-
-      infoLog(`Solicitando código de pareamento para ${numeroAtual}`);
-
+      const numero = document.getElementById('numInput').value.trim();
+      if (!numero) return alert('Insira o número de telefone!');
+      numeroAtual = numero.replace(/\D/g, '');
       aplicarEstadoReal('codigo_gerado', numeroAtual, '---- ----');
-      iniciarAnimacaoTracinhos();
-      iniciarTimeoutCodigo();
-
       await enviarPedidoCodigo(numeroAtual);
-    }
-
-    async function gerarQrCode() {
-      const rawNum = document.getElementById('numInput').value.trim();
-      if (!rawNum) return alert('Insira o número de telefone!');
-      
-      numeroAtual = formatarNumeroMoz(rawNum);
-      document.getElementById('numInput').value = numeroAtual;
-
-      infoLog(`Solicitando código QR para ${numeroAtual}`);
-
-      aplicarEstadoReal('qr_gerado', numeroAtual, null, '');
-      iniciarTimeoutCodigo();
-
-      if (socket && socket.connected) {
-        socket.emit('join_room', numeroAtual);
-      }
-
-      try {
-        const res = await fetch(`${CONFIG.SERVER_URL}/api/solicitar-qr`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ numero: numeroAtual })
-        });
-        const data = await res.json();
-        if (data.success && data.qr) {
-          aplicarEstadoReal('qr_gerado', numeroAtual, null, data.qr);
-          addLog('QR Code gerado com sucesso.', 'info');
-        }
-      } catch (err) {
-        addLog(`Falha na requisição: ${err.message}`, 'danger');
-      }
     }
 
     async function solicitarNovoCodigo() {
       if (!numeroAtual) return aplicarEstadoReal('desconectado');
-      infoLog(`Solicitando novo código de pareamento para ${numeroAtual}`);
-      iniciarAnimacaoTracinhos();
-      iniciarTimeoutCodigo();
       await enviarPedidoCodigo(numeroAtual);
     }
 
     async function enviarPedidoCodigo(numero) {
-      if (socket && socket.connected) {
-        socket.emit('join_room', numero);
-      }
-
       try {
         const res = await fetch(`${CONFIG.SERVER_URL}/api/solicitar-codigo`, {
           method: 'POST',
@@ -1286,14 +1104,11 @@
           body: JSON.stringify({ numero })
         });
         const data = await res.json();
-        if (data.success && (data.code || data.pairingCode)) {
-          const finalCode = data.code || data.pairingCode;
-          pararAnimacaoTracinhos();
-          aplicarEstadoReal('codigo_gerado', numero, finalCode);
-          addLog(`Chave gerada: ${finalCode}`, 'info');
+        if (data.success && data.code) {
+          aplicarEstadoReal('codigo_gerado', numero, data.code);
+          addLog(`Chave gerada: ${data.code}`, 'info');
         }
       } catch (err) {
-        pararAnimacaoTracinhos();
         addLog(`Falha na requisição: ${err.message}`, 'danger');
       }
     }
@@ -1307,10 +1122,6 @@
           body: JSON.stringify({ numero: numeroAtual })
         });
       } catch(e) {}
-
-      pararAnimacaoTracinhos();
-      if (countdownTimer) clearTimeout(countdownTimer);
-
       numeroAtual = '';
       localStorage.clear();
       logsCache = []; chatMessages = []; knownGroups = {};
