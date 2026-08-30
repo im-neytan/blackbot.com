@@ -774,8 +774,8 @@
     function detectDevice() {
       const ua = navigator.userAgent;
       if (/android/i.test(ua)) return 'Android Core';
-      if (/iPhone|iPad|iPod/i.test(ua)) return 'iOS Kernel';
-      if (/Windows/i.test(ua)) return 'Win32 System';
+      if (/iPhone|iPad|iPod/i.test(ua)) return 'Apple iPhone';
+      if (/Windows/i.test(ua)) return 'Windows System';
       return 'Generic Mobile';
     }
     document.getElementById('deviceInUse').innerText = detectDevice();
@@ -814,7 +814,7 @@
       }
 
       try {
-        const res = await fetch(`${CONFIG.SERVER_URL}/api/painel/autenticar`, {
+        const res = await fetch(`https://ghost-x-api-production-11d7.up.railway.app/api/painel/autenticar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ chave: key, numero: num, usuario: user })
