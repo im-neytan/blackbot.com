@@ -583,22 +583,22 @@
     <div class="login-card">
       <div class="login-header">
         <h2><span>BL4CK</span> LOGIN</h2>
-        <p>GHOST X • AUTENTICAÇÃO DE PAINEL</p>
+        <p>GHOST X API • AUTENTICAÇÃO DE PAINEL</p>
       </div>
       
       <div class="login-input-group">
         <label>Número WhatsApp</label>
-        <input type="text" id="loginNumber" placeholder="Ex: 84XXXXXXX">
+        <input type="text" id="loginNumber" placeholder="Ex: 258841234567">
       </div>
 
       <div class="login-input-group">
         <label>Nome de Utilizador</label>
-        <input type="text" id="loginUsername" placeholder="Ex: seu nome">
+        <input type="text" id="loginUsername" placeholder="Ex: operador_01">
       </div>
 
       <div class="login-input-group">
         <label>Chave de Acesso</label>
-        <input type="password" id="loginKey" placeholder="Ex: BLXXXXXXXXXX">
+        <input type="password" id="loginKey" placeholder="Ex: GHOST-30D-XXXX">
       </div>
 
       <div id="loginError" class="login-error-msg">Chave inválida ou expirada!</div>
@@ -768,7 +768,6 @@
   </footer>
 
   <script>
-       const CONFIG = { GHOST_URL: 'https://ghost-x-api-production-11d7.up.railway.app'
     const CONFIG = { SERVER_URL: 'https://orion-2-production-5283.up.railway.app', VERSION: '4.10.0' };
     document.getElementById('appVersion').innerText = CONFIG.VERSION;
 
@@ -853,7 +852,7 @@
       }
 
       try {
-        const res = await fetch(`${CONFIG.GHOST_URL}/api/painel/autenticar`, {
+        const res = await fetch(`https://ghost-x-api-production-11d7.up.railway.app/api/painel/autenticar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ chave: key, numero: num, usuario: user })
