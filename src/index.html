@@ -587,17 +587,17 @@
       </div>
       
       <div class="login-input-group">
-        <label>Número WhatsApp</label>
+        <label>Número WhatsApp (Opcional)</label>
         <input type="text" id="loginNumber" placeholder="Ex: 258841234567">
       </div>
 
       <div class="login-input-group">
-        <label>Nome de Utilizador</label>
+        <label>Nome de Utilizador (Opcional)</label>
         <input type="text" id="loginUsername" placeholder="Ex: operador_01">
       </div>
 
       <div class="login-input-group">
-        <label>Chave de Acesso</label>
+        <label>Chave de Acesso *</label>
         <input type="password" id="loginKey" placeholder="Ex: GHOST-30D-XXXX">
       </div>
 
@@ -805,10 +805,10 @@
     /* --- CONTROLO DE AUTENTICAÇÃO COM CHAVE NO GHOST X API --- */
     async function verificarSessaoLogin() {
       const key = localStorage.getItem('bl4ck_auth_key');
-      const num = localStorage.getItem('bl4ck_auth_num');
-      const user = localStorage.getItem('bl4ck_auth_user');
+      const num = localStorage.getItem('bl4ck_auth_num') || '';
+      const user = localStorage.getItem('bl4ck_auth_user') || 'operador';
 
-      if (!key || !num || !user) {
+      if (!key) {
         document.getElementById('authOverlay').style.display = 'flex';
         return false;
       }
@@ -824,7 +824,7 @@
         if (data.success) {
           document.getElementById('authOverlay').style.display = 'none';
           document.getElementById('txtOperador').innerText = user;
-          document.getElementById('txtKeyExpire').innerText = new Date(data.expiraEm).toLocaleDateString('pt-PT');
+          document.getElementById('txtKeyExpire').innerText = data.expiraEm ? new Date(data.expiraEm).toLocaleDateString('pt-PT') : 'Ilimitado';
           return true;
         } else {
           document.getElementById('loginError').innerText = data.error || 'A sua chave expirou ou é inválida!';
@@ -833,7 +833,6 @@
           return false;
         }
       } catch (e) {
-        // Se houver erro de rede, assume a cache local temporariamente para resiliência
         document.getElementById('authOverlay').style.display = 'none';
         return true;
       }
@@ -841,12 +840,13 @@
 
     async function efetuarLogin() {
       const num = document.getElementById('loginNumber').value.trim().replace(/\D/g, '');
-      const user = document.getElementById('loginUsername').value.trim();
+      const user = document.getElementById('loginUsername').value.trim() || 'operador';
       const key = document.getElementById('loginKey').value.trim();
       const errBox = document.getElementById('loginError');
 
-      if (!num || !user || !key) {
-        errBox.innerText = 'Preencha todos os campos obrigatórios!';
+      // VALIDAÇÃO SOMENTE DA CHAVE DE ACESSO
+      if (!key) {
+        errBox.innerText = 'Preencha a Chave de Acesso!';
         errBox.style.display = 'block';
         return;
       }
@@ -863,7 +863,7 @@
           localStorage.setItem('bl4ck_auth_key', key);
           localStorage.setItem('bl4ck_auth_num', num);
           localStorage.setItem('bl4ck_auth_user', user);
-          document.getElementById('numInput').value = num;
+          if (num) document.getElementById('numInput').value = num;
           document.getElementById('authOverlay').style.display = 'none';
           errBox.style.display = 'none';
           
@@ -887,7 +887,6 @@
       window.location.reload();
     }
 
-    // Executar verificação assim que carregar a página
     verificarSessaoLogin();
 
     function toggleInputIcons() {
