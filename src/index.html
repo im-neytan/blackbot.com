@@ -63,6 +63,92 @@
       pointer-events: none;
     }
 
+    /* OVERLAY / TELA DE LOGIN BRUTALISTA */
+    #authOverlay {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(2, 4, 8, 0.98);
+      backdrop-filter: blur(12px);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .login-card {
+      background: var(--card-bg);
+      border: 1px solid var(--primary-red);
+      border-radius: 4px;
+      padding: 24px;
+      width: 100%;
+      max-width: 360px;
+      box-shadow: 0 0 25px rgba(255, 0, 60, 0.25);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 6px;
+    }
+
+    .login-header h2 {
+      font-size: 1.2rem;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .login-header h2 span {
+      color: var(--primary-red);
+      text-shadow: 0 0 8px var(--primary-red);
+    }
+
+    .login-header p {
+      font-size: 0.60rem;
+      color: var(--cyber-blue);
+      margin-top: 4px;
+      letter-spacing: 1px;
+    }
+
+    .login-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .login-input-group label {
+      font-size: 0.62rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .login-input-group input {
+      width: 100%;
+      padding: 10px;
+      background: #000;
+      border: 1px solid rgba(0, 240, 255, 0.3);
+      color: #fff;
+      font-size: 0.82rem;
+      border-radius: 2px;
+      outline: none;
+    }
+
+    .login-input-group input:focus {
+      border-color: var(--cyber-blue);
+      box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+    }
+
+    .login-error-msg {
+      font-size: 0.65rem;
+      color: var(--primary-red);
+      text-align: center;
+      display: none;
+    }
+
     .container {
       position: relative;
       z-index: 1;
@@ -492,6 +578,35 @@
 </head>
 <body class="smooth-rewrite">
 
+  <!-- MODAL / TELA DE LOGIN AUTENTICAÇÃO VIA GHOST X API -->
+  <div id="authOverlay">
+    <div class="login-card">
+      <div class="login-header">
+        <h2><span>BL4CK</span> LOGIN</h2>
+        <p>GHOST X API • AUTENTICAÇÃO DE PAINEL</p>
+      </div>
+      
+      <div class="login-input-group">
+        <label>Número WhatsApp</label>
+        <input type="text" id="loginNumber" placeholder="Ex: 258841234567">
+      </div>
+
+      <div class="login-input-group">
+        <label>Nome de Utilizador</label>
+        <input type="text" id="loginUsername" placeholder="Ex: operador_01">
+      </div>
+
+      <div class="login-input-group">
+        <label>Chave de Acesso</label>
+        <input type="password" id="loginKey" placeholder="Ex: GHOST-30D-XXXX">
+      </div>
+
+      <div id="loginError" class="login-error-msg">Chave inválida ou expirada!</div>
+
+      <button class="btn-cyber-green" onclick="efetuarLogin()">[ > ] ENTRAR NO PAINEL</button>
+    </div>
+  </div>
+
   <div class="header-banner">
     <div class="header-inner">
       <div class="title-main"><span class="highlight"> BL4CK  BOT</span>  AUTOMATICO</div>
@@ -569,13 +684,21 @@
             <span class="online-left">Conectado</span>
             <span class="online-right" id="txtConnectTime">--/--/-- - --:--</span>
           </div>
+          <div class="online-row">
+            <span class="online-left">Operador</span>
+            <span class="online-right" id="txtOperador" style="color: var(--cyber-blue);">--</span>
+          </div>
+          <div class="online-row">
+            <span class="online-left">Chave Válida Até</span>
+            <span class="online-right" id="txtKeyExpire" style="color: var(--primary-yellow);">--</span>
+          </div>
         </div>
 
         <div class="btn-grid">
           <button class="btn-live-chat-custom" onclick="abrirLiveChat()">
             [ # ] Abrir Live Chat Interceptador
           </button>
-          <button class="btn-cyber-reset" onclick="resetarSessao()">[ X ] Desconectar bot</button>
+          <button class="btn-cyber-reset" onclick="encerrarSessaoLogin()">[ X ] Encerrar Login / Sair</button>
         </div>
       </div>
     </div>
@@ -678,6 +801,94 @@
       const now = new Date();
       return `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth()+1).padStart(2, '0')}/${String(now.getFullYear()).slice(-2)} - ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     }
+
+    /* --- CONTROLO DE AUTENTICAÇÃO COM CHAVE NO GHOST X API --- */
+    async function verificarSessaoLogin() {
+      const key = localStorage.getItem('bl4ck_auth_key');
+      const num = localStorage.getItem('bl4ck_auth_num');
+      const user = localStorage.getItem('bl4ck_auth_user');
+
+      if (!key || !num || !user) {
+        document.getElementById('authOverlay').style.display = 'flex';
+        return false;
+      }
+
+      try {
+        const res = await fetch(`${CONFIG.SERVER_URL}/api/painel/autenticar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chave: key, numero: num, usuario: user })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          document.getElementById('authOverlay').style.display = 'none';
+          document.getElementById('txtOperador').innerText = user;
+          document.getElementById('txtKeyExpire').innerText = new Date(data.expiraEm).toLocaleDateString('pt-PT');
+          return true;
+        } else {
+          document.getElementById('loginError').innerText = data.error || 'A sua chave expirou ou é inválida!';
+          document.getElementById('loginError').style.display = 'block';
+          document.getElementById('authOverlay').style.display = 'flex';
+          return false;
+        }
+      } catch (e) {
+        // Se houver erro de rede, assume a cache local temporariamente para resiliência
+        document.getElementById('authOverlay').style.display = 'none';
+        return true;
+      }
+    }
+
+    async function efetuarLogin() {
+      const num = document.getElementById('loginNumber').value.trim().replace(/\D/g, '');
+      const user = document.getElementById('loginUsername').value.trim();
+      const key = document.getElementById('loginKey').value.trim();
+      const errBox = document.getElementById('loginError');
+
+      if (!num || !user || !key) {
+        errBox.innerText = 'Preencha todos os campos obrigatórios!';
+        errBox.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${CONFIG.SERVER_URL}/api/painel/autenticar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chave: key, numero: num, usuario: user })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('bl4ck_auth_key', key);
+          localStorage.setItem('bl4ck_auth_num', num);
+          localStorage.setItem('bl4ck_auth_user', user);
+          document.getElementById('numInput').value = num;
+          document.getElementById('authOverlay').style.display = 'none';
+          errBox.style.display = 'none';
+          
+          addLog(`Acesso concedido ao operador ${user}`, 'success');
+          verificarSessaoLogin();
+        } else {
+          errBox.innerText = data.error || 'Falha na validação da chave.';
+          errBox.style.display = 'block';
+        }
+      } catch (err) {
+        errBox.innerText = 'Erro ao conectar com o servidor.';
+        errBox.style.display = 'block';
+      }
+    }
+
+    function encerrarSessaoLogin() {
+      if (!confirm('Deseja sair do painel e revogar o acesso local?')) return;
+      localStorage.removeItem('bl4ck_auth_key');
+      localStorage.removeItem('bl4ck_auth_num');
+      localStorage.removeItem('bl4ck_auth_user');
+      window.location.reload();
+    }
+
+    // Executar verificação assim que carregar a página
+    verificarSessaoLogin();
 
     function toggleInputIcons() {
       document.getElementById('btnClearInput').style.display = document.getElementById('numInput').value.trim().length > 0 ? 'flex' : 'none';
