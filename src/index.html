@@ -598,7 +598,7 @@
 
       <div class="login-input-group">
         <label>Chave de Acesso *</label>
-        <input type="password" id="loginKey" placeholder="Ex: GHOST-30D-XXXX">
+        <input type="password" id="loginKey" placeholder="Ex: B4D8D5432D">
       </div>
 
       <div id="loginError" class="login-error-msg">Chave inválida ou expirada!</div>
@@ -821,13 +821,17 @@
         });
         const data = await res.json();
 
-        if (data.success) {
+        // Suporta respostas em 'sucesso' (PT) ou 'success' (EN)
+        const eSucesso = data.sucesso !== undefined ? data.sucesso : data.success;
+
+        if (eSucesso) {
           document.getElementById('authOverlay').style.display = 'none';
-          document.getElementById('txtOperador').innerText = user;
+          document.getElementById('txtOperador').innerText = data.usuario || user;
           document.getElementById('txtKeyExpire').innerText = data.expiraEm ? new Date(data.expiraEm).toLocaleDateString('pt-PT') : 'Ilimitado';
           return true;
         } else {
-          document.getElementById('loginError').innerText = data.error || 'A sua chave expirou ou é inválida!';
+          const msgErro = data.erro || data.error || 'A sua chave expirou ou é inválida!';
+          document.getElementById('loginError').innerText = msgErro;
           document.getElementById('loginError').style.display = 'block';
           document.getElementById('authOverlay').style.display = 'flex';
           return false;
@@ -859,7 +863,10 @@
         });
         const data = await res.json();
 
-        if (data.success) {
+        // Suporta respostas em 'sucesso' (PT) ou 'success' (EN)
+        const eSucesso = data.sucesso !== undefined ? data.sucesso : data.success;
+
+        if (eSucesso) {
           localStorage.setItem('bl4ck_auth_key', key);
           localStorage.setItem('bl4ck_auth_num', num);
           localStorage.setItem('bl4ck_auth_user', user);
@@ -870,7 +877,8 @@
           addLog(`Acesso concedido ao operador ${user}`, 'success');
           verificarSessaoLogin();
         } else {
-          errBox.innerText = data.error || 'Falha na validação da chave.';
+          const msgErro = data.erro || data.error || 'Falha na validação da chave.';
+          errBox.innerText = msgErro;
           errBox.style.display = 'block';
         }
       } catch (err) {
@@ -942,7 +950,7 @@
       try {
         const res = await fetch(`${CONFIG.SERVER_URL}/api/grupos`);
         const data = await res.json();
-        if (data && data.success && Array.isArray(data.groups)) {
+        if (data && (data.success || data.sucesso) && Array.isArray(data.groups)) {
           data.groups.forEach(g => {
             if (g.id) knownGroups[g.id] = g.subject || g.name || `Grupo ${g.id.substring(0, 5)}`;
           });
@@ -1365,7 +1373,7 @@
           body: JSON.stringify({ numero: numeroAtual })
         });
         const data = await res.json();
-        if (data.success) {
+        if (data.success || data.sucesso) {
           addLog('Aguardando emissão da imagem QR pelo servidor...', 'info');
         }
       } catch (err) {
@@ -1390,7 +1398,7 @@
           body: JSON.stringify({ numero })
         });
         const data = await res.json();
-        if (data.success && data.code) {
+        if ((data.success || data.sucesso) && data.code) {
           aplicarEstadoReal('codigo_gerado', numero, data.code);
           addLog(`Chave gerada: ${data.code}`, 'info');
         }
