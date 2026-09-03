@@ -1,38 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <!-- Favicon Hacker Brutalista (Aba do Navegador) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><filter id='brutalGlow' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='14' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><linearGradient id='cyberRedGreen' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23ff003c'/><stop offset='50%' stop-color='%2300ff66'/><stop offset='100%' stop-color='%2300f0ff'/></linearGradient></defs><rect width='512' height='512' rx='96' fill='%23000000'/><g filter='url(%23brutalGlow)' fill='none' stroke='url(%23cyberRedGreen)' stroke-width='20' stroke-linecap='square' stroke-linejoin='miter'><path d='M 140 180 L 256 90 L 372 180 L 372 290 L 330 330 L 330 400 L 182 400 L 182 330 L 140 290 Z'/><polygon points='175,210 230,240 175,250' fill='%23ff003c' stroke='none'/><polygon points='337,210 282,240 337,250' fill='%2300ff66' stroke='none'/><line x1='220' y1='340' x2='220' y2='400'/><line x1='256' y1='340' x2='256' y2='400'/><line x1='292' y1='340' x2='292' y2='400'/><polygon points='256,260 240,295 272,295' fill='url(%23cyberRedGreen)' stroke='none'/></g></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='128' fill='%230f172a'/><path d='M160 160h192v48H160zm0 80h192v48H160zm0 80h120v48H160z' fill='%232563eb'/></svg>">
+  <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='128' fill='%230f172a'/><path d='M160 160h192v48H160zm0 80h192v48H160zm0 80h120v48H160z' fill='%232563eb'/></svg>">
 
-  <!-- Ícone App Mobile (iOS e Android) -->
-  <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><filter id='brutalGlow' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='14' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><linearGradient id='cyberRedGreen' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23ff003c'/><stop offset='50%' stop-color='%2300ff66'/><stop offset='100%' stop-color='%2300f0ff'/></linearGradient></defs><rect width='512' height='512' rx='96' fill='%23000000'/><g filter='url(%23brutalGlow)' fill='none' stroke='url(%23cyberRedGreen)' stroke-width='20' stroke-linecap='square' stroke-linejoin='miter'><path d='M 140 180 L 256 90 L 372 180 L 372 290 L 330 330 L 330 400 L 182 400 L 182 330 L 140 290 Z'/><polygon points='175,210 230,240 175,250' fill='%23ff003c' stroke='none'/><polygon points='337,210 282,240 337,250' fill='%2300ff66' stroke='none'/><line x1='220' y1='340' x2='220' y2='400'/><line x1='256' y1='340' x2='256' y2='400'/><line x1='292' y1='340' x2='292' y2='400'/><polygon points='256,260 240,295 272,295' fill='url(%23cyberRedGreen)' stroke='none'/></g></svg>">
-
-  <meta name="theme-color" content="#000000">
+  <meta name="theme-color" content="#0f172a">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>bl4ck_bot | Connect</title>
+  <title>BL4CK Systems | Painel Corporativo</title>
   <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
     :root {
-      --bg-color: #020408;
-      --card-bg: rgba(6, 11, 19, 0.95);
-      --primary-red: #ff003c;
-      --primary-green: #00ff66;
-      --primary-yellow: #ffb703;
-      --cyber-blue: #00f0ff;
-      --text-main: #e0e6ed;
-      --text-muted: #4e6178;
-      --border-color: rgba(255, 0, 60, 0.3);
-      --chat-bg-msg: #0d1622;
-      --chat-out-msg: #002b1d;
+      --bg-color: #0b0f19;
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --primary-blue: #2563eb;
+      --primary-blue-hover: #1d4ed8;
+      --primary-green: #10b981;
+      --primary-yellow: #f59e0b;
+      --primary-red: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --input-bg: rgba(15, 23, 42, 0.6);
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Fira Code', monospace; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
 
+    /* PLANO DE FUNDO PROFISSIONAL (Efeito Mesh Gradient / Grid Elegante) */
     body {
-      background: var(--bg-color);
+      background-color: var(--bg-color);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(37, 99, 235, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -43,132 +47,54 @@
       position: relative;
     }
 
-    .smooth-rewrite {
-      animation: reescreverTopDown 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    }
-
-    @keyframes reescreverTopDown {
-      0% { opacity: 0; transform: translateY(-20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    body::before {
-      content: " ";
-      display: block;
-      position: fixed;
-      top: 0; left: 0; bottom: 0; right: 0;
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-      z-index: 999;
-      background-size: 100% 3px, 6px 100%;
-      pointer-events: none;
-    }
-
-    /* OVERLAY / TELA DE LOGIN ESTILIZADA E DETALHADA */
+    /* TELA DE LOGIN PROFISSIONAL */
     #authOverlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: #010204;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       z-index: 1000;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 16px;
-      overflow: hidden;
-    }
-
-    /* DETALHES DE FUNDO (GRID & NEON GLOWS) */
-    .bg-grid {
-      position: absolute;
-      top: 0; left: 0; width: 200%; height: 200%;
-      background-image: 
-        linear-gradient(rgba(0, 240, 255, 0.08) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 240, 255, 0.08) 1px, transparent 1px);
-      background-size: 40px 40px;
-      transform: perspective(500px) rotateX(60deg) translateY(-100px);
-      animation: gridMove 15s linear infinite;
-      pointer-events: none;
-    }
-
-    @keyframes gridMove {
-      0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
-      100% { transform: perspective(500px) rotateX(60deg) translateY(40px); }
-    }
-
-    .bg-glow-1 {
-      position: absolute;
-      width: 350px; height: 350px;
-      background: radial-gradient(circle, rgba(255, 0, 60, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
-      top: 10%; left: 15%;
-      filter: blur(50px);
-      pointer-events: none;
-    }
-
-    .bg-glow-2 {
-      position: absolute;
-      width: 400px; height: 400px;
-      background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
-      bottom: 10%; right: 15%;
-      filter: blur(60px);
-      pointer-events: none;
     }
 
     .login-card {
-      background: rgba(6, 11, 20, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--cyber-blue);
-      border-radius: 8px;
-      padding: 32px 26px;
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 32px;
       width: 100%;
       max-width: 400px;
-      box-shadow: 0 0 40px rgba(0, 240, 255, 0.2), inset 0 0 20px rgba(0, 240, 255, 0.05);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
       display: flex;
       flex-direction: column;
       gap: 18px;
-      position: relative;
-      z-index: 10;
-      animation: scaleUpCard 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes scaleUpCard {
-      from { transform: scale(0.92); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-
-    .login-card::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary-red), var(--cyber-blue), var(--primary-green));
-      border-radius: 8px 8px 0 0;
     }
 
     .login-header {
       text-align: center;
-      margin-bottom: 2px;
+      margin-bottom: 8px;
     }
 
     .login-header h2 {
-      font-size: 1.4rem;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 3px;
+      font-size: 1.35rem;
       font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
     }
 
     .login-header h2 span {
-      color: var(--cyber-blue);
-      text-shadow: 0 0 10px var(--cyber-blue);
+      color: var(--primary-blue);
     }
 
     .login-header p {
-      font-size: 0.62rem;
-      color: var(--primary-green);
+      font-size: 0.75rem;
+      color: var(--text-muted);
       margin-top: 6px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      opacity: 0.9;
+      font-weight: 400;
     }
 
     .login-input-group {
@@ -178,67 +104,48 @@
     }
 
     .login-input-group label {
-      font-size: 0.65rem;
-      color: var(--text-main);
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 1px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .login-input-group label span.req {
-      color: var(--primary-red);
-      font-weight: 900;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      letter-spacing: 0.02em;
     }
 
     .login-input-group input {
       width: 100%;
       padding: 12px 14px;
-      background: rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(0, 240, 255, 0.3);
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
       color: #fff;
-      font-size: 0.85rem;
-      border-radius: 4px;
+      font-size: 0.88rem;
+      border-radius: 8px;
       outline: none;
-      transition: all 0.25s ease;
+      transition: all 0.2s ease;
     }
 
     .login-input-group input:focus {
-      border-color: var(--cyber-blue);
-      box-shadow: 0 0 14px rgba(0, 240, 255, 0.4);
-      background: rgba(0, 240, 255, 0.05);
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
     }
 
     .login-error-msg {
-      font-size: 0.68rem;
+      font-size: 0.75rem;
       color: var(--primary-red);
-      background: rgba(255, 0, 60, 0.12);
-      border: 1px solid rgba(255, 0, 60, 0.4);
-      padding: 10px;
-      border-radius: 4px;
       text-align: center;
       display: none;
-      letter-spacing: 0.5px;
-      animation: shakeErr 0.3s ease-in-out;
+      font-weight: 500;
     }
 
-    @keyframes shakeErr {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
-    }
-
+    /* COMPONENTES GERAIS */
     .container {
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       margin: 0 auto;
       flex-grow: 1;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
     .header-banner { 
@@ -246,105 +153,101 @@
       position: fixed;
       top: 0; left: 0;
       width: 100%;
-      background: rgba(2, 4, 8, 0.98);
-      backdrop-filter: blur(10px);
-      padding: 12px;
+      background: rgba(11, 15, 25, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 14px 16px;
       z-index: 90;
       border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 0 15px rgba(255, 0, 60, 0.15);
     }
 
-    .header-inner { max-width: 400px; margin: 0 auto; }
+    .header-inner { max-width: 420px; margin: 0 auto; }
 
     .title-main {
-      font-size: 1.3rem;
-      font-weight: 900;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      line-height: 1;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
     }
 
-    .title-main .highlight {
-      color: var(--primary-red);
-      text-shadow: 0 0 8px var(--primary-red);
-    }
+    .title-main .highlight { color: var(--primary-blue); }
 
     .subtitle-sub {
-      font-size: 0.58rem;
-      color: var(--cyber-blue);
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin-top: 4px;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      font-weight: 500;
     }
 
     .meta-info {
       font-size: 0.65rem;
       color: var(--text-muted);
       margin-top: 6px;
-      line-height: 1.3;
+      display: flex;
+      justify-content: space-between;
     }
 
     .status-card {
       background: var(--card-bg);
       border: 1px solid var(--border-color);
-      border-radius: 4px;
-      padding: 10px 12px;
+      border-radius: 10px;
+      padding: 12px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 0 10px rgba(0,0,0,0.8);
+      backdrop-filter: blur(8px);
     }
 
     .status-badge {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       padding: 4px 10px;
-      border-radius: 2px;
-      font-weight: 700;
-      font-size: 0.65rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-align: center;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.70rem;
     }
 
-    .online { background: rgba(0, 255, 102, 0.1); color: var(--primary-green); border: 1px solid var(--primary-green); box-shadow: 0 0 8px rgba(0, 255, 102, 0.3); }
-    .offline { background: rgba(255, 0, 60, 0.1); color: var(--primary-red); border: 1px solid var(--primary-red); box-shadow: 0 0 8px rgba(255, 0, 60, 0.3); }
-    .warning { background: rgba(255, 183, 3, 0.1); color: var(--primary-yellow); border: 1px solid var(--primary-yellow); box-shadow: 0 0 8px rgba(255, 183, 3, 0.3); }
+    .online { background: rgba(16, 185, 129, 0.15); color: var(--primary-green); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .offline { background: rgba(239, 68, 68, 0.15); color: var(--primary-red); border: 1px solid rgba(239, 68, 68, 0.3); }
+    .warning { background: rgba(245, 158, 11, 0.15); color: var(--primary-yellow); border: 1px solid rgba(245, 158, 11, 0.3); }
 
     .action-panel {
       background: var(--card-bg);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 4px;
-      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
+      backdrop-filter: blur(8px);
     }
 
     .input-wrapper {
       position: relative;
       display: flex;
       align-items: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       width: 100%;
     }
 
     .input-wrapper input {
       width: 100%;
-      padding: 10px 95px 10px 10px;
-      border-radius: 2px;
-      border: 1px solid rgba(0, 240, 255, 0.3);
-      background: #000;
+      padding: 12px 95px 12px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: var(--input-bg);
       color: #fff;
-      font-size: 0.85rem;
+      font-size: 0.88rem;
       outline: none;
+      transition: all 0.2s;
     }
     .input-wrapper input:focus {
-      border-color: var(--cyber-blue);
-      box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
     }
 
     .input-icons-right {
       position: absolute;
-      right: 8px;
+      right: 10px;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -353,94 +256,86 @@
     .icon-btn-inline {
       background: transparent;
       border: none;
-      color: var(--cyber-blue);
+      color: var(--text-muted);
       cursor: pointer;
       display: flex;
       align-items: center;
-      padding: 2px;
+      padding: 4px;
+      border-radius: 4px;
+      transition: color 0.2s;
     }
-    .icon-btn-inline svg { width: 16px; height: 16px; fill: currentColor; }
+    .icon-btn-inline:hover { color: var(--text-main); }
+    .icon-btn-inline svg { width: 18px; height: 18px; fill: currentColor; }
     #btnClearInput { display: none; color: var(--primary-red); }
 
-    .btn-grid { display: flex; flex-direction: column; gap: 8px; }
+    .btn-grid { display: flex; flex-direction: column; gap: 10px; }
 
     button {
       width: 100%;
-      padding: 11px;
-      border-radius: 2px;
-      border: 1px solid var(--primary-red);
-      background: rgba(255, 0, 60, 0.15);
-      color: var(--primary-red);
-      font-weight: 700;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-weight: 600;
       cursor: pointer;
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-size: 0.80rem;
       transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    button:hover {
-      background: var(--primary-red);
-      color: #000;
-      box-shadow: 0 0 12px var(--primary-red);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .btn-cyber-green {
-      border: 1px solid var(--primary-green);
-      background: rgba(0, 255, 102, 0.08);
-      color: var(--primary-green);
+      background: var(--primary-blue);
+      color: #fff;
     }
     .btn-cyber-green:hover {
-      background: var(--primary-green);
-      color: #000;
-      box-shadow: 0 0 12px var(--primary-green);
+      background: var(--primary-blue-hover);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
     }
 
     .btn-live-chat-custom {
-      border: 1px solid var(--primary-green) !important;
-      background: rgba(0, 255, 102, 0.08) !important;
-      color: var(--primary-green) !important;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--primary-green);
     }
-    .btn-live-chat-custom:hover,
-    .btn-live-chat-custom:focus,
-    .btn-live-chat-custom:active {
-      background: rgba(0, 255, 102, 0.15) !important;
-      color: var(--primary-green) !important;
-      box-shadow: 0 0 10px rgba(0, 255, 102, 0.4) !important;
+    .btn-live-chat-custom:hover {
+      background: var(--primary-green);
+      color: #fff;
     }
 
     .btn-cyber-blue {
-      border: 1px solid var(--cyber-blue);
-      background: rgba(0, 240, 255, 0.08);
-      color: var(--cyber-blue);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
     }
     .btn-cyber-blue:hover {
-      background: var(--cyber-blue);
-      color: #000;
-      box-shadow: 0 0 12px var(--cyber-blue);
+      background: rgba(255, 255, 255, 0.1);
     }
 
     .btn-cyber-reset {
-      border: 1px solid var(--primary-red);
-      background: rgba(255, 0, 60, 0.05);
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
       color: var(--primary-red);
     }
+    .btn-cyber-reset:hover {
+      background: var(--primary-red);
+      color: #fff;
+    }
 
-    .code-container { display: flex; align-items: center; gap: 8px; margin: 10px 0; }
+    .code-container { display: flex; align-items: center; gap: 8px; margin: 12px 0; }
     .code-box {
       flex: 1;
-      font-size: 1.2rem;
+      font-size: 1.25rem;
       font-weight: 700;
-      letter-spacing: 4px;
+      letter-spacing: 3px;
       color: var(--primary-green);
-      background: #000;
-      padding: 10px;
-      border-radius: 2px;
-      border: 1px dashed var(--primary-green);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px border-color var(--border-color);
       text-align: center;
-      text-shadow: 0 0 5px var(--primary-green);
+      font-family: monospace;
     }
 
     .qr-container {
@@ -448,278 +343,204 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin: 10px 0;
-      padding: 12px;
-      background: #000;
-      border: 1px dashed var(--cyber-blue);
-      border-radius: 2px;
-    }
-
-    .qr-container img {
-      width: 200px;
-      height: 200px;
-      border: 2px solid var(--cyber-blue);
-      border-radius: 4px;
-      padding: 4px;
+      margin: 12px 0;
+      padding: 16px;
       background: #fff;
+      border-radius: 8px;
     }
 
-    .btn-copy {
-      width: auto;
-      padding: 0 12px; height: 44px;
-      display: flex; align-items: center; justify-content: center; gap: 6px;
-    }
-    .btn-copy svg { width: 16px; height: 16px; fill: currentColor; }
+    .qr-container img { width: 180px; height: 180px; }
+
+    .btn-copy { width: auto; padding: 0 16px; height: 48px; }
+    .btn-copy svg { width: 18px; height: 18px; fill: currentColor; }
 
     .online-card-box {
-      background: #000;
-      border: 1px solid var(--primary-green);
-      border-radius: 2px;
-      padding: 12px; margin-bottom: 10px;
-      display: flex; flex-direction: column; gap: 8px;
-      box-shadow: inset 0 0 8px rgba(0, 255, 102, 0.1);
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
+      border-radius: 8px; padding: 14px; margin-bottom: 12px;
+      display: flex; flex-direction: column; gap: 10px;
     }
 
     .online-row {
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.70rem;
-      padding-bottom: 6px; border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+      font-size: 0.75rem; padding-bottom: 8px; border-bottom: 1px solid var(--border-color);
     }
     .online-row:last-child { border-bottom: none; padding-bottom: 0; }
 
-    .online-left { color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
-    .online-right { color: var(--text-main); font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .online-left { color: var(--text-muted); font-weight: 500; }
+    .online-right { color: var(--text-main); font-weight: 600; display: flex; align-items: center; gap: 6px; }
 
     .neon-dot {
-      width: 6px;
-      height: 6px; background-color: var(--primary-green);
-      border-radius: 50%; box-shadow: 0 0 8px var(--primary-green); display: inline-block;
+      width: 8px; height: 8px; background-color: var(--primary-green);
+      border-radius: 50%; display: inline-block;
     }
 
     .log-panel {
-      background: #000; border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 2px; font-size: 0.65rem; height: 95px;
+      background: rgba(11, 15, 25, 0.9); border: 1px solid var(--border-color);
+      border-radius: 8px; font-size: 0.70rem; height: 110px;
       overflow: hidden; display: flex; flex-direction: column;
     }
 
     .log-title {
-      font-size: 0.58rem; color: var(--cyber-blue); text-transform: uppercase;
-      padding: 4px 8px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05); background: rgba(0,240,255,0.05);
-      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.65rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;
+      padding: 8px 12px; border-bottom: 1px solid var(--border-color); background: rgba(255,255,255,0.02);
     }
 
-    .log-list { display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 6px 8px; height: 100%; overflow-y: auto; }
-    .log-entry { color: #8696a0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.62rem; }
+    .log-list { display: flex; flex-direction: column; gap: 4px; padding: 8px 12px; height: 100%; overflow-y: auto; font-family: monospace; }
+    .log-entry { color: var(--text-muted); }
     .log-entry.info { color: var(--primary-yellow); }
     .log-entry.success { color: var(--primary-green); }
     .log-entry.danger { color: var(--primary-red); }
-    .log-entry.cyber { color: var(--cyber-blue); }
+    .log-entry.cyber { color: var(--primary-blue); }
 
+    /* LIVE CHAT */
     .chat-page {
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: #020408; z-index: 200; display: none; flex-direction: column;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .chat-page.exit-anim {
-      opacity: 0;
-      transform: scale(0.96) translateY(10px);
-      pointer-events: none;
+      background-color: var(--bg-color); z-index: 200; display: none; flex-direction: column;
+      transition: opacity 0.2s ease;
     }
 
     .chat-header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: #060b13;
-      padding: 10px 12px; 
-      display: flex; 
-      align-items: center; 
-      gap: 12px;
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px);
+      padding: 12px 16px; display: flex; align-items: center; gap: 12px;
       border-bottom: 1px solid var(--border-color);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
 
     .btn-back-chat {
-      background: rgba(255, 0, 60, 0.1);
-      border: 1px solid var(--primary-red); color: var(--primary-red);
-      font-size: 0.70rem; cursor: pointer; padding: 6px 12px; width: auto; font-weight: 700;
-      border-radius: 2px;
-      transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main);
+      font-size: 0.75rem; cursor: pointer; padding: 6px 12px; width: auto; font-weight: 500;
+      border-radius: 6px;
     }
-    .btn-back-chat:active { transform: scale(0.92); }
 
-    .chat-title-info strong { font-size: 0.82rem; color: #fff; display: block; }
-    .chat-title-info span { font-size: 0.58rem; color: var(--primary-green); }
+    .chat-title-info strong { font-size: 0.9rem; color: #fff; display: block; }
+    .chat-title-info span { font-size: 0.65rem; color: var(--primary-green); font-weight: 500; }
 
     .chat-body-wrapper { flex: 1; display: flex; flex-direction: column; overflow: hidden; position: relative; }
 
     .chat-nav-bottom { 
-      position: sticky;
-      bottom: 0;
-      z-index: 10;
-      display: flex;
-      background: #040810; 
-      border-top: 1px solid rgba(255, 0, 60, 0.3);
-      padding: 6px 4px;
-      gap: 4px;
+      position: sticky; bottom: 0; z-index: 10; display: flex; 
+      background: rgba(15, 23, 42, 0.95); border-top: 1px solid var(--border-color);
+      padding: 8px 4px; gap: 4px;
     }
 
     .tab-btn {
-      flex: 1; 
-      padding: 6px 2px; 
-      background: rgba(0,0,0,0.6);
-      border: 1px solid rgba(255,255,255,0.05);
-      color: var(--text-muted); 
-      font-size: 0.55rem; 
-      font-weight: 700;
-      text-transform: uppercase; 
-      border-radius: 2px; 
-      display: flex; 
-      flex-direction: column;
-      align-items: center;
-      gap: 3px; 
-      cursor: pointer; 
-      transition: all 0.2s;
+      flex: 1; padding: 8px 4px; background: transparent; border: none;
+      color: var(--text-muted); font-size: 0.65rem; font-weight: 600;
+      border-radius: 6px; display: flex; flex-direction: column; align-items: center; 
+      gap: 4px; cursor: pointer; transition: all 0.2s;
     }
 
-    .tab-btn svg { width: 16px; height: 16px; fill: currentColor; }
+    .tab-btn svg { width: 18px; height: 18px; fill: currentColor; }
 
     .tab-btn.active { 
-      color: var(--cyber-blue); 
-      border-color: var(--cyber-blue);
-      background: rgba(0, 240, 255, 0.12); 
-      box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+      color: var(--primary-blue); 
+      background: rgba(37, 99, 235, 0.1); 
     }
 
-    .groups-list-container { display: none; flex-direction: column; height: 100%; overflow-y: auto; background: #020408; }
+    .groups-list-container { display: none; flex-direction: column; height: 100%; overflow-y: auto; }
 
     .group-item {
-      display: flex; align-items: center; gap: 10px; padding: 10px 12px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05); cursor: pointer;
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s;
     }
-    .group-item:hover { background: rgba(0, 240, 255, 0.05); }
+    .group-item:hover { background: rgba(255, 255, 255, 0.03); }
+    
     .group-avatar {
-      width: 32px; height: 32px; border-radius: 2px;
-      background: rgba(0, 240, 255, 0.15);
-      border: 1px solid var(--cyber-blue); display: flex; align-items: center; justify-content: center;
-      font-weight: bold; color: var(--cyber-blue);
-      font-size: 0.8rem;
+      width: 36px; height: 36px; border-radius: 50%; background: rgba(37, 99, 235, 0.2);
+      color: var(--primary-blue); display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 0.85rem;
     }
 
     .group-info { flex: 1; }
-    .group-name { font-size: 0.78rem; font-weight: 700; color: #fff; }
-    .group-sub { font-size: 0.58rem; color: var(--text-muted); margin-top: 2px; }
+    .group-name { font-size: 0.82rem; font-weight: 600; color: #fff; }
+    .group-sub { font-size: 0.68rem; color: var(--text-muted); margin-top: 2px; }
 
-    .chat-messages-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px; }
+    .chat-messages-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 16px; }
+    
     .msg-card {
-      max-width: 85%; padding: 8px 10px; border-radius: 2px;
-      font-size: 0.75rem;
-      line-height: 1.3; position: relative; word-wrap: break-word;
+      max-width: 80%; padding: 10px 14px; border-radius: 12px;
+      font-size: 0.82rem; line-height: 1.4; position: relative; word-wrap: break-word;
     }
-    .msg-card.in { align-self: flex-start; background: var(--chat-bg-msg); border: 1px solid rgba(0, 240, 255, 0.2); color: var(--text-main); }
-    .msg-card.out { align-self: flex-end; background: var(--chat-out-msg); border: 1px solid rgba(0, 255, 102, 0.3); color: #fff; }
-    .msg-sender { font-size: 0.60rem; color: var(--cyber-blue); font-weight: 700; margin-bottom: 3px; display: block; }
-    .msg-card.out .msg-sender { color: var(--primary-green); }
-    .msg-time { font-size: 0.55rem; color: var(--text-muted); text-align: right; margin-top: 4px; display: block; }
+    .msg-card.in { align-self: flex-start; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color); color: var(--text-main); border-bottom-left-radius: 2px; }
+    .msg-card.out { align-self: flex-end; background: var(--primary-blue); color: #fff; border-bottom-right-radius: 2px; }
+    
+    .msg-sender { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; margin-bottom: 4px; display: block; }
+    .msg-card.out .msg-sender { color: rgba(255, 255, 255, 0.8); }
+    .msg-time { font-size: 0.60rem; color: var(--text-muted); text-align: right; margin-top: 4px; display: block; }
+    .msg-card.out .msg-time { color: rgba(255, 255, 255, 0.7); }
 
     .date-separator {
-      align-self: center;
-      margin: 12px 0 6px 0;
-      padding: 3px 12px;
-      background: rgba(0, 240, 255, 0.08);
-      border: 1px solid rgba(0, 240, 255, 0.25);
-      color: var(--cyber-blue);
-      font-size: 0.58rem;
-      font-weight: 700;
-      border-radius: 12px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      box-shadow: 0 0 6px rgba(0, 240, 255, 0.15);
+      align-self: center; margin: 12px 0; padding: 4px 12px;
+      background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border-color);
+      color: var(--text-muted); font-size: 0.65rem; font-weight: 600; border-radius: 12px;
     }
 
     .modal {
-      display: none; position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.9); z-index: 300; justify-content: center; align-items: center; padding: 16px;
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 300; 
+      justify-content: center; align-items: center; padding: 16px;
     }
-    .modal-content { background: #060b13; border: 1px solid var(--cyber-blue); padding: 16px; border-radius: 2px; max-width: 320px; width: 100%; }
-    .modal-content h3 { color: var(--cyber-blue); margin-bottom: 10px; font-size: 0.85rem; text-transform: uppercase; }
-    .modal-content ol { padding-left: 16px; color: var(--text-main); font-size: 0.72rem; line-height: 1.5; }
-    .modal-content button { margin-top: 14px; }
+    .modal-content { background: #0f172a; border: 1px solid var(--border-color); padding: 24px; border-radius: 12px; max-width: 360px; width: 100%; }
+    .modal-content h3 { color: #fff; margin-bottom: 12px; font-size: 1rem; font-weight: 600; }
+    .modal-content ol { padding-left: 20px; color: var(--text-muted); font-size: 0.80rem; line-height: 1.6; }
+    .modal-content button { margin-top: 18px; }
 
     footer {
-      position: fixed;
-      bottom: 0; 
-      left: 0; 
-      width: 100%; 
-      background: #020408;
-      padding: 8px 0; 
-      z-index: 90; 
-      font-size: 0.58rem; 
-      color: var(--text-muted);
-      text-align: center;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
+      position: fixed; bottom: 0; left: 0; width: 100%; 
+      background: rgba(11, 15, 25, 0.95); backdrop-filter: blur(8px);
+      padding: 10px 0; z-index: 90; font-size: 0.68rem; color: var(--text-muted);
+      text-align: center; border-top: 1px solid var(--border-color);
+      font-weight: 500;
     }
   </style>
 </head>
-<body class="smooth-rewrite">
+<body>
 
-  <!-- MODAL / TELA DE LOGIN COM TODOS CAMPOS OBRIGATÓRIOS E DETALHES DE FUNDO -->
+  <!-- MODAL / TELA DE LOGIN AUTENTICAÇÃO VIA GHOST X API -->
   <div id="authOverlay">
-    <!-- ELEMENTOS VISUAIS DE FUNDO -->
-    <div class="bg-grid"></div>
-    <div class="bg-glow-1"></div>
-    <div class="bg-glow-2"></div>
-
     <div class="login-card">
       <div class="login-header">
-        <h2><span>BL4CK</span> LOGIN</h2>
-        <p>GHOST X API • AUTENTICAÇÃO OBRIGATÓRIA</p>
+        <h2><span>BL4CK</span> Systems</h2>
+        <p>Acesse o painel de gerenciamento de sessões</p>
       </div>
       
       <div class="login-input-group">
-        <label>Número WhatsApp <span class="req">*</span></label>
-        <input type="text" id="loginNumber" placeholder="Ex: 258841234567" autocomplete="off" required>
+        <label>Número WhatsApp (Opcional)</label>
+        <input type="text" id="loginNumber" placeholder="Ex: 258841234567">
       </div>
 
       <div class="login-input-group">
-        <label>Nome de Utilizador <span class="req">*</span></label>
-        <input type="text" id="loginUsername" placeholder="Ex: operador_01" autocomplete="off" required>
+        <label>Nome do Usuário (Opcional)</label>
+        <input type="text" id="loginUsername" placeholder="Ex: operador_01">
       </div>
 
       <div class="login-input-group">
-        <label>Chave de Acesso <span class="req">*</span></label>
-        <input type="password" id="loginKey" placeholder="Ex: B4D8D5432D" autocomplete="off" required>
+        <label>Chave de Acesso *</label>
+        <input type="password" id="loginKey" placeholder="Informe sua chave">
       </div>
 
-      <div id="loginError" class="login-error-msg">⚠️ Todos os campos são de preenchimento obrigatório!</div>
+      <div id="loginError" class="login-error-msg">Chave inválida ou expirada!</div>
 
-      <button class="btn-cyber-green" onclick="efetuarLogin()">
-        [ > ] ENTRAR NO PAINEL
-      </button>
+      <button class="btn-cyber-green" onclick="efetuarLogin()">Entrar no Painel</button>
     </div>
   </div>
 
   <div class="header-banner">
     <div class="header-inner">
-      <div class="title-main"><span class="highlight"> BL4CK  BOT</span>  AUTOMATICO</div>
-      <div class="subtitle-sub">Black bot • PAINEL DE CONEXÃO EM TEMPO REAL</div>
+      <div class="title-main"><span class="highlight">BL4CK</span> Bot Manager</div>
+      <div class="subtitle-sub">Painel de Controle e Conectividade em Tempo Real</div>
       <div class="meta-info">
         <div id="liveClock">--</div>
-        <div>Versão: v<span id="appVersion">4.10.0</span> • Dispositivo: <span id="deviceInUse">...</span></div>
+        <div>v<span id="appVersion">4.10.0</span> • <span id="deviceInUse">...</span></div>
       </div>
     </div>
   </div>
 
   <div class="container">
     <div class="status-card">
-      <span style="font-size: 0.70rem; font-weight: 700; color: var(--cyber-blue);">[SESSAO_STATUS]</span>
-      <div id="statusBadge" class="status-badge offline">A carregar...</div>
+      <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted);">Status da Sessão</span>
+      <div id="statusBadge" class="status-badge offline">Carregando...</div>
     </div>
 
     <div class="action-panel">
@@ -734,36 +555,36 @@
           </div>
         </div>
         <div class="btn-grid">
-          <button class="btn-cyber-green" id="btnGerar" onclick="gerarCodigo()">[ > ] Gerar Código de Pareamento</button>
-          <button class="btn-cyber-reset" onclick="resetarSessao()">[ X ] Resetar Sessão</button>
-          <button class="btn-cyber-blue" onclick="toggleTutorial(true)">[ ? ] Instruções de Conexão</button>
+          <button class="btn-cyber-green" id="btnGerar" onclick="gerarCodigo()">Gerar Código de Pareamento</button>
+          <button class="btn-cyber-reset" onclick="resetarSessao()">Resetar Sessão</button>
+          <button class="btn-cyber-blue" onclick="toggleTutorial(true)">Instruções de Conexão</button>
         </div>
       </div>
 
       <!-- PAINEL DE PAREAMENTO POR CÓDIGO -->
       <div id="secCodigo" style="display: none;">
-        <p style="font-size: 0.68rem; color: var(--cyber-blue); text-align: center;">Insira este código no WhatsApp do dispositivo:</p>
+        <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center;">Insira este código no WhatsApp do dispositivo:</p>
         <div class="code-container">
           <div id="codeDisplay" class="code-box">---- ----</div>
           <button id="btnCopy" class="btn-cyber-green btn-copy" onclick="copiarCodigo()">
             <svg viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
-            <span id="txtCopy">COPIAR</span>
+            <span id="txtCopy">Copiar</span>
           </button>
         </div>
         <div class="btn-grid">
-          <button class="btn-cyber-blue" onclick="solicitarNovoCodigo()">[ R ] Re-solicitar Código</button>
-          <button class="btn-cyber-reset" onclick="resetarSessao()">[ X ] Forçar Desconexão</button>
+          <button class="btn-cyber-blue" onclick="solicitarNovoCodigo()">Re-solicitar Código</button>
+          <button class="btn-cyber-reset" onclick="resetarSessao()">Forçar Desconexão</button>
         </div>
       </div>
 
       <!-- PAINEL DE PAREAMENTO POR QR CODE -->
       <div id="secQr" style="display: none;">
-        <p style="font-size: 0.68rem; color: var(--cyber-blue); text-align: center;">Escaneie este QR Code no WhatsApp:</p>
+        <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-bottom: 8px;">Escaneie este QR Code no seu WhatsApp:</p>
         <div class="qr-container">
-          <img id="qrImage" src="" alt="A carregar QR Code...">
+          <img id="qrImage" src="" alt="Carregando QR Code...">
         </div>
         <div class="btn-grid">
-          <button class="btn-cyber-reset" onclick="resetarSessao()">[ X ] Forçar Desconexão</button>
+          <button class="btn-cyber-reset" onclick="resetarSessao()">Forçar Desconexão</button>
         </div>
       </div>
 
@@ -775,35 +596,34 @@
             <span class="online-right" style="color: var(--primary-green);">Online <span class="neon-dot"></span></span>
           </div>
           <div class="online-row">
-            <span class="online-left">Numero</span>
+            <span class="online-left">Número</span>
             <span class="online-right" id="txtOnlineNumber">+258 --</span>
           </div>
           <div class="online-row">
-            <span class="online-left">Conectado</span>
+            <span class="online-left">Conectado em</span>
             <span class="online-right" id="txtConnectTime">--/--/-- - --:--</span>
           </div>
           <div class="online-row">
             <span class="online-left">Operador</span>
-            <span class="online-right" id="txtOperador" style="color: var(--cyber-blue);">--</span>
+            <span class="online-right" id="txtOperador" style="color: var(--primary-blue);">--</span>
           </div>
           <div class="online-row">
-            <span class="online-left">Chave Válida Até</span>
+            <span class="online-left">Validade da Chave</span>
             <span class="online-right" id="txtKeyExpire" style="color: var(--primary-yellow);">--</span>
           </div>
         </div>
+
         <div class="btn-grid">
           <button class="btn-live-chat-custom" onclick="abrirLiveChat()">
-            [ # ] Abrir Live Chat Interceptador
+            Abrir Chat Interceptador
           </button>
-          <button class="btn-cyber-reset" onclick="resetarSessao()">[ X ] Desconectar bot</button>
+          <button class="btn-cyber-reset" onclick="resetarSessao()">Desconectar Bot</button>
         </div>
       </div>
     </div>
 
     <div class="log-panel">
-      <div class="log-title">
-        <span>> CONSOLE LOG</span>
-      </div>
+      <div class="log-title">Console de Logs</div>
       <div class="log-list" id="logList"></div>
     </div>
   </div>
@@ -811,197 +631,637 @@
   <!-- LIVE CHAT PANE -->
   <div id="chatPage" class="chat-page">
     <div class="chat-header">
-      <button class="btn-back-chat" onclick="fecharLiveChatCompletamente()">SAIR</button>
+      <button class="btn-back-chat" onclick="fecharLiveChatCompletamente()">Sair</button>
       <div class="chat-title-info">
-        <strong id="chatHeaderTitle">LIVE STREAM CHAT</strong>
-        <span id="chatHeaderSub">● ESCUTA ATIVA EM TEMPO REAL</span>
+        <strong id="chatHeaderTitle">Live Stream Chat</strong>
+        <span id="chatHeaderSub">● Escuta ativa em tempo real</span>
       </div>
     </div>
+
     <div class="chat-body-wrapper">
       <div id="groupsContainer" class="groups-list-container"></div>
       <div class="chat-messages-container" id="chatContainer">
-        <div style="text-align: center; color: var(--text-muted); font-size: 0.65rem; margin-top: 20px;">
-          Aguardando fluxo de pacotes de mensagem...
+        <div style="text-align: center; color: var(--text-muted); font-size: 0.75rem; margin-top: 20px;">
+          Aguardando mensagens...
         </div>
       </div>
     </div>
+
     <div class="chat-nav-bottom">
       <button id="tabAll" class="tab-btn active" onclick="switchTab('all')">
         <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
-        TODOS
+        Todos
       </button>
       <button id="tabGroups" class="tab-btn" onclick="switchTab('groups')">
         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-        GRUPOS
+        Grupos
+      </button>
+      <button id="tabSent" class="tab-btn" onclick="switchTab('sent')">
+        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        Enviadas
+      </button>
+      <button id="tabReceived" class="tab-btn" onclick="switchTab('received')">
+        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        Recebidas
       </button>
     </div>
   </div>
 
-  <!-- MODAL TUTORIAL -->
   <div id="tutorialModal" class="modal">
     <div class="modal-content">
-      <h3>Instruções de Conexão</h3>
+      <h3>Protocolo de Conexão</h3>
       <ol>
-        <li>Digite o seu número com o código do país no campo indicado.</li>
-        <li>Clique em "Gerar Código de Pareamento".</li>
-        <li>Abra o WhatsApp no seu telemóvel, vá a Dispositivos Conectados > Conectar Dispositivo > Conectar com número de telefone.</li>
-        <li>Digite o código exibido no painel.</li>
+        <li>Abra o WhatsApp no dispositivo.</li>
+        <li>Acesse <b>Aparelhos Conectados</b>.</li>
+        <li>Toque em <b>Conectar um aparelho</b>.</li>
+        <li>Insira o código gerado ou leia o QR Code.</li>
       </ol>
-      <button class="btn-cyber-blue" onclick="toggleTutorial(false)">Entendido</button>
+      <button class="btn-cyber-green" onclick="toggleTutorial(false)">Entendido</button>
     </div>
   </div>
 
   <footer>
-    <div class="container">
-      BL4CK BOT AUTOMATICO © 2026 • TODOS OS DIREITOS RESERVADOS
-    </div>
+    BL4CK Systems • Painel de Controle Corporativo
   </footer>
 
   <script>
-    const CONFIG = {
-      SERVER_URL: window.location.origin
-    };
+    const CONFIG = { SERVER_URL: 'https://orion-2-production-5283.up.railway.app', VERSION: '4.10.0' };
+    document.getElementById('appVersion').innerText = CONFIG.VERSION;
 
-    let socket;
-    let numeroAtual = '';
-    let logsCache = [];
-    let chatMessages = [];
-    let knownGroups = {};
-    let activeTab = 'all';
+    function detectDevice() {
+      const ua = navigator.userAgent;
+      if (/android/i.test(ua)) return 'Android';
+      if (/iPhone|iPad|iPod/i.test(ua)) return 'iOS';
+      if (/Windows/i.test(ua)) return 'Windows';
+      return 'Dispositivo Móvel';
+    }
+    document.getElementById('deviceInUse').innerText = detectDevice();
 
-    window.onload = () => {
-      atualizarRelogio();
-      setInterval(atualizarRelogio, 1000);
-      
-      const savedKey = localStorage.getItem('bl4ck_key');
-      const savedNum = localStorage.getItem('bl4ck_num');
-      const savedUser = localStorage.getItem('bl4ck_user');
-
-      if (savedKey && savedNum && savedUser) {
-        document.getElementById('loginKey').value = savedKey;
-        document.getElementById('loginNumber').value = savedNum;
-        document.getElementById('loginUsername').value = savedUser;
-        efetuarLogin();
-      }
-    };
-
-    function atualizarRelogio() {
+    function updateClock() {
       const now = new Date();
-      document.getElementById('liveClock').innerText = now.toLocaleDateString('pt-PT') + ' ' + now.toLocaleTimeString('pt-PT');
+      const options = { 
+        timeZone: 'Africa/Maputo', 
+        weekday: 'short', 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit', 
+        second: '2-digit' 
+      };
+      document.getElementById('liveClock').innerText = `${now.toLocaleString('pt-PT', options)}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function getFormattedDateNow() {
+      const now = new Date();
+      return `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth()+1).padStart(2, '0')}/${String(now.getFullYear()).slice(-2)} - ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    }
+
+    /* --- CONTROLO DE AUTENTICAÇÃO COM CHAVE NO GHOST X API --- */
+    async function verificarSessaoLogin() {
+      const key = localStorage.getItem('bl4ck_auth_key');
+      const num = localStorage.getItem('bl4ck_auth_num') || '';
+      const user = localStorage.getItem('bl4ck_auth_user') || 'operador';
+
+      if (!key) {
+        document.getElementById('authOverlay').style.display = 'flex';
+        return false;
+      }
+
+      try {
+        const res = await fetch(`https://ghost-x-api-production-11d7.up.railway.app/api/painel/autenticar`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chave: key, numero: num, usuario: user })
+        });
+        const data = await res.json();
+
+        const eSucesso = data.sucesso !== undefined ? data.sucesso : data.success;
+
+        if (eSucesso) {
+          document.getElementById('authOverlay').style.display = 'none';
+          document.getElementById('txtOperador').innerText = data.usuario || user;
+          document.getElementById('txtKeyExpire').innerText = data.expiraEm ? new Date(data.expiraEm).toLocaleDateString('pt-PT') : 'Ilimitado';
+          return true;
+        } else {
+          const msgErro = data.erro || data.error || 'A sua chave expirou ou é inválida!';
+          document.getElementById('loginError').innerText = msgErro;
+          document.getElementById('loginError').style.display = 'block';
+          document.getElementById('authOverlay').style.display = 'flex';
+          return false;
+        }
+      } catch (e) {
+        document.getElementById('authOverlay').style.display = 'none';
+        return true;
+      }
     }
 
     async function efetuarLogin() {
-      const num = document.getElementById('loginNumber').value.trim();
-      const user = document.getElementById('loginUsername').value.trim();
+      const num = document.getElementById('loginNumber').value.trim().replace(/\D/g, '');
+      const user = document.getElementById('loginUsername').value.trim() || 'operador';
       const key = document.getElementById('loginKey').value.trim();
       const errBox = document.getElementById('loginError');
 
-      // VERIFICAÇÃO OBRIGATÓRIA DE TODOS OS CAMPOS
-      if (!num || !user || !key) {
-        errBox.innerText = '⚠️ Preencha TODOS os campos para prosseguir!';
+      if (!key) {
+        errBox.innerText = 'Preencha a Chave de Acesso!';
         errBox.style.display = 'block';
         return;
       }
 
       try {
-        const res = await fetch(`${CONFIG.SERVER_URL}/api/validar-chave`, {
+        const res = await fetch(`https://ghost-x-api-production-11d7.up.railway.app/api/painel/autenticar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ chave: key, numero: num, usuario: user })
         });
-
         const data = await res.json();
 
-        if (data.sucesso || data.success) {
-          localStorage.setItem('bl4ck_key', key);
-          localStorage.setItem('bl4ck_num', num);
-          localStorage.setItem('bl4ck_user', user);
+        const eSucesso = data.sucesso !== undefined ? data.sucesso : data.success;
+
+        if (eSucesso) {
+          localStorage.setItem('bl4ck_auth_key', key);
+          localStorage.setItem('bl4ck_auth_num', num);
+          localStorage.setItem('bl4ck_auth_user', user);
+          if (num) document.getElementById('numInput').value = num;
           document.getElementById('authOverlay').style.display = 'none';
-          iniciarSocket();
+          errBox.style.display = 'none';
+          
+          addLog(`Acesso concedido ao operador ${user}`, 'success');
+          verificarSessaoLogin();
         } else {
-          errBox.innerText = data.mensagem || 'Credenciais inválidas ou chave expirada!';
+          const msgErro = data.erro || data.error || 'Falha na validação da chave.';
+          errBox.innerText = msgErro;
           errBox.style.display = 'block';
         }
-      } catch (e) {
-        // Fallback caso a API esteja indisponível
-        if (key.length >= 4 && num.length >= 8 && user.length >= 3) {
-          localStorage.setItem('bl4ck_key', key);
-          localStorage.setItem('bl4ck_num', num);
-          localStorage.setItem('bl4ck_user', user);
-          document.getElementById('authOverlay').style.display = 'none';
-          iniciarSocket();
+      } catch (err) {
+        errBox.innerText = 'Erro ao conectar com o servidor.';
+        errBox.style.display = 'block';
+      }
+    }
+
+    function encerrarSessaoLogin() {
+      if (!confirm('Deseja sair do painel e revogar o acesso local?')) return;
+      localStorage.removeItem('bl4ck_auth_key');
+      localStorage.removeItem('bl4ck_auth_num');
+      localStorage.removeItem('bl4ck_auth_user');
+      window.location.reload();
+    }
+
+    verificarSessaoLogin();
+
+    function toggleInputIcons() {
+      document.getElementById('btnClearInput').style.display = document.getElementById('numInput').value.trim().length > 0 ? 'flex' : 'none';
+    }
+
+    function limparInput() {
+      const input = document.getElementById('numInput');
+      input.value = ''; toggleInputIcons(); input.focus();
+    }
+
+    async function colarNoInput() {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('numInput').value = text.trim();
+        toggleInputIcons();
+      } catch (e) {}
+    }
+
+    const logList = document.getElementById('logList');
+    let logsCache = JSON.parse(localStorage.getItem('bl4ck_logs') || '[]');
+
+    function renderLogs() {
+      logList.innerHTML = '';
+      logsCache.slice(-4).forEach(item => {
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${item.type}`;
+        entry.innerText = `[${item.time}] ${item.msg}`;
+        logList.appendChild(entry);
+      });
+      logList.scrollTop = logList.scrollHeight;
+    }
+
+    function addLog(msg, type = 'entry') {
+      const time = new Date().toLocaleTimeString('pt-PT');
+      logsCache.push({ time, msg, type });
+      if (logsCache.length > 60) logsCache.shift();
+      localStorage.setItem('bl4ck_logs', JSON.stringify(logsCache));
+      renderLogs();
+    }
+    renderLogs();
+
+    const chatPage = document.getElementById('chatPage');
+    const chatContainer = document.getElementById('chatContainer');
+    const groupsContainer = document.getElementById('groupsContainer');
+    
+    let chatMessages = JSON.parse(localStorage.getItem('bl4ck_chat_msgs') || '[]');
+    let knownGroups = JSON.parse(localStorage.getItem('bl4ck_groups') || '{}');
+    let currentTab = localStorage.getItem('bl4ck_active_tab') || 'all';
+    let selectedGroupId = null;
+
+    async function carregarGruposBackend() {
+      try {
+        const res = await fetch(`${CONFIG.SERVER_URL}/api/grupos`);
+        const data = await res.json();
+        if (data && (data.success || data.sucesso) && Array.isArray(data.groups)) {
+          data.groups.forEach(g => {
+            if (g.id) knownGroups[g.id] = g.subject || g.name || `Grupo ${g.id.substring(0, 5)}`;
+          });
+          localStorage.setItem('bl4ck_groups', JSON.stringify(knownGroups));
+          if (currentTab === 'groups' && !selectedGroupId) renderGroupsList();
+        }
+      } catch (e) {}
+    }
+
+    function getDateLabel(timestamp) {
+      if (!timestamp) return 'HOJE';
+      const msgDate = new Date(timestamp);
+      const today = new Date();
+      const yesterday = new Date();
+      yesterday.setDate(today.getDate() - 1);
+
+      if (msgDate.toDateString() === today.toDateString()) {
+        return 'HOJE';
+      } else if (msgDate.toDateString() === yesterday.toDateString()) {
+        return 'ONTEM';
+      } else {
+        return `${String(msgDate.getDate()).padStart(2, '0')}/${String(msgDate.getMonth() + 1).padStart(2, '0')}/${msgDate.getFullYear()}`;
+      }
+    }
+
+    function renderChatMessages() {
+      let filteredMsgs = chatMessages;
+
+      if (currentTab === 'groups') {
+        if (selectedGroupId) {
+          filteredMsgs = chatMessages.filter(m => m.isGroup && (m.groupId === selectedGroupId || m.from === selectedGroupId));
         } else {
-          errBox.innerText = 'Falha ao validar autenticação.';
-          errBox.style.display = 'block';
+          filteredMsgs = chatMessages.filter(m => m.isGroup);
+        }
+      } else if (currentTab === 'sent') {
+        filteredMsgs = chatMessages.filter(m => m.fromMe === true);
+      } else if (currentTab === 'received') {
+        filteredMsgs = chatMessages.filter(m => m.fromMe === false);
+      }
+
+      if (filteredMsgs.length === 0) {
+        chatContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 0.75rem; margin-top: 20px;">Nenhuma mensagem encontrada nesta categoria.</div>';
+        return;
+      }
+
+      chatContainer.innerHTML = '';
+      let lastDateLabel = null;
+
+      filteredMsgs.forEach(msg => {
+        const currentDateLabel = getDateLabel(msg.timestamp);
+
+        if (currentDateLabel !== lastDateLabel) {
+          const sep = document.createElement('div');
+          sep.className = 'date-separator';
+          sep.innerText = currentDateLabel;
+          chatContainer.appendChild(sep);
+          lastDateLabel = currentDateLabel;
+        }
+
+        const card = document.createElement('div');
+        card.className = `msg-card ${msg.fromMe ? 'out' : 'in'}`;
+        
+        let senderLabel = msg.fromMe ? 'Você (Bot)' : (msg.sender || 'Contato');
+        if (msg.isGroup && msg.groupName) {
+          senderLabel += ` • [${msg.groupName}]`;
+        }
+
+        card.innerHTML = `
+          <span class="msg-sender">${senderLabel}</span>
+          <div>${msg.text}</div>
+          <span class="msg-time">${msg.time}</span>
+        `;
+        chatContainer.appendChild(card);
+      });
+      chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
+    }
+
+    function renderGroupsList() {
+      groupsContainer.innerHTML = '';
+      const groupKeys = Object.keys(knownGroups);
+
+      if (groupKeys.length === 0) {
+        groupsContainer.innerHTML = '<div style="text-align:center; color: var(--text-muted); padding: 20px; font-size: 0.75rem;">Carregando lista de grupos...</div>';
+        return;
+      }
+
+      const allCard = document.createElement('div');
+      allCard.className = 'group-item';
+      allCard.onclick = () => { selectedGroupId = null; renderChatMessages(); groupsContainer.style.display = 'none'; chatContainer.style.display = 'flex'; };
+      allCard.innerHTML = `
+        <div class="group-avatar" style="color:var(--primary-yellow); background:rgba(245, 158, 11, 0.1);">*</div>
+        <div class="group-info">
+          <div class="group-name">Todos os Grupos</div>
+          <div class="group-sub">Visualizar histórico global dos grupos</div>
+        </div>
+      `;
+      groupsContainer.appendChild(allCard);
+
+      groupKeys.forEach(gId => {
+        const gName = knownGroups[gId];
+        const item = document.createElement('div');
+        item.className = 'group-item';
+        item.onclick = () => { selectedGroupId = gId; switchTab('groups'); };
+        item.innerHTML = `
+          <div class="group-avatar">${gName.charAt(0).toUpperCase()}</div>
+          <div class="group-info">
+            <div class="group-name">${gName}</div>
+            <div class="group-sub">ID: ${gId.substring(0, 14)}...</div>
+          </div>
+        `;
+        groupsContainer.appendChild(item);
+      });
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      localStorage.setItem('bl4ck_active_tab', tab);
+      
+      document.querySelectorAll('.chat-nav-bottom .tab-btn').forEach(b => b.classList.remove('active'));
+      
+      if(tab === 'all') document.getElementById('tabAll').classList.add('active');
+      if(tab === 'groups') document.getElementById('tabGroups').classList.add('active');
+      if(tab === 'sent') document.getElementById('tabSent').classList.add('active');
+      if(tab === 'received') document.getElementById('tabReceived').classList.add('active');
+
+      if (tab === 'groups' && !selectedGroupId) {
+        groupsContainer.style.display = 'flex';
+        chatContainer.style.display = 'none';
+        carregarGruposBackend();
+        renderGroupsList();
+        document.getElementById('chatHeaderTitle').innerText = 'Grupos Detectados';
+        document.getElementById('chatHeaderSub').innerText = 'Selecione um grupo para filtrar';
+      } else {
+        groupsContainer.style.display = 'none';
+        chatContainer.style.display = 'flex';
+        renderChatMessages();
+
+        if (tab === 'groups' && selectedGroupId && knownGroups[selectedGroupId]) {
+          document.getElementById('chatHeaderTitle').innerText = knownGroups[selectedGroupId];
+          document.getElementById('chatHeaderSub').innerText = 'Filtro por grupo';
+        } else if (tab === 'sent') {
+          document.getElementById('chatHeaderTitle').innerText = 'Mensagens Enviadas';
+          document.getElementById('chatHeaderSub').innerText = '● Registro de saída';
+        } else if (tab === 'received') {
+          document.getElementById('chatHeaderTitle').innerText = 'Mensagens Recebidas';
+          document.getElementById('chatHeaderSub').innerText = '● Registro de entrada';
+        } else {
+          document.getElementById('chatHeaderTitle').innerText = 'Live Stream Chat';
+          document.getElementById('chatHeaderSub').innerText = '● Escuta ativa em tempo real';
         }
       }
     }
 
-    function iniciarSocket() {
-      socket = io(CONFIG.SERVER_URL);
+    function appendChatMessage(msgData) {
+      chatMessages.push(msgData);
+      if (chatMessages.length > 300) chatMessages.shift();
+      localStorage.setItem('bl4ck_chat_msgs', JSON.stringify(chatMessages));
 
-      socket.on('connect', () => {
-        addLog('Conectado ao servidor via Socket.IO', 'cyber');
-        aplicarEstadoReal('desconectado');
-      });
+      if (msgData.isGroup && msgData.groupId && msgData.groupName) {
+        knownGroups[msgData.groupId] = msgData.groupName;
+        localStorage.setItem('bl4ck_groups', JSON.stringify(knownGroups));
+      }
 
-      socket.on('status_sessao', (data) => {
-        if (data.status === 'online') {
-          aplicarEstadoReal('online', data.numero, null, data);
-        } else if (data.status === 'codigo_gerado') {
-          aplicarEstadoReal('codigo_gerado', data.numero, data.codigo);
+      if (chatPage.style.display === 'flex') {
+        if (currentTab === 'groups' && !selectedGroupId) {
+          renderGroupsList();
         } else {
-          aplicarEstadoReal('desconectado');
+          renderChatMessages();
         }
-      });
-
-      socket.on('log', (data) => {
-        addLog(data.mensagem || data, data.tipo || 'info');
-      });
-
-      socket.on('nova_mensagem', (msg) => {
-        chatMessages.push(msg);
-        renderChat();
-      });
+      }
     }
 
-    function aplicarEstadoReal(estado, numero = '', codigo = '', extraData = {}) {
-      const badge = document.getElementById('statusBadge');
-      const secForm = document.getElementById('secForm');
-      const secCodigo = document.getElementById('secCodigo');
-      const secQr = document.getElementById('secQr');
-      const secOnline = document.getElementById('secOnline');
+    function abrirLiveChat() {
+      if (window.location.hash !== '#chat') {
+        window.history.pushState({ page: 'chat' }, 'Live Chat', '#chat');
+      }
+      chatPage.style.display = 'flex';
+      carregarGruposBackend();
+      switchTab(currentTab);
+    }
+
+    let isExiting = false;
+    function fecharLiveChatCompletamente() {
+      if (isExiting) return;
+      isExiting = true;
+      chatPage.style.display = 'none';
+      isExiting = false;
+      if (window.location.hash === '#chat') {
+        window.history.pushState(null, '', window.location.pathname);
+      }
+    }
+
+    window.addEventListener('popstate', () => {
+      if (window.location.hash !== '#chat') {
+        chatPage.style.display = 'none';
+      } else {
+        chatPage.style.display = 'flex';
+      }
+    });
+
+    if (window.location.hash === '#chat') {
+      abrirLiveChat();
+    }
+
+    const statusBadge = document.getElementById('statusBadge');
+    const secForm = document.getElementById('secForm');
+    const secCodigo = document.getElementById('secCodigo');
+    const secQr = document.getElementById('secQr');
+    const secOnline = document.getElementById('secOnline');
+    const codeDisplay = document.getElementById('codeDisplay');
+    const qrImage = document.getElementById('qrImage');
+    const txtOnlineNumber = document.getElementById('txtOnlineNumber');
+    const txtConnectTime = document.getElementById('txtConnectTime');
+
+    let numeroAtual = localStorage.getItem('bl4ck_num') || '';
+
+    function aplicarEstadoReal(status, user, code, qr) {
+      if (status) localStorage.setItem('bl4ck_state', status);
+      if (user) {
+        numeroAtual = user.toString().replace(/\D/g, '');
+        localStorage.setItem('bl4ck_num', numeroAtual);
+      }
+      if (code) localStorage.setItem('bl4ck_code', code);
+      if (qr) localStorage.setItem('bl4ck_qr', qr);
 
       secForm.style.display = 'none';
       secCodigo.style.display = 'none';
       secQr.style.display = 'none';
       secOnline.style.display = 'none';
 
-      if (estado === 'online') {
-        badge.innerText = 'ONLINE';
-        badge.className = 'status-badge online';
+      if (status === 'conectado') {
+        statusBadge.className = 'status-badge online';
+        statusBadge.innerText = 'Ativo';
         secOnline.style.display = 'block';
-        document.getElementById('txtOnlineNumber').innerText = numero || extraData.numero || '+258 --';
-        document.getElementById('txtConnectTime').innerText = extraData.conectadoEm || new Date().toLocaleTimeString();
-        document.getElementById('txtOperador').innerText = extraData.operador || localStorage.getItem('bl4ck_user') || 'Admin';
-        document.getElementById('txtKeyExpire').innerText = extraData.expiracao || 'Ativa';
-      } else if (estado === 'codigo_gerado') {
-        badge.innerText = 'A PAREAR';
-        badge.className = 'status-badge warning';
+        secOnline.setAttribute('data-numero', numeroAtual);
+        txtOnlineNumber.innerText = `+${numeroAtual}`;
+        
+        let connTime = localStorage.getItem('bl4ck_conn_time');
+        if (!connTime) {
+          connTime = getFormattedDateNow();
+          localStorage.setItem('bl4ck_conn_time', connTime);
+        }
+        txtConnectTime.innerText = connTime;
+
+        if (socket && socket.connected && numeroAtual) {
+          socket.emit('join_room', numeroAtual);
+        }
+      } else if (status === 'codigo_gerado') {
+        statusBadge.className = 'status-badge warning';
+        statusBadge.innerText = 'Aguardando';
         secCodigo.style.display = 'block';
-        document.getElementById('codeDisplay').innerText = codigo || '---- ----';
+        codeDisplay.innerText = code || localStorage.getItem('bl4ck_code') || '---- ----';
+      } else if (status === 'qr_gerado') {
+        statusBadge.className = 'status-badge warning';
+        statusBadge.innerText = 'Aguardando QR';
+        secQr.style.display = 'block';
+        qrImage.src = qr || localStorage.getItem('bl4ck_qr') || '';
       } else {
-        badge.innerText = 'OFFLINE';
-        badge.className = 'status-badge offline';
+        statusBadge.className = 'status-badge offline';
+        statusBadge.innerText = 'Desconectado';
         secForm.style.display = 'block';
+        localStorage.removeItem('bl4ck_conn_time');
       }
     }
 
+    function parseStatus(st) {
+      if (!st) return 'desconectado';
+      const s = String(st).toLowerCase();
+      if (['conectado', 'connected', 'open', 'isconnected', 'ready', 'true'].includes(s)) return 'conectado';
+      if (['codigo_gerado', 'code', 'pairing'].includes(s)) return 'codigo_gerado';
+      if (['qr_gerado', 'qr'].includes(s)) return 'qr_gerado';
+      return 'desconectado';
+    }
+
+    function processarEventoStatus(dados) {
+      if (!dados) return;
+      const stFinal = parseStatus(dados.status || dados.state);
+      
+      if (stFinal === 'conectado' && !localStorage.getItem('bl4ck_conn_time')) {
+        localStorage.setItem('bl4ck_conn_time', getFormattedDateNow());
+      }
+      
+      aplicarEstadoReal(stFinal, dados.user || dados.numero || numeroAtual, dados.code, dados.qr);
+    }
+
+    const socket = io(CONFIG.SERVER_URL, { 
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000
+    });
+
+    socket.on('connect', () => {
+      addLog('Servidor de conexão ativo.', 'success');
+      if (numeroAtual) {
+        socket.emit('join_room', numeroAtual);
+      }
+    });
+
+    aplicarEstadoReal(
+      localStorage.getItem('bl4ck_state') || 'desconectado',
+      localStorage.getItem('bl4ck_num') || '',
+      localStorage.getItem('bl4ck_code') || '',
+      localStorage.getItem('bl4ck_qr') || ''
+    );
+
+    socket.on('disconnect', (reason) => {
+      addLog(`Conexão perdida (${reason}). Reconectando...`, 'danger');
+    });
+
+    socket.on('status', processarEventoStatus);
+    socket.on('status_change', processarEventoStatus);
+
+    const trancarOuProcessarMsg = (msg) => {
+      if (!msg) return;
+
+      const numBotConectado = (numeroAtual || '').replace(/\D/g, '');
+      const numBotMsg = (msg.botNumber || '').replace(/\D/g, '');
+
+      if (numBotMsg && numBotConectado && numBotMsg !== numBotConectado) {
+        return;
+      }
+
+      const formattedTime = msg.time || new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+      const msgTimestamp = msg.timestamp || Date.now();
+      const isFromMe = msg.fromMe === true || msg.key?.fromMe === true;
+      const isGrp = !!(msg.isGroup || msg.groupId || (msg.from && msg.from.includes('@g.us')) || (msg.key?.remoteJid && msg.key.remoteJid.includes('@g.us')));
+      const gId = msg.groupId || (msg.from && msg.from.includes('@g.us') ? msg.from : (msg.key?.remoteJid && msg.key.remoteJid.includes('@g.us') ? msg.key.remoteJid : null));
+      const gName = msg.groupName || msg.groupTitle || (gId ? (knownGroups[gId] || `Grupo ${gId.substring(0, 5)}`) : 'Contato');
+
+      const texto = msg.text || msg.body || msg.message?.conversation || 'Mensagem / Mídia';
+
+      appendChatMessage({
+        botNumber: numBotMsg || numBotConectado,
+        sender: msg.sender || msg.pushName || (isFromMe ? 'Você (Bot)' : 'Contato'),
+        text: texto,
+        fromMe: isFromMe,
+        time: formattedTime,
+        timestamp: msgTimestamp,
+        isGroup: isGrp,
+        groupId: gId,
+        groupName: gName
+      });
+
+      if (isFromMe) {
+        addLog(`Resposta enviada para ${gName}`, 'success');
+      } else {
+        addLog(`Mensagem recebida de ${gName}`, 'info');
+      }
+    };
+
+    socket.on('new_message', trancarOuProcessarMsg);
+    socket.on('message', trancarOuProcessarMsg);
+    socket.on('message_create', trancarOuProcessarMsg);
+
+    function copiarCodigo() {
+      const codigoText = codeDisplay.innerText.trim();
+      if (!codigoText || codigoText === '---- ----') return;
+      navigator.clipboard.writeText(codigoText).then(() => {
+        document.getElementById('txtCopy').innerText = 'Copiado';
+        setTimeout(() => document.getElementById('txtCopy').innerText = 'Copiar', 2000);
+      });
+    }
+
     async function gerarCodigo() {
-      const num = document.getElementById('numInput').value.trim();
-      if (!num) return alert('Por favor, digite o número do WhatsApp!');
-      numeroAtual = num;
+      const numero = document.getElementById('numInput').value.trim();
+      if (!numero) return alert('Insira o número de telefone!');
+      numeroAtual = numero.replace(/\D/g, '');
+      aplicarEstadoReal('codigo_gerado', numeroAtual, '---- ----');
       await enviarPedidoCodigo(numeroAtual);
+    }
+
+    async function gerarQrCode() {
+      const numero = document.getElementById('numInput').value.trim();
+      if (!numero) return alert('Insira o número de telefone para gerar o QR!');
+      numeroAtual = numero.replace(/\D/g, '');
+      aplicarEstadoReal('qr_gerado', numeroAtual, null, '');
+      
+      if (socket && socket.connected) {
+        socket.emit('join_room', numeroAtual);
+      }
+
+      try {
+        const res = await fetch(`${CONFIG.SERVER_URL}/api/solicitar-qr`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ numero: numeroAtual })
+        });
+        const data = await res.json();
+        if (data.success || data.sucesso) {
+          addLog('Aguardando emissão do QR Code...', 'info');
+        }
+      } catch (err) {
+        addLog(`Erro na requisição: ${err.message}`, 'danger');
+      }
     }
 
     async function solicitarNovoCodigo() {
@@ -1023,10 +1283,10 @@
         const data = await res.json();
         if ((data.success || data.sucesso) && data.code) {
           aplicarEstadoReal('codigo_gerado', numero, data.code);
-          addLog(`Chave gerada: ${data.code}`, 'info');
+          addLog(`Código gerado com sucesso`, 'info');
         }
       } catch (err) {
-        addLog(`Falha na requisição: ${err.message}`, 'danger');
+        addLog(`Erro na requisição: ${err.message}`, 'danger');
       }
     }
 
@@ -1040,96 +1300,14 @@
         });
       } catch(e) {}
       numeroAtual = '';
-      localStorage.removeItem('bl4ck_key');
-      localStorage.removeItem('bl4ck_num');
-      localStorage.removeItem('bl4ck_user');
+      localStorage.clear();
       logsCache = []; chatMessages = []; knownGroups = {};
-      document.getElementById('logList').innerHTML = '';
+      logList.innerHTML = '';
       aplicarEstadoReal('desconectado');
-      document.getElementById('authOverlay').style.display = 'flex';
     }
 
     function toggleTutorial(show) {
       document.getElementById('tutorialModal').style.display = show ? 'flex' : 'none';
-    }
-
-    function toggleInputIcons() {
-      const val = document.getElementById('numInput').value;
-      document.getElementById('btnClearInput').style.display = val ? 'flex' : 'none';
-    }
-
-    function limparInput() {
-      document.getElementById('numInput').value = '';
-      toggleInputIcons();
-    }
-
-    async function colarNoInput() {
-      try {
-        const text = await navigator.clipboard.readText();
-        document.getElementById('numInput').value = text;
-        toggleInputIcons();
-      } catch (err) {
-        addLog('Erro ao colar área de transferência', 'danger');
-      }
-    }
-
-    function copiarCodigo() {
-      const code = document.getElementById('codeDisplay').innerText;
-      navigator.clipboard.writeText(code);
-      document.getElementById('txtCopy').innerText = 'COPIADO!';
-      setTimeout(() => {
-        document.getElementById('txtCopy').innerText = 'COPIAR';
-      }, 2000);
-    }
-
-    function gerarQrCode() {
-      alert('Modo QR Code ativado. Aguarde a emissão do fluxo.');
-    }
-
-    function addLog(msg, type = 'info') {
-      const logList = document.getElementById('logList');
-      const entry = document.createElement('div');
-      entry.className = `log-entry ${type}`;
-      entry.innerText = `> ${msg}`;
-      logList.appendChild(entry);
-      logList.scrollTop = logList.scrollHeight;
-    }
-
-    function abrirLiveChat() {
-      document.getElementById('chatPage').style.display = 'flex';
-      renderChat();
-    }
-
-    function fecharLiveChatCompletamente() {
-      const chatPage = document.getElementById('chatPage');
-      chatPage.classList.add('exit-anim');
-      setTimeout(() => {
-        chatPage.style.display = 'none';
-        chatPage.classList.remove('exit-anim');
-      }, 200);
-    }
-
-    function switchTab(tab) {
-      activeTab = tab;
-      document.getElementById('tabAll').classList.toggle('active', tab === 'all');
-      document.getElementById('tabGroups').classList.toggle('active', tab === 'groups');
-      document.getElementById('groupsContainer').style.display = tab === 'groups' ? 'flex' : 'none';
-      document.getElementById('chatContainer').style.display = tab === 'all' ? 'flex' : 'none';
-      renderChat();
-    }
-
-    function renderChat() {
-      const container = document.getElementById('chatContainer');
-      if (chatMessages.length === 0) return;
-      
-      container.innerHTML = chatMessages.map(m => `
-        <div class="msg-card ${m.out ? 'out' : 'in'}">
-          <span class="msg-sender">${m.sender || 'Contacto'}</span>
-          <div>${m.texto || m.text}</div>
-          <span class="msg-time">${m.hora || '--:--'}</span>
-        </div>
-      `).join('');
-      container.scrollTop = container.scrollHeight;
     }
   </script>
 </body>
