@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <!-- Favicon Hacker Brutalista (Aba do Navegador) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><filter id='brutalGlow' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='14' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><linearGradient id='cyberRedGreen' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23ff003c'/><stop offset='50%' stop-color='%2300ff66'/><stop offset='100%' stop-color='%2300f0ff'/></linearGradient></defs><rect width='512' height='512' rx='96' fill='%23000000'/><g filter='url(%23brutalGlow)' fill='none' stroke='url(%23cyberRedGreen)' stroke-width='20' stroke-linecap='square' stroke-linejoin='miter'><path d='M 140 180 L 256 90 L 372 180 L 372 290 L 330 330 L 330 400 L 182 400 L 182 330 L 140 290 Z'/><polygon points='175,210 230,240 175,250' fill='%23ff003c' stroke='none'/><polygon points='337,210 282,240 337,250' fill='%2300ff66' stroke='none'/><line x1='220' y1='340' x2='220' y2='400'/><line x1='256' y1='340' x2='256' y2='400'/><line x1='292' y1='340' x2='292' y2='400'/><polygon points='256,260 240,295 272,295' fill='url(%23cyberRedGreen)' stroke='none'/></g></svg>">
 
-  <!-- Ícone App Mobile (iOS e Android) -->
   <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><filter id='brutalGlow' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='14' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><linearGradient id='cyberRedGreen' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23ff003c'/><stop offset='50%' stop-color='%2300ff66'/><stop offset='100%' stop-color='%2300f0ff'/></linearGradient></defs><rect width='512' height='512' rx='96' fill='%23000000'/><g filter='url(%23brutalGlow)' fill='none' stroke='url(%23cyberRedGreen)' stroke-width='20' stroke-linecap='square' stroke-linejoin='miter'><path d='M 140 180 L 256 90 L 372 180 L 372 290 L 330 330 L 330 400 L 182 400 L 182 330 L 140 290 Z'/><polygon points='175,210 230,240 175,250' fill='%23ff003c' stroke='none'/><polygon points='337,210 282,240 337,250' fill='%2300ff66' stroke='none'/><line x1='220' y1='340' x2='220' y2='400'/><line x1='256' y1='340' x2='256' y2='400'/><line x1='292' y1='340' x2='292' y2='400'/><polygon points='256,260 240,295 272,295' fill='url(%23cyberRedGreen)' stroke='none'/></g></svg>">
 
   <meta name="theme-color" content="#000000">
@@ -63,60 +61,86 @@
       pointer-events: none;
     }
 
-    /* OVERLAY / TELA DE LOGIN BRUTALISTA */
+    /* OVERLAY / TELA DE LOGIN MELHORADA */
     #authOverlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(2, 4, 8, 0.98);
-      backdrop-filter: blur(12px);
+      background: rgba(2, 4, 8, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       z-index: 1000;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 16px;
+      animation: fadeInAuth 0.3s ease-out;
+    }
+
+    @keyframes fadeInAuth {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .login-card {
-      background: var(--card-bg);
+      background: linear-gradient(145deg, rgba(8, 15, 26, 0.98), rgba(3, 6, 12, 0.98));
       border: 1px solid var(--primary-red);
-      border-radius: 4px;
-      padding: 24px;
+      border-radius: 6px;
+      padding: 28px 24px;
       width: 100%;
-      max-width: 360px;
-      box-shadow: 0 0 25px rgba(255, 0, 60, 0.25);
+      max-width: 380px;
+      box-shadow: 0 0 35px rgba(255, 0, 60, 0.3), inset 0 0 15px rgba(255, 0, 60, 0.08);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
+      position: relative;
+      overflow: hidden;
+      animation: scaleUpCard 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes scaleUpCard {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .login-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary-red), var(--cyber-blue), var(--primary-green));
     }
 
     .login-header {
       text-align: center;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .login-header h2 {
-      font-size: 1.2rem;
+      font-size: 1.35rem;
       color: #fff;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
+      font-weight: 700;
     }
 
     .login-header h2 span {
       color: var(--primary-red);
-      text-shadow: 0 0 8px var(--primary-red);
+      text-shadow: 0 0 10px var(--primary-red);
     }
 
     .login-header p {
-      font-size: 0.60rem;
+      font-size: 0.62rem;
       color: var(--cyber-blue);
-      margin-top: 4px;
-      letter-spacing: 1px;
+      margin-top: 6px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.9;
     }
 
     .login-input-group {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
 
     .login-input-group label {
@@ -124,29 +148,56 @@
       color: var(--text-muted);
       text-transform: uppercase;
       font-weight: 700;
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .login-input-group label span.req {
+      color: var(--primary-red);
     }
 
     .login-input-group input {
       width: 100%;
-      padding: 10px;
-      background: #000;
-      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(0, 240, 255, 0.25);
       color: #fff;
-      font-size: 0.82rem;
-      border-radius: 2px;
+      font-size: 0.85rem;
+      border-radius: 3px;
       outline: none;
+      transition: all 0.25s ease;
     }
 
     .login-input-group input:focus {
       border-color: var(--cyber-blue);
-      box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
+      background: rgba(0, 240, 255, 0.03);
+    }
+
+    .login-input-group input#loginKey:focus {
+      border-color: var(--primary-red);
+      box-shadow: 0 0 12px rgba(255, 0, 60, 0.35);
+      background: rgba(255, 0, 60, 0.03);
     }
 
     .login-error-msg {
-      font-size: 0.65rem;
+      font-size: 0.68rem;
       color: var(--primary-red);
+      background: rgba(255, 0, 60, 0.1);
+      border: 1px solid rgba(255, 0, 60, 0.3);
+      padding: 8px;
+      border-radius: 3px;
       text-align: center;
       display: none;
+      letter-spacing: 0.5px;
+      animation: shakeErr 0.3s ease-in-out;
+    }
+
+    @keyframes shakeErr {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
     }
 
     .container {
@@ -385,7 +436,8 @@
     }
 
     .btn-copy {
-      width: auto; padding: 0 12px; height: 44px;
+      width: auto;
+      padding: 0 12px; height: 44px;
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
     .btn-copy svg { width: 16px; height: 16px; fill: currentColor; }
@@ -393,14 +445,16 @@
     .online-card-box {
       background: #000;
       border: 1px solid var(--primary-green);
-      border-radius: 2px; padding: 12px; margin-bottom: 10px;
+      border-radius: 2px;
+      padding: 12px; margin-bottom: 10px;
       display: flex; flex-direction: column; gap: 8px;
       box-shadow: inset 0 0 8px rgba(0, 255, 102, 0.1);
     }
 
     .online-row {
       display: flex; justify-content: space-between; align-items: center;
-      font-size: 0.70rem; padding-bottom: 6px; border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+      font-size: 0.70rem;
+      padding-bottom: 6px; border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
     }
     .online-row:last-child { border-bottom: none; padding-bottom: 0; }
 
@@ -408,7 +462,8 @@
     .online-right { color: var(--text-main); font-weight: 700; display: flex; align-items: center; gap: 6px; }
 
     .neon-dot {
-      width: 6px; height: 6px; background-color: var(--primary-green);
+      width: 6px;
+      height: 6px; background-color: var(--primary-green);
       border-radius: 50%; box-shadow: 0 0 8px var(--primary-green); display: inline-block;
     }
 
@@ -420,7 +475,8 @@
 
     .log-title {
       font-size: 0.58rem; color: var(--cyber-blue); text-transform: uppercase;
-      padding: 4px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.05); background: rgba(0,240,255,0.05);
+      padding: 4px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05); background: rgba(0,240,255,0.05);
       display: flex; justify-content: space-between; align-items: center;
     }
 
@@ -449,7 +505,7 @@
       position: sticky;
       top: 0;
       z-index: 10;
-      background: #060b13; 
+      background: #060b13;
       padding: 10px 12px; 
       display: flex; 
       align-items: center; 
@@ -459,9 +515,11 @@
     }
 
     .btn-back-chat {
-      background: rgba(255, 0, 60, 0.1); border: 1px solid var(--primary-red); color: var(--primary-red);
+      background: rgba(255, 0, 60, 0.1);
+      border: 1px solid var(--primary-red); color: var(--primary-red);
       font-size: 0.70rem; cursor: pointer; padding: 6px 12px; width: auto; font-weight: 700;
-      border-radius: 2px; transition: all 0.2s;
+      border-radius: 2px;
+      transition: all 0.2s;
     }
     .btn-back-chat:active { transform: scale(0.92); }
 
@@ -474,7 +532,7 @@
       position: sticky;
       bottom: 0;
       z-index: 10;
-      display: flex; 
+      display: flex;
       background: #040810; 
       border-top: 1px solid rgba(255, 0, 60, 0.3);
       padding: 6px 4px;
@@ -484,7 +542,7 @@
     .tab-btn {
       flex: 1; 
       padding: 6px 2px; 
-      background: rgba(0,0,0,0.6); 
+      background: rgba(0,0,0,0.6);
       border: 1px solid rgba(255,255,255,0.05);
       color: var(--text-muted); 
       font-size: 0.55rem; 
@@ -493,7 +551,7 @@
       border-radius: 2px; 
       display: flex; 
       flex-direction: column;
-      align-items: center; 
+      align-items: center;
       gap: 3px; 
       cursor: pointer; 
       transition: all 0.2s;
@@ -503,7 +561,7 @@
 
     .tab-btn.active { 
       color: var(--cyber-blue); 
-      border-color: var(--cyber-blue); 
+      border-color: var(--cyber-blue);
       background: rgba(0, 240, 255, 0.12); 
       box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
     }
@@ -516,9 +574,11 @@
     }
     .group-item:hover { background: rgba(0, 240, 255, 0.05); }
     .group-avatar {
-      width: 32px; height: 32px; border-radius: 2px; background: rgba(0, 240, 255, 0.15);
+      width: 32px; height: 32px; border-radius: 2px;
+      background: rgba(0, 240, 255, 0.15);
       border: 1px solid var(--cyber-blue); display: flex; align-items: center; justify-content: center;
-      font-weight: bold; color: var(--cyber-blue); font-size: 0.8rem;
+      font-weight: bold; color: var(--cyber-blue);
+      font-size: 0.8rem;
     }
 
     .group-info { flex: 1; }
@@ -528,7 +588,8 @@
     .chat-messages-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; padding: 12px; }
     .msg-card {
       max-width: 85%; padding: 8px 10px; border-radius: 2px;
-      font-size: 0.75rem; line-height: 1.3; position: relative; word-wrap: break-word;
+      font-size: 0.75rem;
+      line-height: 1.3; position: relative; word-wrap: break-word;
     }
     .msg-card.in { align-self: flex-start; background: var(--chat-bg-msg); border: 1px solid rgba(0, 240, 255, 0.2); color: var(--text-main); }
     .msg-card.out { align-self: flex-end; background: var(--chat-out-msg); border: 1px solid rgba(0, 255, 102, 0.3); color: #fff; }
@@ -552,7 +613,8 @@
     }
 
     .modal {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0, 0, 0, 0.9); z-index: 300; justify-content: center; align-items: center; padding: 16px;
     }
     .modal-content { background: #060b13; border: 1px solid var(--cyber-blue); padding: 16px; border-radius: 2px; max-width: 320px; width: 100%; }
@@ -561,7 +623,7 @@
     .modal-content button { margin-top: 14px; }
 
     footer {
-      position: fixed; 
+      position: fixed;
       bottom: 0; 
       left: 0; 
       width: 100%; 
@@ -570,7 +632,7 @@
       z-index: 90; 
       font-size: 0.58rem; 
       color: var(--text-muted);
-      text-align: center; 
+      text-align: center;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       box-shadow: 0 -2px 10px rgba(0,0,0,0.8);
     }
@@ -578,7 +640,6 @@
 </head>
 <body class="smooth-rewrite">
 
-  <!-- MODAL / TELA DE LOGIN AUTENTICAÇÃO VIA GHOST X API -->
   <div id="authOverlay">
     <div class="login-card">
       <div class="login-header">
@@ -587,23 +648,25 @@
       </div>
       
       <div class="login-input-group">
-        <label>Número WhatsApp (Opcional)</label>
-        <input type="text" id="loginNumber" placeholder="Ex: 258841234567">
+        <label>Número WhatsApp <span>(Opcional)</span></label>
+        <input type="text" id="loginNumber" placeholder="Ex: 258841234567" autocomplete="off">
       </div>
 
       <div class="login-input-group">
-        <label>Nome de Utilizador (Opcional)</label>
-        <input type="text" id="loginUsername" placeholder="Ex: operador_01">
+        <label>Nome de Utilizador <span>(Opcional)</span></label>
+        <input type="text" id="loginUsername" placeholder="Ex: operador_01" autocomplete="off">
       </div>
 
       <div class="login-input-group">
-        <label>Chave de Acesso *</label>
-        <input type="password" id="loginKey" placeholder="Ex: B4D8D5432D">
+        <label>Chave de Acesso <span class="req">*</span></label>
+        <input type="password" id="loginKey" placeholder="Ex: B4D8D5432D" autocomplete="off">
       </div>
 
-      <div id="loginError" class="login-error-msg">Chave inválida ou expirada!</div>
+      <div id="loginError" class="login-error-msg">⚠️ Chave inválida ou expirada!</div>
 
-      <button class="btn-cyber-green" onclick="efetuarLogin()">[ > ] ENTRAR NO PAINEL</button>
+      <button class="btn-cyber-green" onclick="efetuarLogin()">
+        [ > ] ENTRAR NO PAINEL
+      </button>
     </div>
   </div>
 
@@ -625,7 +688,6 @@
     </div>
 
     <div class="action-panel">
-      <!-- FORMULARIO DE INICIO -->
       <div id="secForm">
         <div class="input-wrapper">
           <input type="text" id="numInput" placeholder="Ex: 258841234567" oninput="toggleInputIcons()">
@@ -642,7 +704,6 @@
         </div>
       </div>
 
-      <!-- PAINEL DE PAREAMENTO POR CÓDIGO -->
       <div id="secCodigo" style="display: none;">
         <p style="font-size: 0.68rem; color: var(--cyber-blue); text-align: center;">Insira este código no WhatsApp do dispositivo:</p>
         <div class="code-container">
@@ -658,7 +719,6 @@
         </div>
       </div>
 
-      <!-- PAINEL DE PAREAMENTO POR QR CODE -->
       <div id="secQr" style="display: none;">
         <p style="font-size: 0.68rem; color: var(--cyber-blue); text-align: center;">Escaneie este QR Code no WhatsApp:</p>
         <div class="qr-container">
@@ -669,7 +729,6 @@
         </div>
       </div>
 
-      <!-- STATUS ONLINE -->
       <div id="secOnline" class="session-card" data-numero="" style="display: none;">
         <div class="online-card-box">
           <div class="online-row">
@@ -693,7 +752,6 @@
             <span class="online-right" id="txtKeyExpire" style="color: var(--primary-yellow);">--</span>
           </div>
         </div>
-
         <div class="btn-grid">
           <button class="btn-live-chat-custom" onclick="abrirLiveChat()">
             [ # ] Abrir Live Chat Interceptador
@@ -711,7 +769,6 @@
     </div>
   </div>
 
-  <!-- LIVE CHAT PANE -->
   <div id="chatPage" class="chat-page">
     <div class="chat-header">
       <button class="btn-back-chat" onclick="fecharLiveChatCompletamente()">SAIR</button>
@@ -720,7 +777,6 @@
         <span id="chatHeaderSub">● ESCUTA ATIVA EM TEMPO REAL</span>
       </div>
     </div>
-
     <div class="chat-body-wrapper">
       <div id="groupsContainer" class="groups-list-container"></div>
       <div class="chat-messages-container" id="chatContainer">
@@ -729,7 +785,6 @@
         </div>
       </div>
     </div>
-
     <div class="chat-nav-bottom">
       <button id="tabAll" class="tab-btn active" onclick="switchTab('all')">
         <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/></svg>
@@ -739,646 +794,163 @@
         <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         GRUPOS
       </button>
-      <button id="tabSent" class="tab-btn" onclick="switchTab('sent')">
-        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-        ENVIADAS
-      </button>
-      <button id="tabReceived" class="tab-btn" onclick="switchTab('received')">
-        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-        RECEBIDAS
-      </button>
     </div>
   </div>
 
   <div id="tutorialModal" class="modal">
     <div class="modal-content">
-      <h3>> PROTOCOLO_DE_CONEXAO</h3>
+      <h3>Instruções de Conexão</h3>
       <ol>
-        <li>Abra o WhatsApp no dispositivo.</li>
-        <li>Navegue até <b>Aparelhos Conectados</b>.</li>
-        <li>Toque em <b>Conectar um aparelho</b>.</li>
-        <li>Insira o Código de Telefone OU escaneie a imagem QR Code gerada.</li>
+        <li>Digite o seu número com o código do país no campo indicado.</li>
+        <li>Clique em "Gerar Código de Pareamento".</li>
+        <li>Abra o WhatsApp no seu telemóvel, vá a Dispositivos Conectados > Conectar Dispositivo > Conectar com número de telefone.</li>
+        <li>Digite o código exibido no painel.</li>
       </ol>
-      <button class="btn-cyber-green" onclick="toggleTutorial(false)">[ CONFIRMAR ]</button>
+      <button class="btn-cyber-blue" onclick="toggleTutorial(false)">Entendido</button>
     </div>
   </div>
 
   <footer>
-    BL4CK BOT • PAINEL DE CONEXÃO 24/7 • <span style="color: var(--primary-red);">BL4CK SOLUTIONS</span>
+    <div class="container">
+      BL4CK BOT AUTOMATICO © 2026 • TODOS OS DIREITOS RESERVADOS
+    </div>
   </footer>
 
   <script>
-    const CONFIG = { SERVER_URL: 'https://orion-2-production-5283.up.railway.app', VERSION: '4.10.0' };
-    document.getElementById('appVersion').innerText = CONFIG.VERSION;
+    const CONFIG = {
+      SERVER_URL: window.location.origin
+    };
 
-    function detectDevice() {
-      const ua = navigator.userAgent;
-      if (/android/i.test(ua)) return 'Android Core';
-      if (/iPhone|iPad|iPod/i.test(ua)) return 'Apple iPhone';
-      if (/Windows/i.test(ua)) return 'Windows System';
-      return 'Generic Mobile';
-    }
-    document.getElementById('deviceInUse').innerText = detectDevice();
+    let socket;
+    let numeroAtual = '';
+    let logsCache = [];
+    let chatMessages = [];
+    let knownGroups = {};
+    let activeTab = 'all';
 
-    function updateClock() {
-      const now = new Date();
-      const options = { 
-        timeZone: 'Africa/Maputo', 
-        weekday: 'long', 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric', 
-        hour: '2-digit', 
-        minute: '2-digit', 
-        second: '2-digit' 
-      };
-      document.getElementById('liveClock').innerText = `${now.toLocaleString('pt-PT', options)} • Maputo`;
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-
-    function getFormattedDateNow() {
-      const now = new Date();
-      return `${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth()+1).padStart(2, '0')}/${String(now.getFullYear()).slice(-2)} - ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-    }
-
-    /* --- CONTROLO DE AUTENTICAÇÃO COM CHAVE NO GHOST X API --- */
-    async function verificarSessaoLogin() {
-      const key = localStorage.getItem('bl4ck_auth_key');
-      const num = localStorage.getItem('bl4ck_auth_num') || '';
-      const user = localStorage.getItem('bl4ck_auth_user') || 'operador';
-
-      if (!key) {
-        document.getElementById('authOverlay').style.display = 'flex';
-        return false;
+    window.onload = () => {
+      atualizarRelogio();
+      setInterval(atualizarRelogio, 1000);
+      
+      const savedKey = localStorage.getItem('bl4ck_key');
+      if (savedKey) {
+        document.getElementById('loginKey').value = savedKey;
+        efetuarLogin();
       }
+    };
 
-      try {
-        const res = await fetch(`https://ghost-x-api-production-11d7.up.railway.app/api/painel/autenticar`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ chave: key, numero: num, usuario: user })
-        });
-        const data = await res.json();
-
-        // Suporta respostas em 'sucesso' (PT) ou 'success' (EN)
-        const eSucesso = data.sucesso !== undefined ? data.sucesso : data.success;
-
-        if (eSucesso) {
-          document.getElementById('authOverlay').style.display = 'none';
-          document.getElementById('txtOperador').innerText = data.usuario || user;
-          document.getElementById('txtKeyExpire').innerText = data.expiraEm ? new Date(data.expiraEm).toLocaleDateString('pt-PT') : 'Ilimitado';
-          return true;
-        } else {
-          const msgErro = data.erro || data.error || 'A sua chave expirou ou é inválida!';
-          document.getElementById('loginError').innerText = msgErro;
-          document.getElementById('loginError').style.display = 'block';
-          document.getElementById('authOverlay').style.display = 'flex';
-          return false;
-        }
-      } catch (e) {
-        document.getElementById('authOverlay').style.display = 'none';
-        return true;
-      }
+    function atualizarRelogio() {
+      const now = new Date();
+      document.getElementById('liveClock').innerText = now.toLocaleDateString('pt-PT') + ' ' + now.toLocaleTimeString('pt-PT');
     }
 
     async function efetuarLogin() {
-      const num = document.getElementById('loginNumber').value.trim().replace(/\D/g, '');
-      const user = document.getElementById('loginUsername').value.trim() || 'operador';
       const key = document.getElementById('loginKey').value.trim();
+      const num = document.getElementById('loginNumber').value.trim();
+      const user = document.getElementById('loginUsername').value.trim();
       const errBox = document.getElementById('loginError');
 
-      // VALIDAÇÃO SOMENTE DA CHAVE DE ACESSO
       if (!key) {
-        errBox.innerText = 'Preencha a Chave de Acesso!';
+        errBox.innerText = '⚠️ A chave de acesso é obrigatória!';
         errBox.style.display = 'block';
         return;
       }
 
       try {
-        const res = await fetch(`https://ghost-x-api-production-11d7.up.railway.app/api/painel/autenticar`, {
+        const res = await fetch(`${CONFIG.SERVER_URL}/api/validar-chave`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ chave: key, numero: num, usuario: user })
         });
+
         const data = await res.json();
 
-        // Suporta respostas em 'sucesso' (PT) ou 'success' (EN)
-        const eSucesso = data.sucesso !== undefined ? data.sucesso : data.success;
-
-        if (eSucesso) {
-          localStorage.setItem('bl4ck_auth_key', key);
-          localStorage.setItem('bl4ck_auth_num', num);
-          localStorage.setItem('bl4ck_auth_user', user);
-          if (num) document.getElementById('numInput').value = num;
+        if (data.sucesso || data.success) {
+          localStorage.setItem('bl4ck_key', key);
           document.getElementById('authOverlay').style.display = 'none';
-          errBox.style.display = 'none';
-          
-          addLog(`Acesso concedido ao operador ${user}`, 'success');
-          verificarSessaoLogin();
+          iniciarSocket();
         } else {
-          const msgErro = data.erro || data.error || 'Falha na validação da chave.';
-          errBox.innerText = msgErro;
+          errBox.innerText = data.mensagem || 'Chave inválida ou expirada!';
           errBox.style.display = 'block';
         }
-      } catch (err) {
-        errBox.innerText = 'Erro ao conectar com o servidor.';
-        errBox.style.display = 'block';
-      }
-    }
-
-    function encerrarSessaoLogin() {
-      if (!confirm('Deseja sair do painel e revogar o acesso local?')) return;
-      localStorage.removeItem('bl4ck_auth_key');
-      localStorage.removeItem('bl4ck_auth_num');
-      localStorage.removeItem('bl4ck_auth_user');
-      window.location.reload();
-    }
-
-    verificarSessaoLogin();
-
-    function toggleInputIcons() {
-      document.getElementById('btnClearInput').style.display = document.getElementById('numInput').value.trim().length > 0 ? 'flex' : 'none';
-    }
-
-    function limparInput() {
-      const input = document.getElementById('numInput');
-      input.value = ''; toggleInputIcons(); input.focus();
-    }
-
-    async function colarNoInput() {
-      try {
-        const text = await navigator.clipboard.readText();
-        document.getElementById('numInput').value = text.trim();
-        toggleInputIcons();
-      } catch (e) {}
-    }
-
-    const logList = document.getElementById('logList');
-    let logsCache = JSON.parse(localStorage.getItem('bl4ck_logs') || '[]');
-
-    function renderLogs() {
-      logList.innerHTML = '';
-      logsCache.slice(-4).forEach(item => {
-        const entry = document.createElement('div');
-        entry.className = `log-entry ${item.type}`;
-        entry.innerText = `[${item.time}] ${item.msg}`;
-        logList.appendChild(entry);
-      });
-      logList.scrollTop = logList.scrollHeight;
-    }
-
-    function addLog(msg, type = 'entry') {
-      const time = new Date().toLocaleTimeString('pt-PT');
-      logsCache.push({ time, msg, type });
-      if (logsCache.length > 60) logsCache.shift();
-      localStorage.setItem('bl4ck_logs', JSON.stringify(logsCache));
-      renderLogs();
-    }
-    renderLogs();
-
-    const chatPage = document.getElementById('chatPage');
-    const chatContainer = document.getElementById('chatContainer');
-    const groupsContainer = document.getElementById('groupsContainer');
-    
-    let chatMessages = JSON.parse(localStorage.getItem('bl4ck_chat_msgs') || '[]');
-    let knownGroups = JSON.parse(localStorage.getItem('bl4ck_groups') || '{}');
-    let currentTab = localStorage.getItem('bl4ck_active_tab') || 'all';
-    let selectedGroupId = null;
-
-    async function carregarGruposBackend() {
-      try {
-        const res = await fetch(`${CONFIG.SERVER_URL}/api/grupos`);
-        const data = await res.json();
-        if (data && (data.success || data.sucesso) && Array.isArray(data.groups)) {
-          data.groups.forEach(g => {
-            if (g.id) knownGroups[g.id] = g.subject || g.name || `Grupo ${g.id.substring(0, 5)}`;
-          });
-          localStorage.setItem('bl4ck_groups', JSON.stringify(knownGroups));
-          if (currentTab === 'groups' && !selectedGroupId) renderGroupsList();
-        }
-      } catch (e) {}
-    }
-
-    function getDateLabel(timestamp) {
-      if (!timestamp) return 'HOJE';
-      const msgDate = new Date(timestamp);
-      const today = new Date();
-      const yesterday = new Date();
-      yesterday.setDate(today.getDate() - 1);
-
-      if (msgDate.toDateString() === today.toDateString()) {
-        return 'HOJE';
-      } else if (msgDate.toDateString() === yesterday.toDateString()) {
-        return 'ONTEM';
-      } else {
-        return `${String(msgDate.getDate()).padStart(2, '0')}/${String(msgDate.getMonth() + 1).padStart(2, '0')}/${msgDate.getFullYear()}`;
-      }
-    }
-
-    function renderChatMessages() {
-      let filteredMsgs = chatMessages;
-
-      if (currentTab === 'groups') {
-        if (selectedGroupId) {
-          filteredMsgs = chatMessages.filter(m => m.isGroup && (m.groupId === selectedGroupId || m.from === selectedGroupId));
+      } catch (e) {
+        // Fallback caso a rota API não esteja pronta
+        if (key.length >= 4) {
+          localStorage.setItem('bl4ck_key', key);
+          document.getElementById('authOverlay').style.display = 'none';
+          iniciarSocket();
         } else {
-          filteredMsgs = chatMessages.filter(m => m.isGroup);
+          errBox.innerText = 'Falha ao validar chave com o servidor.';
+          errBox.style.display = 'block';
         }
-      } else if (currentTab === 'sent') {
-        filteredMsgs = chatMessages.filter(m => m.fromMe === true);
-      } else if (currentTab === 'received') {
-        filteredMsgs = chatMessages.filter(m => m.fromMe === false);
       }
-
-      if (filteredMsgs.length === 0) {
-        chatContainer.innerHTML = '<div style="text-align: center; color: var(--text-muted); font-size: 0.65rem; margin-top: 20px;">Sem mensagens registradas nesta categoria.</div>';
-        return;
-      }
-
-      chatContainer.innerHTML = '';
-      let lastDateLabel = null;
-
-      filteredMsgs.forEach(msg => {
-        const currentDateLabel = getDateLabel(msg.timestamp);
-
-        if (currentDateLabel !== lastDateLabel) {
-          const sep = document.createElement('div');
-          sep.className = 'date-separator';
-          sep.innerText = currentDateLabel;
-          chatContainer.appendChild(sep);
-          lastDateLabel = currentDateLabel;
-        }
-
-        const card = document.createElement('div');
-        card.className = `msg-card ${msg.fromMe ? 'out' : 'in'}`;
-        
-        let senderLabel = msg.fromMe ? 'VOCÊ (BOT)' : (msg.sender || 'CONTATO');
-        if (msg.isGroup && msg.groupName) {
-          senderLabel += ` • [${msg.groupName}]`;
-        }
-
-        card.innerHTML = `
-          <span class="msg-sender">${senderLabel}</span>
-          <div>${msg.text}</div>
-          <span class="msg-time">${msg.time}</span>
-        `;
-        chatContainer.appendChild(card);
-      });
-      chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
     }
 
-    function renderGroupsList() {
-      groupsContainer.innerHTML = '';
-      const groupKeys = Object.keys(knownGroups);
+    function iniciarSocket() {
+      socket = io(CONFIG.SERVER_URL);
 
-      if (groupKeys.length === 0) {
-        groupsContainer.innerHTML = '<div style="text-align:center; color: var(--text-muted); padding: 20px; font-size: 0.65rem;">Consultando metadata de grupos no servidor...</div>';
-        return;
-      }
+      socket.on('connect', () => {
+        addLog('Conectado ao servidor via Socket.IO', 'cyber');
+        aplicarEstadoReal('desconectado');
+      });
 
-      const allCard = document.createElement('div');
-      allCard.className = 'group-item';
-      allCard.onclick = () => { selectedGroupId = null; renderChatMessages(); groupsContainer.style.display = 'none'; chatContainer.style.display = 'flex'; };
-      allCard.innerHTML = `
-        <div class="group-avatar" style="color:var(--primary-yellow); border-color:var(--primary-yellow);">*</div>
-        <div class="group-info">
-          <div class="group-name">FEED GLOBAL DE GRUPOS</div>
-          <div class="group-sub">Exibir mensagens de todos os grupos</div>
-        </div>
-      `;
-      groupsContainer.appendChild(allCard);
+      socket.on('status_sessao', (data) => {
+        if (data.status === 'online') {
+          aplicarEstadoReal('online', data.numero, null, data);
+        } else if (data.status === 'codigo_gerado') {
+          aplicarEstadoReal('codigo_gerado', data.numero, data.codigo);
+        } else {
+          aplicarEstadoReal('desconectado');
+        }
+      });
 
-      groupKeys.forEach(gId => {
-        const gName = knownGroups[gId];
-        const item = document.createElement('div');
-        item.className = 'group-item';
-        item.onclick = () => { selectedGroupId = gId; switchTab('groups'); };
-        item.innerHTML = `
-          <div class="group-avatar">${gName.charAt(0).toUpperCase()}</div>
-          <div class="group-info">
-            <div class="group-name">${gName}</div>
-            <div class="group-sub">ID: ${gId.substring(0, 14)}...</div>
-          </div>
-        `;
-        groupsContainer.appendChild(item);
+      socket.on('log', (data) => {
+        addLog(data.mensagem || data, data.tipo || 'info');
+      });
+
+      socket.on('nova_mensagem', (msg) => {
+        chatMessages.push(msg);
+        renderChat();
       });
     }
 
-    function switchTab(tab) {
-      currentTab = tab;
-      localStorage.setItem('bl4ck_active_tab', tab);
-      
-      document.querySelectorAll('.chat-nav-bottom .tab-btn').forEach(b => b.classList.remove('active'));
-      
-      if(tab === 'all') document.getElementById('tabAll').classList.add('active');
-      if(tab === 'groups') document.getElementById('tabGroups').classList.add('active');
-      if(tab === 'sent') document.getElementById('tabSent').classList.add('active');
-      if(tab === 'received') document.getElementById('tabReceived').classList.add('active');
-
-      if (tab === 'groups' && !selectedGroupId) {
-        groupsContainer.style.display = 'flex';
-        chatContainer.style.display = 'none';
-        carregarGruposBackend();
-        renderGroupsList();
-        document.getElementById('chatHeaderTitle').innerText = 'GRUPOS CAPTURADOS';
-        document.getElementById('chatHeaderSub').innerText = 'Selecione um grupo para filtrar';
-      } else {
-        groupsContainer.style.display = 'none';
-        chatContainer.style.display = 'flex';
-        renderChatMessages();
-
-        if (tab === 'groups' && selectedGroupId && knownGroups[selectedGroupId]) {
-          document.getElementById('chatHeaderTitle').innerText = knownGroups[selectedGroupId];
-          document.getElementById('chatHeaderSub').innerText = 'Filtro Ativo do Grupo';
-        } else if (tab === 'sent') {
-          document.getElementById('chatHeaderTitle').innerText = 'ENVIADAS PELO BOT';
-          document.getElementById('chatHeaderSub').innerText = '● REGISTRO DE SAÍDA';
-        } else if (tab === 'received') {
-          document.getElementById('chatHeaderTitle').innerText = 'RECEBIDAS EXTERNAS';
-          document.getElementById('chatHeaderSub').innerText = '● REGISTRO DE ENTRADA';
-        } else {
-          document.getElementById('chatHeaderTitle').innerText = 'LIVE STREAM CHAT';
-          document.getElementById('chatHeaderSub').innerText = '● ESCUTA ATIVA TEMPO REAL';
-        }
-      }
-    }
-
-    function appendChatMessage(msgData) {
-      chatMessages.push(msgData);
-      if (chatMessages.length > 300) chatMessages.shift();
-      localStorage.setItem('bl4ck_chat_msgs', JSON.stringify(chatMessages));
-
-      if (msgData.isGroup && msgData.groupId && msgData.groupName) {
-        knownGroups[msgData.groupId] = msgData.groupName;
-        localStorage.setItem('bl4ck_groups', JSON.stringify(knownGroups));
-      }
-
-      if (chatPage.style.display === 'flex') {
-        if (currentTab === 'groups' && !selectedGroupId) {
-          renderGroupsList();
-        } else {
-          renderChatMessages();
-        }
-      }
-    }
-
-    function abrirLiveChat() {
-      if (window.location.hash !== '#chat') {
-        window.history.pushState({ page: 'chat' }, 'Live Chat', '#chat');
-      }
-      chatPage.classList.remove('exit-anim');
-      chatPage.style.display = 'flex';
-      carregarGruposBackend();
-      switchTab(currentTab);
-    }
-
-    let isExiting = false;
-    function fecharLiveChatCompletamente() {
-      if (isExiting) return;
-      isExiting = true;
-      chatPage.classList.add('exit-anim');
-
-      setTimeout(() => {
-        chatPage.style.display = 'none';
-        chatPage.classList.remove('exit-anim');
-        isExiting = false;
-        if (window.location.hash === '#chat') {
-          window.history.pushState(null, '', window.location.pathname);
-        }
-      }, 200);
-    }
-
-    window.addEventListener('popstate', () => {
-      if (window.location.hash !== '#chat') {
-        chatPage.style.display = 'none';
-      } else {
-        chatPage.style.display = 'flex';
-      }
-    });
-
-    if (window.location.hash === '#chat') {
-      abrirLiveChat();
-    }
-
-    const statusBadge = document.getElementById('statusBadge');
-    const secForm = document.getElementById('secForm');
-    const secCodigo = document.getElementById('secCodigo');
-    const secQr = document.getElementById('secQr');
-    const secOnline = document.getElementById('secOnline');
-    const codeDisplay = document.getElementById('codeDisplay');
-    const qrImage = document.getElementById('qrImage');
-    const txtOnlineNumber = document.getElementById('txtOnlineNumber');
-    const txtConnectTime = document.getElementById('txtConnectTime');
-
-    let numeroAtual = localStorage.getItem('bl4ck_num') || '';
-
-    function aplicarEstadoReal(status, user, code, qr) {
-      if (status) localStorage.setItem('bl4ck_state', status);
-      if (user) {
-        numeroAtual = user.toString().replace(/\D/g, '');
-        localStorage.setItem('bl4ck_num', numeroAtual);
-      }
-      if (code) localStorage.setItem('bl4ck_code', code);
-      if (qr) localStorage.setItem('bl4ck_qr', qr);
+    function aplicarEstadoReal(estado, numero = '', codigo = '', extraData = {}) {
+      const badge = document.getElementById('statusBadge');
+      const secForm = document.getElementById('secForm');
+      const secCodigo = document.getElementById('secCodigo');
+      const secQr = document.getElementById('secQr');
+      const secOnline = document.getElementById('secOnline');
 
       secForm.style.display = 'none';
       secCodigo.style.display = 'none';
       secQr.style.display = 'none';
       secOnline.style.display = 'none';
 
-      if (status === 'conectado') {
-        statusBadge.className = 'status-badge online';
-        statusBadge.innerText = 'Ativo';
+      if (estado === 'online') {
+        badge.innerText = 'ONLINE';
+        badge.className = 'status-badge online';
         secOnline.style.display = 'block';
-        secOnline.setAttribute('data-numero', numeroAtual);
-        txtOnlineNumber.innerText = `+${numeroAtual}`;
-        
-        let connTime = localStorage.getItem('bl4ck_conn_time');
-        if (!connTime) {
-          connTime = getFormattedDateNow();
-          localStorage.setItem('bl4ck_conn_time', connTime);
-        }
-        txtConnectTime.innerText = connTime;
-
-        if (socket && socket.connected && numeroAtual) {
-          socket.emit('join_room', numeroAtual);
-        }
-      } else if (status === 'codigo_gerado') {
-        statusBadge.className = 'status-badge warning';
-        statusBadge.innerText = 'AGUARDANDO';
+        document.getElementById('txtOnlineNumber').innerText = numero || extraData.numero || '+258 --';
+        document.getElementById('txtConnectTime').innerText = extraData.conectadoEm || new Date().toLocaleTimeString();
+        document.getElementById('txtOperador').innerText = extraData.operador || 'Admin';
+        document.getElementById('txtKeyExpire').innerText = extraData.expiracao || 'Ativa';
+      } else if (estado === 'codigo_gerado') {
+        badge.innerText = 'A PAREAR';
+        badge.className = 'status-badge warning';
         secCodigo.style.display = 'block';
-        codeDisplay.innerText = code || localStorage.getItem('bl4ck_code') || '---- ----';
-      } else if (status === 'qr_gerado') {
-        statusBadge.className = 'status-badge warning';
-        statusBadge.innerText = 'AGUARDANDO QR';
-        secQr.style.display = 'block';
-        qrImage.src = qr || localStorage.getItem('bl4ck_qr') || '';
+        document.getElementById('codeDisplay').innerText = codigo || '---- ----';
       } else {
-        statusBadge.className = 'status-badge offline';
-        statusBadge.innerText = 'DESCONECTADO';
+        badge.innerText = 'OFFLINE';
+        badge.className = 'status-badge offline';
         secForm.style.display = 'block';
-        localStorage.removeItem('bl4ck_conn_time');
       }
-    }
-
-    function parseStatus(st) {
-      if (!st) return 'desconectado';
-      const s = String(st).toLowerCase();
-      if (['conectado', 'connected', 'open', 'isconnected', 'ready', 'true'].includes(s)) return 'conectado';
-      if (['codigo_gerado', 'code', 'pairing'].includes(s)) return 'codigo_gerado';
-      if (['qr_gerado', 'qr'].includes(s)) return 'qr_gerado';
-      return 'desconectado';
-    }
-
-    function processarEventoStatus(dados) {
-      if (!dados) return;
-      const stFinal = parseStatus(dados.status || dados.state);
-      
-      if (stFinal === 'conectado' && !localStorage.getItem('bl4ck_conn_time')) {
-        localStorage.setItem('bl4ck_conn_time', getFormattedDateNow());
-      }
-      
-      aplicarEstadoReal(stFinal, dados.user || dados.numero || numeroAtual, dados.code, dados.qr);
-    }
-
-    const socket = io(CONFIG.SERVER_URL, { 
-      transports: ['websocket', 'polling'],
-      reconnection: true,
-      reconnectionAttempts: Infinity,
-      reconnectionDelay: 1000,
-      reconnectionDelayMax: 5000,
-      timeout: 20000
-    });
-
-    socket.on('connect', () => {
-      addLog('Endpoint de comunicação ativo.', 'success');
-      if (numeroAtual) {
-        socket.emit('join_room', numeroAtual);
-      }
-    });
-
-    aplicarEstadoReal(
-      localStorage.getItem('bl4ck_state') || 'desconectado',
-      localStorage.getItem('bl4ck_num') || '',
-      localStorage.getItem('bl4ck_code') || '',
-      localStorage.getItem('bl4ck_qr') || ''
-    );
-
-    socket.on('disconnect', (reason) => {
-      addLog(`Endpoint desconectado (${reason}). Reconectando...`, 'danger');
-    });
-
-    socket.on('status', processarEventoStatus);
-    socket.on('status_change', processarEventoStatus);
-
-    const trancarOuProcessarMsg = (msg) => {
-      if (!msg) return;
-
-      const numBotConectado = (numeroAtual || '').replace(/\D/g, '');
-      const numBotMsg = (msg.botNumber || '').replace(/\D/g, '');
-
-      if (numBotMsg && numBotConectado && numBotMsg !== numBotConectado) {
-        return;
-      }
-
-      const formattedTime = msg.time || new Date().toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
-      const msgTimestamp = msg.timestamp || Date.now();
-      const isFromMe = msg.fromMe === true || msg.key?.fromMe === true;
-      const isGrp = !!(msg.isGroup || msg.groupId || (msg.from && msg.from.includes('@g.us')) || (msg.key?.remoteJid && msg.key.remoteJid.includes('@g.us')));
-      const gId = msg.groupId || (msg.from && msg.from.includes('@g.us') ? msg.from : (msg.key?.remoteJid && msg.key.remoteJid.includes('@g.us') ? msg.key.remoteJid : null));
-      const gName = msg.groupName || msg.groupTitle || (gId ? (knownGroups[gId] || `Grupo ${gId.substring(0, 5)}`) : 'Contato');
-
-      const texto = msg.text || msg.body || msg.message?.conversation || 'Mensagem / Mídia';
-
-      appendChatMessage({
-        botNumber: numBotMsg || numBotConectado,
-        sender: msg.sender || msg.pushName || (isFromMe ? 'VOCÊ (BOT)' : 'CONTATO'),
-        text: texto,
-        fromMe: isFromMe,
-        time: formattedTime,
-        timestamp: msgTimestamp,
-        isGroup: isGrp,
-        groupId: gId,
-        groupName: gName
-      });
-
-      if (texto.includes('📷 Imagem')) {
-        addLog(`Mídia de imagem recebida de ${gName}`, 'cyber');
-      } else if (texto.includes('🎥 Vídeo')) {
-        addLog(`Mídia de vídeo recebida de ${gName}`, 'cyber');
-      } else if (texto.includes('🎙️ Áudio')) {
-        addLog(`Mídia de áudio recebida de ${gName}`, 'cyber');
-      } else if (texto.includes('📄 Documento')) {
-        addLog(`Mídia de documento recebida de ${gName}`, 'cyber');
-      } else if (texto.includes('🎨 Figurinha')) {
-        addLog(`Mídia de figurinha recebida de ${gName}`, 'cyber');
-      } else {
-        if (isFromMe) {
-          addLog(`Resposta enviada à ${gName}`, 'success');
-        } else {
-          addLog(`Mensagem recebida de ${gName}`, 'info');
-        }
-      }
-    };
-
-    socket.on('new_message', trancarOuProcessarMsg);
-    socket.on('message', trancarOuProcessarMsg);
-    socket.on('message_create', trancarOuProcessarMsg);
-
-    socket.on('group_update', (data) => {
-      const gName = data?.name || data?.subject || 'Grupo';
-      if (data?.type === 'picture' || data?.type === 'icon') {
-        addLog(`Perfil atualizado Grupo ${gName}`, 'cyber');
-      } else if (data?.type === 'name' || data?.type === 'subject') {
-        addLog(`Nome atualizado Grupo ${gName}`, 'cyber');
-      } else if (data?.type === 'description' || data?.type === 'desc') {
-        addLog(`Descrição atualizada Grupo ${gName}`, 'cyber');
-      } else {
-        addLog(`Perfil atualizado Grupo ${gName}`, 'cyber');
-      }
-    });
-
-    function copiarCodigo() {
-      const codigoText = codeDisplay.innerText.trim();
-      if (!codigoText || codigoText === '---- ----') return;
-      navigator.clipboard.writeText(codigoText).then(() => {
-        document.getElementById('txtCopy').innerText = 'COPIADO';
-        setTimeout(() => document.getElementById('txtCopy').innerText = 'COPIAR', 2000);
-      });
     }
 
     async function gerarCodigo() {
-      const numero = document.getElementById('numInput').value.trim();
-      if (!numero) return alert('Insira o número de telefone!');
-      numeroAtual = numero.replace(/\D/g, '');
-      aplicarEstadoReal('codigo_gerado', numeroAtual, '---- ----');
+      const num = document.getElementById('numInput').value.trim();
+      if (!num) return alert('Por favor, digite o número do WhatsApp!');
+      numeroAtual = num;
       await enviarPedidoCodigo(numeroAtual);
-    }
-
-    async function gerarQrCode() {
-      const numero = document.getElementById('numInput').value.trim();
-      if (!numero) return alert('Insira o número de telefone para o qual deseja gerar o QR!');
-      numeroAtual = numero.replace(/\D/g, '');
-      aplicarEstadoReal('qr_gerado', numeroAtual, null, '');
-      
-      if (socket && socket.connected) {
-        socket.emit('join_room', numeroAtual);
-      }
-
-      try {
-        const res = await fetch(`${CONFIG.SERVER_URL}/api/solicitar-qr`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ numero: numeroAtual })
-        });
-        const data = await res.json();
-        if (data.success || data.sucesso) {
-          addLog('Aguardando emissão da imagem QR pelo servidor...', 'info');
-        }
-      } catch (err) {
-        addLog(`Falha na requisição: ${err.message}`, 'danger');
-      }
     }
 
     async function solicitarNovoCodigo() {
@@ -1417,14 +989,94 @@
         });
       } catch(e) {}
       numeroAtual = '';
-      localStorage.clear();
+      localStorage.removeItem('bl4ck_key');
       logsCache = []; chatMessages = []; knownGroups = {};
-      logList.innerHTML = '';
+      document.getElementById('logList').innerHTML = '';
       aplicarEstadoReal('desconectado');
+      document.getElementById('authOverlay').style.display = 'flex';
     }
 
     function toggleTutorial(show) {
       document.getElementById('tutorialModal').style.display = show ? 'flex' : 'none';
+    }
+
+    function toggleInputIcons() {
+      const val = document.getElementById('numInput').value;
+      document.getElementById('btnClearInput').style.display = val ? 'flex' : 'none';
+    }
+
+    function limparInput() {
+      document.getElementById('numInput').value = '';
+      toggleInputIcons();
+    }
+
+    async function colarNoInput() {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('numInput').value = text;
+        toggleInputIcons();
+      } catch (err) {
+        addLog('Erro ao colar área de transferência', 'danger');
+      }
+    }
+
+    function copiarCodigo() {
+      const code = document.getElementById('codeDisplay').innerText;
+      navigator.clipboard.writeText(code);
+      document.getElementById('txtCopy').innerText = 'COPIADO!';
+      setTimeout(() => {
+        document.getElementById('txtCopy').innerText = 'COPIAR';
+      }, 2000);
+    }
+
+    function gerarQrCode() {
+      alert('Modo QR Code ativado. Aguarde a emissão do fluxo.');
+    }
+
+    function addLog(msg, type = 'info') {
+      const logList = document.getElementById('logList');
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.innerText = `> ${msg}`;
+      logList.appendChild(entry);
+      logList.scrollTop = logList.scrollHeight;
+    }
+
+    function abrirLiveChat() {
+      document.getElementById('chatPage').style.display = 'flex';
+      renderChat();
+    }
+
+    function fecharLiveChatCompletamente() {
+      const chatPage = document.getElementById('chatPage');
+      chatPage.classList.add('exit-anim');
+      setTimeout(() => {
+        chatPage.style.display = 'none';
+        chatPage.classList.remove('exit-anim');
+      }, 200);
+    }
+
+    function switchTab(tab) {
+      activeTab = tab;
+      document.getElementById('tabAll').classList.toggle('active', tab === 'all');
+      document.getElementById('tabGroups').classList.toggle('active', tab === 'groups');
+      document.getElementById('groupsContainer').style.display = tab === 'groups' ? 'flex' : 'none';
+      document.getElementById('chatContainer').style.display = tab === 'all' ? 'flex' : 'none';
+      renderChat();
+    }
+
+    function renderChat() {
+      const container = document.getElementById('chatContainer');
+      if (chatMessages.length === 0) return;
+      
+      container.innerHTML = chatMessages.map(m => `
+        <div class="msg-card ${m.out ? 'out' : 'in'}">
+          <span class="msg-sender">${m.sender || 'Contacto'}</span>
+          <div>${m.texto || m.text}</div>
+          <span class="msg-time">${m.hora || '--:--'}</span>
+        </div>
+      `).join('');
+      container.scrollTop = container.scrollHeight;
     }
   </script>
 </body>
