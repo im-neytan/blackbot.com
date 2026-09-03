@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
+  <!-- Favicon Hacker Brutalista (Aba do Navegador) -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><filter id='brutalGlow' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='14' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><linearGradient id='cyberRedGreen' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23ff003c'/><stop offset='50%' stop-color='%2300ff66'/><stop offset='100%' stop-color='%2300f0ff'/></linearGradient></defs><rect width='512' height='512' rx='96' fill='%23000000'/><g filter='url(%23brutalGlow)' fill='none' stroke='url(%23cyberRedGreen)' stroke-width='20' stroke-linecap='square' stroke-linejoin='miter'><path d='M 140 180 L 256 90 L 372 180 L 372 290 L 330 330 L 330 400 L 182 400 L 182 330 L 140 290 Z'/><polygon points='175,210 230,240 175,250' fill='%23ff003c' stroke='none'/><polygon points='337,210 282,240 337,250' fill='%2300ff66' stroke='none'/><line x1='220' y1='340' x2='220' y2='400'/><line x1='256' y1='340' x2='256' y2='400'/><line x1='292' y1='340' x2='292' y2='400'/><polygon points='256,260 240,295 272,295' fill='url(%23cyberRedGreen)' stroke='none'/></g></svg>">
 
+  <!-- Ícone App Mobile (iOS e Android) -->
   <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><filter id='brutalGlow' x='-30%' y='-30%' width='160%' height='160%'><feGaussianBlur stdDeviation='14' result='blur'/><feMerge><feMergeNode in='blur'/><feMergeNode in='SourceGraphic'/></feMerge></filter><linearGradient id='cyberRedGreen' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23ff003c'/><stop offset='50%' stop-color='%2300ff66'/><stop offset='100%' stop-color='%2300f0ff'/></linearGradient></defs><rect width='512' height='512' rx='96' fill='%23000000'/><g filter='url(%23brutalGlow)' fill='none' stroke='url(%23cyberRedGreen)' stroke-width='20' stroke-linecap='square' stroke-linejoin='miter'><path d='M 140 180 L 256 90 L 372 180 L 372 290 L 330 330 L 330 400 L 182 400 L 182 330 L 140 290 Z'/><polygon points='175,210 230,240 175,250' fill='%23ff003c' stroke='none'/><polygon points='337,210 282,240 337,250' fill='%2300ff66' stroke='none'/><line x1='220' y1='340' x2='220' y2='400'/><line x1='256' y1='340' x2='256' y2='400'/><line x1='292' y1='340' x2='292' y2='400'/><polygon points='256,260 240,295 272,295' fill='url(%23cyberRedGreen)' stroke='none'/></g></svg>">
 
   <meta name="theme-color" content="#000000">
@@ -61,39 +63,70 @@
       pointer-events: none;
     }
 
-    /* OVERLAY / TELA DE LOGIN MELHORADA */
+    /* OVERLAY / TELA DE LOGIN ESTILIZADA E DETALHADA */
     #authOverlay {
       position: fixed;
       top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(2, 4, 8, 0.95);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: #010204;
       z-index: 1000;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 16px;
-      animation: fadeInAuth 0.3s ease-out;
+      overflow: hidden;
     }
 
-    @keyframes fadeInAuth {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    /* DETALHES DE FUNDO (GRID & NEON GLOWS) */
+    .bg-grid {
+      position: absolute;
+      top: 0; left: 0; width: 200%; height: 200%;
+      background-image: 
+        linear-gradient(rgba(0, 240, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+      transform: perspective(500px) rotateX(60deg) translateY(-100px);
+      animation: gridMove 15s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes gridMove {
+      0% { transform: perspective(500px) rotateX(60deg) translateY(0); }
+      100% { transform: perspective(500px) rotateX(60deg) translateY(40px); }
+    }
+
+    .bg-glow-1 {
+      position: absolute;
+      width: 350px; height: 350px;
+      background: radial-gradient(circle, rgba(255, 0, 60, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+      top: 10%; left: 15%;
+      filter: blur(50px);
+      pointer-events: none;
+    }
+
+    .bg-glow-2 {
+      position: absolute;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+      bottom: 10%; right: 15%;
+      filter: blur(60px);
+      pointer-events: none;
     }
 
     .login-card {
-      background: linear-gradient(145deg, rgba(8, 15, 26, 0.98), rgba(3, 6, 12, 0.98));
-      border: 1px solid var(--primary-red);
-      border-radius: 6px;
-      padding: 28px 24px;
+      background: rgba(6, 11, 20, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--cyber-blue);
+      border-radius: 8px;
+      padding: 32px 26px;
       width: 100%;
-      max-width: 380px;
-      box-shadow: 0 0 35px rgba(255, 0, 60, 0.3), inset 0 0 15px rgba(255, 0, 60, 0.08);
+      max-width: 400px;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.2), inset 0 0 20px rgba(0, 240, 255, 0.05);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 18px;
       position: relative;
-      overflow: hidden;
+      z-index: 10;
       animation: scaleUpCard 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
@@ -106,17 +139,18 @@
       content: "";
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 2px;
+      height: 3px;
       background: linear-gradient(90deg, var(--primary-red), var(--cyber-blue), var(--primary-green));
+      border-radius: 8px 8px 0 0;
     }
 
     .login-header {
       text-align: center;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .login-header h2 {
-      font-size: 1.35rem;
+      font-size: 1.4rem;
       color: #fff;
       text-transform: uppercase;
       letter-spacing: 3px;
@@ -124,13 +158,13 @@
     }
 
     .login-header h2 span {
-      color: var(--primary-red);
-      text-shadow: 0 0 10px var(--primary-red);
+      color: var(--cyber-blue);
+      text-shadow: 0 0 10px var(--cyber-blue);
     }
 
     .login-header p {
       font-size: 0.62rem;
-      color: var(--cyber-blue);
+      color: var(--primary-green);
       margin-top: 6px;
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -144,8 +178,8 @@
     }
 
     .login-input-group label {
-      font-size: 0.62rem;
-      color: var(--text-muted);
+      font-size: 0.65rem;
+      color: var(--text-main);
       text-transform: uppercase;
       font-weight: 700;
       letter-spacing: 1px;
@@ -155,39 +189,34 @@
 
     .login-input-group label span.req {
       color: var(--primary-red);
+      font-weight: 900;
     }
 
     .login-input-group input {
       width: 100%;
       padding: 12px 14px;
-      background: rgba(0, 0, 0, 0.7);
-      border: 1px solid rgba(0, 240, 255, 0.25);
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(0, 240, 255, 0.3);
       color: #fff;
       font-size: 0.85rem;
-      border-radius: 3px;
+      border-radius: 4px;
       outline: none;
       transition: all 0.25s ease;
     }
 
     .login-input-group input:focus {
       border-color: var(--cyber-blue);
-      box-shadow: 0 0 12px rgba(0, 240, 255, 0.35);
-      background: rgba(0, 240, 255, 0.03);
-    }
-
-    .login-input-group input#loginKey:focus {
-      border-color: var(--primary-red);
-      box-shadow: 0 0 12px rgba(255, 0, 60, 0.35);
-      background: rgba(255, 0, 60, 0.03);
+      box-shadow: 0 0 14px rgba(0, 240, 255, 0.4);
+      background: rgba(0, 240, 255, 0.05);
     }
 
     .login-error-msg {
       font-size: 0.68rem;
       color: var(--primary-red);
-      background: rgba(255, 0, 60, 0.1);
-      border: 1px solid rgba(255, 0, 60, 0.3);
-      padding: 8px;
-      border-radius: 3px;
+      background: rgba(255, 0, 60, 0.12);
+      border: 1px solid rgba(255, 0, 60, 0.4);
+      padding: 10px;
+      border-radius: 4px;
       text-align: center;
       display: none;
       letter-spacing: 0.5px;
@@ -640,29 +669,35 @@
 </head>
 <body class="smooth-rewrite">
 
+  <!-- MODAL / TELA DE LOGIN COM TODOS CAMPOS OBRIGATÓRIOS E DETALHES DE FUNDO -->
   <div id="authOverlay">
+    <!-- ELEMENTOS VISUAIS DE FUNDO -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow-1"></div>
+    <div class="bg-glow-2"></div>
+
     <div class="login-card">
       <div class="login-header">
         <h2><span>BL4CK</span> LOGIN</h2>
-        <p>GHOST X API • AUTENTICAÇÃO DE PAINEL</p>
+        <p>GHOST X API • AUTENTICAÇÃO OBRIGATÓRIA</p>
       </div>
       
       <div class="login-input-group">
-        <label>Número WhatsApp <span>(Opcional)</span></label>
-        <input type="text" id="loginNumber" placeholder="Ex: 258841234567" autocomplete="off">
+        <label>Número WhatsApp <span class="req">*</span></label>
+        <input type="text" id="loginNumber" placeholder="Ex: 258841234567" autocomplete="off" required>
       </div>
 
       <div class="login-input-group">
-        <label>Nome de Utilizador <span>(Opcional)</span></label>
-        <input type="text" id="loginUsername" placeholder="Ex: operador_01" autocomplete="off">
+        <label>Nome de Utilizador <span class="req">*</span></label>
+        <input type="text" id="loginUsername" placeholder="Ex: operador_01" autocomplete="off" required>
       </div>
 
       <div class="login-input-group">
         <label>Chave de Acesso <span class="req">*</span></label>
-        <input type="password" id="loginKey" placeholder="Ex: B4D8D5432D" autocomplete="off">
+        <input type="password" id="loginKey" placeholder="Ex: B4D8D5432D" autocomplete="off" required>
       </div>
 
-      <div id="loginError" class="login-error-msg">⚠️ Chave inválida ou expirada!</div>
+      <div id="loginError" class="login-error-msg">⚠️ Todos os campos são de preenchimento obrigatório!</div>
 
       <button class="btn-cyber-green" onclick="efetuarLogin()">
         [ > ] ENTRAR NO PAINEL
@@ -688,6 +723,7 @@
     </div>
 
     <div class="action-panel">
+      <!-- FORMULARIO DE INICIO -->
       <div id="secForm">
         <div class="input-wrapper">
           <input type="text" id="numInput" placeholder="Ex: 258841234567" oninput="toggleInputIcons()">
@@ -704,6 +740,7 @@
         </div>
       </div>
 
+      <!-- PAINEL DE PAREAMENTO POR CÓDIGO -->
       <div id="secCodigo" style="display: none;">
         <p style="font-size: 0.68rem; color: var(--cyber-blue); text-align: center;">Insira este código no WhatsApp do dispositivo:</p>
         <div class="code-container">
@@ -719,6 +756,7 @@
         </div>
       </div>
 
+      <!-- PAINEL DE PAREAMENTO POR QR CODE -->
       <div id="secQr" style="display: none;">
         <p style="font-size: 0.68rem; color: var(--cyber-blue); text-align: center;">Escaneie este QR Code no WhatsApp:</p>
         <div class="qr-container">
@@ -729,6 +767,7 @@
         </div>
       </div>
 
+      <!-- STATUS ONLINE -->
       <div id="secOnline" class="session-card" data-numero="" style="display: none;">
         <div class="online-card-box">
           <div class="online-row">
@@ -769,6 +808,7 @@
     </div>
   </div>
 
+  <!-- LIVE CHAT PANE -->
   <div id="chatPage" class="chat-page">
     <div class="chat-header">
       <button class="btn-back-chat" onclick="fecharLiveChatCompletamente()">SAIR</button>
@@ -797,6 +837,7 @@
     </div>
   </div>
 
+  <!-- MODAL TUTORIAL -->
   <div id="tutorialModal" class="modal">
     <div class="modal-content">
       <h3>Instruções de Conexão</h3>
@@ -833,8 +874,13 @@
       setInterval(atualizarRelogio, 1000);
       
       const savedKey = localStorage.getItem('bl4ck_key');
-      if (savedKey) {
+      const savedNum = localStorage.getItem('bl4ck_num');
+      const savedUser = localStorage.getItem('bl4ck_user');
+
+      if (savedKey && savedNum && savedUser) {
         document.getElementById('loginKey').value = savedKey;
+        document.getElementById('loginNumber').value = savedNum;
+        document.getElementById('loginUsername').value = savedUser;
         efetuarLogin();
       }
     };
@@ -845,13 +891,14 @@
     }
 
     async function efetuarLogin() {
-      const key = document.getElementById('loginKey').value.trim();
       const num = document.getElementById('loginNumber').value.trim();
       const user = document.getElementById('loginUsername').value.trim();
+      const key = document.getElementById('loginKey').value.trim();
       const errBox = document.getElementById('loginError');
 
-      if (!key) {
-        errBox.innerText = '⚠️ A chave de acesso é obrigatória!';
+      // VERIFICAÇÃO OBRIGATÓRIA DE TODOS OS CAMPOS
+      if (!num || !user || !key) {
+        errBox.innerText = '⚠️ Preencha TODOS os campos para prosseguir!';
         errBox.style.display = 'block';
         return;
       }
@@ -867,20 +914,24 @@
 
         if (data.sucesso || data.success) {
           localStorage.setItem('bl4ck_key', key);
+          localStorage.setItem('bl4ck_num', num);
+          localStorage.setItem('bl4ck_user', user);
           document.getElementById('authOverlay').style.display = 'none';
           iniciarSocket();
         } else {
-          errBox.innerText = data.mensagem || 'Chave inválida ou expirada!';
+          errBox.innerText = data.mensagem || 'Credenciais inválidas ou chave expirada!';
           errBox.style.display = 'block';
         }
       } catch (e) {
-        // Fallback caso a rota API não esteja pronta
-        if (key.length >= 4) {
+        // Fallback caso a API esteja indisponível
+        if (key.length >= 4 && num.length >= 8 && user.length >= 3) {
           localStorage.setItem('bl4ck_key', key);
+          localStorage.setItem('bl4ck_num', num);
+          localStorage.setItem('bl4ck_user', user);
           document.getElementById('authOverlay').style.display = 'none';
           iniciarSocket();
         } else {
-          errBox.innerText = 'Falha ao validar chave com o servidor.';
+          errBox.innerText = 'Falha ao validar autenticação.';
           errBox.style.display = 'block';
         }
       }
@@ -932,7 +983,7 @@
         secOnline.style.display = 'block';
         document.getElementById('txtOnlineNumber').innerText = numero || extraData.numero || '+258 --';
         document.getElementById('txtConnectTime').innerText = extraData.conectadoEm || new Date().toLocaleTimeString();
-        document.getElementById('txtOperador').innerText = extraData.operador || 'Admin';
+        document.getElementById('txtOperador').innerText = extraData.operador || localStorage.getItem('bl4ck_user') || 'Admin';
         document.getElementById('txtKeyExpire').innerText = extraData.expiracao || 'Ativa';
       } else if (estado === 'codigo_gerado') {
         badge.innerText = 'A PAREAR';
@@ -990,6 +1041,8 @@
       } catch(e) {}
       numeroAtual = '';
       localStorage.removeItem('bl4ck_key');
+      localStorage.removeItem('bl4ck_num');
+      localStorage.removeItem('bl4ck_user');
       logsCache = []; chatMessages = []; knownGroups = {};
       document.getElementById('logList').innerHTML = '';
       aplicarEstadoReal('desconectado');
