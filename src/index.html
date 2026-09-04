@@ -63,90 +63,125 @@
       pointer-events: none;
     }
 
-    /* OVERLAY / TELA DE LOGIN BRUTALISTA */
+    /* TELA DE LOGIN PROFISSIONAL E MODERNA */
     #authOverlay {
       position: fixed;
-      top: 0; left: 0; width: 100vw; height: 100vh;
-      background: rgba(2, 4, 8, 0.98);
-      backdrop-filter: blur(12px);
+      top: 0; 
+      left: 0; 
+      width: 100vw; 
+      height: 100vh;
+      background: radial-gradient(circle at center, rgba(15, 23, 42, 0.95), rgba(2, 4, 8, 0.98));
+      backdrop-filter: blur(16px);
       z-index: 1000;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 20px;
     }
 
     .login-card {
-      background: var(--card-bg);
-      border: 1px solid var(--primary-red);
-      border-radius: 4px;
-      padding: 24px;
+      background: rgba(13, 22, 37, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-top: 1px solid rgba(0, 240, 255, 0.4);
+      border-radius: 12px;
+      padding: 32px 28px;
       width: 100%;
-      max-width: 360px;
-      box-shadow: 0 0 25px rgba(255, 0, 60, 0.25);
+      max-width: 380px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.1);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 18px;
+      transition: all 0.3s ease;
     }
 
     .login-header {
       text-align: center;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
 
     .login-header h2 {
-      font-size: 1.2rem;
-      color: #fff;
+      font-size: 1.4rem;
+      color: #ffffff;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 2px;
     }
 
     .login-header h2 span {
-      color: var(--primary-red);
-      text-shadow: 0 0 8px var(--primary-red);
+      color: var(--cyber-blue);
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
     }
 
     .login-header p {
-      font-size: 0.60rem;
-      color: var(--cyber-blue);
-      margin-top: 4px;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      margin-top: 6px;
       letter-spacing: 1px;
     }
 
     .login-input-group {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
     }
 
     .login-input-group label {
-      font-size: 0.62rem;
-      color: var(--text-muted);
+      font-size: 0.65rem;
+      color: var(--text-main);
       text-transform: uppercase;
-      font-weight: 700;
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
 
     .login-input-group input {
       width: 100%;
-      padding: 10px;
-      background: #000;
-      border: 1px solid rgba(0, 240, 255, 0.3);
+      padding: 12px 14px;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.12);
       color: #fff;
-      font-size: 0.82rem;
-      border-radius: 2px;
+      font-size: 0.85rem;
+      border-radius: 6px;
       outline: none;
+      transition: all 0.25s ease;
     }
 
     .login-input-group input:focus {
       border-color: var(--cyber-blue);
-      box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+      background: rgba(0, 240, 255, 0.03);
+      box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+    }
+
+    .btn-login-submit {
+      width: 100%;
+      padding: 13px;
+      border-radius: 6px;
+      border: 1px solid var(--cyber-blue);
+      background: rgba(0, 240, 255, 0.12);
+      color: var(--cyber-blue);
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-top: 6px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-login-submit:hover {
+      background: var(--cyber-blue);
+      color: #000;
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
     }
 
     .login-error-msg {
-      font-size: 0.65rem;
+      font-size: 0.70rem;
       color: var(--primary-red);
       text-align: center;
       display: none;
+      background: rgba(255, 0, 60, 0.1);
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 0, 60, 0.3);
     }
 
     .container {
@@ -578,12 +613,12 @@
 </head>
 <body class="smooth-rewrite">
 
-  <!-- MODAL / TELA DE LOGIN AUTENTICAÇÃO VIA GHOST X API -->
+  <!-- MODAL / TELA DE LOGIN PROFISSIONAL -->
   <div id="authOverlay">
     <div class="login-card">
       <div class="login-header">
-        <h2><span>BL4CK</span> LOGIN</h2>
-        <p>GHOST X API • AUTENTICAÇÃO DE PAINEL</p>
+        <h2><span>BL4CK</span> BOT</h2>
+        <p>PAINEL DE AUTENTICAÇÃO E CONTROLO</p>
       </div>
       
       <div class="login-input-group">
@@ -598,12 +633,12 @@
 
       <div class="login-input-group">
         <label>Chave de Acesso *</label>
-        <input type="password" id="loginKey" placeholder="Ex: B4D8D5432D">
+        <input type="password" id="loginKey" placeholder="Insira a sua chave">
       </div>
 
       <div id="loginError" class="login-error-msg">Chave inválida ou expirada!</div>
 
-      <button class="btn-cyber-green" onclick="efetuarLogin()">[ > ] ENTRAR NO PAINEL</button>
+      <button class="btn-login-submit" onclick="efetuarLogin()">Aceder ao Painel</button>
     </div>
   </div>
 
