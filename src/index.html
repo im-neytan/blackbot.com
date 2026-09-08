@@ -913,7 +913,7 @@
           document.getElementById('authOverlay').style.display = 'none';
           errBox.style.display = 'none';
           
-          addLog(`Acesso concedido ao operador ${user}`, 'success');
+          addLog(`Acesso concedido ao operador`, 'success');
           verificarSessaoLogin();
         } else {
           const msgErro = data.erro || data.error || 'Falha na validação dos dados de acesso.';
