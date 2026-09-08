@@ -482,11 +482,13 @@
     .log-entry.danger { color: var(--primary-red); }
     .log-entry.cyber { color: var(--cyber-blue); }
 
-    /* --- ESTILO PROFISSIONAL SUAVE: LIVE CHAT --- */
+   /* --- ESTILO PROFISSIONAL SUAVE: LIVE CHAT --- */
     .chat-page {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-      background-color: #030712; z-index: 200; display: none; flex-direction: column;
+      background-color: #030712; 
+      z-index: 1000; /* Alterado de 200 para 1000 para cobrir o efeito scanline do body::before */
+      display: none; flex-direction: column;
       transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
       opacity: 1;
       transform: scale(1);
