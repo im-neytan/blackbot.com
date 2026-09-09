@@ -708,21 +708,21 @@
       </div>
       
       <div class="login-input-group">
-        <label>Número WhatsApp <span class="required-star"></span></label>
-        <input type="text" id="loginNumber" placeholder="Ex: 258841234567" required>
+        <label>Número WhatsApp <span class="required-star">*</span></label>
+        <input type="text" id="loginNumber" placeholder="Ex: 25884XXXXXXX" required>
       </div>
 
       <div class="login-input-group">
-        <label>Nome de Utilizador <span class="required-star"></span></label>
+        <label>Nome de Utilizador <span class="required-star">*</span></label>
         <input type="text" id="loginUsername" placeholder="Ex: operador_01" required>
       </div>
 
       <div class="login-input-group">
-        <label>Chave de Acesso <span class="required-star"></span></label>
+        <label>Chave de Acesso <span class="required-star">*</span></label>
         <input type="password" id="loginKey" placeholder="Insira a sua chave" required>
       </div>
 
-      <div id="loginError" class="login-error-msg">Por favor, preencha todos os campos!</div>
+      <div id="loginError" class="login-error-msg">Por favor, preencha todos os campos! (*)</div>
 
       <button class="btn-login-submit" onclick="efetuarLogin()">Aceder ao Painel</button>
     </div>
@@ -731,7 +731,7 @@
   <div class="header-banner">
     <div class="header-inner">
       <div class="title-main"><span class="highlight"> BL4CK  BOT</span>  AUTOMATICO</div>
-      <div class="subtitle-sub">Black bot • PAINEL DE CONEXÃO EM TEMPO REAL</div>
+      <div class="subtitle-sub"><span>Black bot </span>Black bot • PAINEL DE CONEXÃO EM TEMPO REAL</div>
       <div class="meta-info">
         <div id="liveClock">--</div>
         <div>Versão: v<span id="appVersion">4.10.0</span> • Dispositivo: <span id="deviceInUse">...</span></div>
